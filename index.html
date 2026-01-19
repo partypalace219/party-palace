@@ -286,6 +286,74 @@
             color: white;
         }
         
+        /* Gallery Grid - Ready for image uploads */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 2rem 1rem 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+        .gallery-item-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0;
+        }
+        .gallery-item-category {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        /* Placeholder image styling */
+        .gallery-item-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .gallery-item-placeholder.arches { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .gallery-item-placeholder.columns { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .gallery-item-placeholder.walls { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .gallery-item-placeholder.centerpieces { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .gallery-item-placeholder.events { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: flex;
@@ -1288,6 +1356,144 @@
             color: #333;
             text-shadow: none;
         }
+        
+        /* Category Image Tiles */
+        .category-tiles {
+            padding: 2rem 0;
+            background: var(--gray-50);
+        }
+        .category-tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        @media (max-width: 992px) {
+            .category-tiles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 576px) {
+            .category-tiles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .category-tile {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 4/3;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .category-tile:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+        .category-tile-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .category-tile-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 2rem 1rem 1rem;
+            text-align: center;
+        }
+        .category-tile-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .category-tile-count {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .category-tile.arches .category-tile-bg {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .category-tile.columns .category-tile-bg {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+        .category-tile.walls .category-tile-bg {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+        .category-tile.centerpieces .category-tile-bg {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+        
+        /* Social Media Links - Brand Colors */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        .social-link.instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+        .social-link.facebook {
+            background: #1877F2;
+            color: white;
+        }
+        .social-link.tiktok {
+            background: #000000;
+            color: white;
+        }
+        .social-link.snapchat {
+            background: #FFFC00;
+            color: #000000;
+        }
+        /* Homepage social section */
+        .home-social-section {
+            background: var(--gray-50);
+            padding: 2rem 0;
+            text-align: center;
+        }
+        .home-social-section h3 {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+        }
+        .home-social-section .social-links {
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -1392,6 +1598,30 @@
                 <p style="margin-top: 1.5rem; font-size: 0.875rem; color: rgba(255,255,255,0.8);">💳 A deposit is required to secure your booking.</p>
             </div>
         </section>
+        <!-- Social Media Section - Added to Homepage -->
+        <section class="home-social-section">
+            <div class="container">
+                <h3>Follow Us @partypalace.in</h3>
+                <div class="social-links">
+                    <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-link instagram">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        Instagram
+                    </a>
+                    <a href="https://facebook.com/partypalace.in" target="_blank" rel="noopener" class="social-link facebook">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                    </a>
+                    <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-link tiktok">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                        TikTok
+                    </a>
+                    <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener" class="social-link snapchat">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+                        Snapchat
+                    </a>
+                </div>
+            </div>
+        </section>
     </div>
     <!-- Catalog Page -->
     <div id="page-partydecor" class="page">
@@ -1409,6 +1639,39 @@
                     <button class="filter-btn" data-category="columns" onclick="filterProducts('columns')">Columns</button>
                     <button class="filter-btn" data-category="walls" onclick="filterProducts('walls')">Walls</button>
                     <button class="filter-btn" data-category="centerpieces" onclick="filterProducts('centerpieces')">Centerpieces</button>
+                </div>
+            </div>
+        </section>
+        <!-- Category Image Tiles -->
+        <section class="category-tiles">
+            <div class="category-tiles-grid">
+                <div class="category-tile arches" onclick="filterProducts('arches')">
+                    <div class="category-tile-bg">🌀</div>
+                    <div class="category-tile-overlay">
+                        <h3 class="category-tile-title">Arches</h3>
+                        <p class="category-tile-count">6 styles available</p>
+                    </div>
+                </div>
+                <div class="category-tile columns" onclick="filterProducts('columns')">
+                    <div class="category-tile-bg">🏛️</div>
+                    <div class="category-tile-overlay">
+                        <h3 class="category-tile-title">Columns</h3>
+                        <p class="category-tile-count">3 styles available</p>
+                    </div>
+                </div>
+                <div class="category-tile walls" onclick="filterProducts('walls')">
+                    <div class="category-tile-bg">🎨</div>
+                    <div class="category-tile-overlay">
+                        <h3 class="category-tile-title">Walls</h3>
+                        <p class="category-tile-count">3 styles available</p>
+                    </div>
+                </div>
+                <div class="category-tile centerpieces" onclick="filterProducts('centerpieces')">
+                    <div class="category-tile-bg">🎈</div>
+                    <div class="category-tile-overlay">
+                        <h3 class="category-tile-title">Centerpieces</h3>
+                        <p class="category-tile-count">4 styles available</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1451,11 +1714,107 @@
                     <h2>Our Recent Work</h2>
                     <p>Browse through photos of our balloon installations, event decorations, and happy celebrations.</p>
                 </div>
-                <div class="gallery-placeholder" style="text-align: center; padding: 4rem 2rem; background: var(--gray-50); border-radius: 12px;">
-                    <span style="font-size: 4rem;">📸</span>
-                    <h3 style="margin-top: 1rem; margin-bottom: 0.5rem;">Gallery Coming Soon</h3>
-                    <p>We're curating our best work to showcase here. Check back soon!</p>
-                    <button onclick="navigate('contact')" class="btn btn-primary" style="margin-top: 1.5rem;">Contact Us for Photos</button>
+                
+                <!-- 
+                =====================================================
+                GALLERY GRID - Ready for Image Uploads
+                =====================================================
+                To add real photos:
+                1. Replace the placeholder div with an <img> tag
+                2. Set src to your image path (e.g., "images/arch-1.jpg")
+                3. Update the title and category text
+                
+                Example with real image:
+                <div class="gallery-item">
+                    <img src="images/your-photo.jpg" alt="Description of photo">
+                    <div class="gallery-item-overlay">
+                        <p class="gallery-item-title">Event Name</p>
+                        <p class="gallery-item-category">Category</p>
+                    </div>
+                </div>
+                =====================================================
+                -->
+                
+                <div class="gallery-grid">
+                    <!-- Arches -->
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/arch-1.jpg" alt="Spiral Balloon Arch"> -->
+                        <div class="gallery-item-placeholder arches">🌀</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Spiral Arch</p>
+                            <p class="gallery-item-category">Arches</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/arch-2.jpg" alt="Organic Balloon Arch"> -->
+                        <div class="gallery-item-placeholder arches">🎈</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Organic Arch</p>
+                            <p class="gallery-item-category">Arches</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Columns -->
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/column-1.jpg" alt="Balloon Columns"> -->
+                        <div class="gallery-item-placeholder columns">🏛️</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Spiral Columns</p>
+                            <p class="gallery-item-category">Columns</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Walls -->
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/wall-1.jpg" alt="Balloon Wall"> -->
+                        <div class="gallery-item-placeholder walls">🎨</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Balloon Wall</p>
+                            <p class="gallery-item-category">Walls</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/wall-2.jpg" alt="Flower Wall"> -->
+                        <div class="gallery-item-placeholder walls">🌸</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Flower Wall</p>
+                            <p class="gallery-item-category">Walls</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Centerpieces -->
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/centerpiece-1.jpg" alt="Balloon Centerpieces"> -->
+                        <div class="gallery-item-placeholder centerpieces">🎈</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Balloon Centerpieces</p>
+                            <p class="gallery-item-category">Centerpieces</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Events -->
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/event-1.jpg" alt="Birthday Party Setup"> -->
+                        <div class="gallery-item-placeholder events">🎉</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Birthday Celebration</p>
+                            <p class="gallery-item-category">Full Event</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <!-- Replace placeholder with: <img src="images/event-2.jpg" alt="Wedding Decor"> -->
+                        <div class="gallery-item-placeholder events">💒</div>
+                        <div class="gallery-item-overlay">
+                            <p class="gallery-item-title">Wedding Decor</p>
+                            <p class="gallery-item-category">Full Event</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Call to Action -->
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-50); border-radius: 12px;">
+                    <p style="margin-bottom: 1rem;">Want to see more? Follow us on social media for our latest work!</p>
+                    <button onclick="navigate('contact')" class="btn btn-primary">Contact Us for Photos</button>
                 </div>
             </div>
         </section>
@@ -1849,18 +2208,23 @@
                         </div>
                         <div class="contact-info-box">
                             <h3>Follow Us</h3>
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
-                                <a href="https://instagram.com/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
-                                    <span style="font-size: 1.25rem;">📷</span> Instagram
+                            <!-- Social Media Links - All links verified for @partypalace.in -->
+                            <div class="social-links">
+                                <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-link instagram">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                                    Instagram
                                 </a>
-                                <a href="https://facebook.com/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
-                                    <span style="font-size: 1.25rem;">👍</span> Facebook
+                                <a href="https://facebook.com/partypalace.in" target="_blank" rel="noopener" class="social-link facebook">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                    Facebook
                                 </a>
-                                <a href="https://tiktok.com/@partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
-                                    <span style="font-size: 1.25rem;">🎵</span> TikTok
+                                <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-link tiktok">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                                    TikTok
                                 </a>
-                                <a href="https://snapchat.com/add/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
-                                    <span style="font-size: 1.25rem;">👻</span> Snapchat
+                                <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener" class="social-link snapchat">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+                                    Snapchat
                                 </a>
                             </div>
                             <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">@partypalace.in on all platforms</p>
@@ -1868,9 +2232,9 @@
                         <div class="contact-info-box" style="background: var(--gray-100); border-color: var(--gray-300);">
                             <h3>Important Documents</h3>
                             <div class="contact-method">
-                                <div class="contact-method-label">📋 Party Decor Contract</div>
+                                <div class="contact-method-label">📋 Party Palace Contract</div>
                                 <div class="contact-method-value" style="font-size: 0.875rem;">Required for all decoration services. Outlines service terms, pricing, and policies.</div>
-                                <button type="button" id="openContractBtn" class="btn btn-primary" style="margin-top: 0.75rem; width: 100%;">View & Sign Party Decor Agreement</button>
+                                <button type="button" id="openContractBtn" class="btn btn-primary" style="margin-top: 0.75rem; width: 100%;">View & Sign Party Palace Agreement</button>
                                 <div id="contractStatus" class="waiver-status unsigned"><span style="color: #DC2626;">⚠ Contract Required</span></div>
                             </div>
                             <div class="contact-method" style="margin-top: 1rem;">
@@ -2013,11 +2377,11 @@
     <input type="hidden" id="waiver_signature" name="waiver_signature" value="">
     <input type="hidden" id="waiver_date" name="waiver_date" value="">
 
-    <!-- Party Decor & Rentals Agreement Modal -->
+    <!-- Party Palace Agreement Modal -->
     <div id="contractModal" class="waiver-modal" role="dialog" aria-modal="true" aria-labelledby="contractModalTitle" aria-hidden="true">
         <div class="waiver-modal-content" tabindex="-1">
             <div class="waiver-modal-header">
-                <h2 id="contractModalTitle">📋 Party Decor & Rentals Agreement</h2>
+                <h2 id="contractModalTitle">📋 Party Palace Agreement</h2>
                 <button type="button" id="closeContractModal" class="waiver-modal-close" aria-label="Close">&times;</button>
             </div>
             <div class="waiver-modal-body">
@@ -2025,7 +2389,7 @@
                     <h3>PARTY DECOR & RENTALS AGREEMENT</h3>
                     <p style="text-align: center; font-weight: 600; color: #DC2626;">PLEASE READ CAREFULLY BEFORE BOOKING</p>
                     
-                    <p>This Party Decor & Rentals Agreement ("Agreement") is entered into by the undersigned client ("Client") and Party Palace, located in Griffith, IN ("Company").</p>
+                    <p>This Party Palace Agreement ("Agreement") is entered into by the undersigned client ("Client") and Party Palace, located in Griffith, IN ("Company").</p>
                     
                     <p>By booking services, submitting a deposit, signing electronically, or completing checkout, the Client agrees to the following terms and conditions:</p>
                     
@@ -2126,7 +2490,7 @@
                     </ul>
                     
                     <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-300); font-weight: 600; color: #DC2626; text-align: center;">
-                        ⚠️ IMPORTANT: You must agree to this Party Decor & Rentals Agreement in order to proceed with booking or checkout.
+                        ⚠️ IMPORTANT: You must agree to this Party Palace Agreement in order to proceed with booking or checkout.
                     </p>
                 </div>
                 
@@ -2135,7 +2499,7 @@
                     
                     <div class="waiver-checkbox-group">
                         <input type="checkbox" id="contractCheckbox" name="contractCheckbox">
-                        <label for="contractCheckbox">I have read and agree to the Party Decor & Rentals Agreement</label>
+                        <label for="contractCheckbox">I have read and agree to the Party Palace Agreement</label>
                     </div>
                     
                     <div class="waiver-form-row">
@@ -2263,8 +2627,8 @@
                 targetPage.classList.add('active');
             }
             
-            // Update nav buttons
-            document.querySelectorAll('.nav-desktop button, .mobile-menu button[data-page]').forEach(btn => {
+            // Update nav buttons (desktop and mobile)
+            document.querySelectorAll('.nav-desktop button[data-page], .mobile-menu button[data-page]').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.page === page);
             });
             
@@ -2285,8 +2649,7 @@
             // BROWSER HISTORY SUPPORT (for back/forward)
             // ============================================
             // Push state to browser history so back/forward buttons work
-            // Only add to history if this is a user-initiated navigation
-            // (not when handling popstate/initial load)
+            // ALWAYS use hash (even for home) to ensure consistent behavior on mobile
             if (addToHistory) {
                 const newUrl = window.location.pathname + '#' + page;
                 history.pushState({ page: page }, '', newUrl);
@@ -2298,18 +2661,36 @@
         // ============================================
         // Listen for popstate event (fired when user clicks back/forward)
         window.addEventListener('popstate', function(event) {
+            // Get page from state or URL hash
+            let page = null;
+            
             if (event.state && event.state.page) {
-                // Navigate to the page from history state (don't add to history again)
-                navigate(event.state.page, false);
+                page = event.state.page;
             } else {
-                // No state - check URL hash or default to home
+                // Fallback: check URL hash
                 const hash = window.location.hash.replace('#', '');
                 const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
                 if (hash && validPages.includes(hash)) {
-                    navigate(hash, false);
-                } else {
-                    navigate('home', false);
+                    page = hash;
                 }
+            }
+            
+            // Navigate to page (or home if none found)
+            navigate(page || 'home', false);
+        });
+        
+        // ============================================
+        // HANDLE MOBILE BFCACHE (pageshow event)
+        // ============================================
+        // Mobile Safari and some browsers use bfcache - this ensures
+        // the page state is correct when returning via back/forward
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                // Page was restored from bfcache - sync display with URL
+                const hash = window.location.hash.replace('#', '');
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
+                const page = (hash && validPages.includes(hash)) ? hash : 'home';
+                navigate(page, false);
             }
         });
         
@@ -2322,12 +2703,13 @@
             const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
             
             if (hash && validPages.includes(hash)) {
-                // Navigate to the hashed page (replace initial state, don't push)
+                // Navigate to the hashed page
                 navigate(hash, false);
                 history.replaceState({ page: hash }, '', window.location.pathname + '#' + hash);
             } else {
-                // No hash or invalid hash - set home as initial state
-                history.replaceState({ page: 'home' }, '', window.location.pathname);
+                // No hash - set home with #home hash for consistent back/forward
+                navigate('home', false);
+                history.replaceState({ page: 'home' }, '', window.location.pathname + '#home');
             }
         }
         // Mobile Menu
@@ -2779,7 +3161,7 @@
                 
                 // Check checkbox
                 if (!checkbox.checked) {
-                    errors.push('You must agree to the Party Decor & Rentals Agreement');
+                    errors.push('You must agree to the Party Palace Agreement');
                 }
                 
                 // Check full name
@@ -3005,7 +3387,7 @@
                     if (!bothSigned) {
                         bookingSubmitBtn.classList.add('btn-disabled');
                         let missingDocs = [];
-                        if (!this.isContractSigned()) missingDocs.push('Party Decor Agreement');
+                        if (!this.isContractSigned()) missingDocs.push('Party Palace Agreement');
                         if (!this.isWaiverSigned()) missingDocs.push('Liability Waiver');
                         bookingSubmitBtn.title = 'Please sign: ' + missingDocs.join(' and ');
                     } else {
@@ -3027,7 +3409,7 @@
                     const errorDiv = document.getElementById('bookingDocumentsError');
                     if (errorDiv) {
                         let missingDocs = [];
-                        if (!contractSigned) missingDocs.push('Party Decor & Rentals Agreement');
+                        if (!contractSigned) missingDocs.push('Party Palace Agreement');
                         if (!waiverSigned) missingDocs.push('Liability Waiver');
                         errorDiv.style.display = 'block';
                         errorDiv.innerHTML = '✗ You must sign the following before completing your booking:<br>• ' + missingDocs.join('<br>• ');
