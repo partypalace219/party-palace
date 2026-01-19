@@ -1246,6 +1246,48 @@
             font-size: 0.875rem;
             margin-bottom: 1rem;
         }
+        
+        /* ============================================
+           COLOR PALETTE SWATCHES
+           ============================================ */
+        
+        .color-swatch {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-swatch:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color-swatch.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px white, 0 0 0 5px var(--blue-primary);
+        }
+        
+        .color-swatch.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* For light colors (white, yellow), use dark checkmark */
+        .color-swatch.selected.light-color::after {
+            color: #333;
+            text-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -1474,26 +1516,27 @@
                 </div>
                 
                 <!-- Material Selection -->
-                <div class="material-section" style="margin-bottom: 3rem;">
-                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Choose Your Material</h3>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🪵</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Wood</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🔩</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Metal</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🧱</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Acrylic</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🎨</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">PLA Plastic</p>
-                        </div>
+                <!-- Color Preference Section (replaced material selection) -->
+                <div class="color-preference-section" style="margin-bottom: 3rem;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Pick a Color</h3>
+                    <p style="text-align: center; color: var(--gray-600); margin-bottom: 1rem; font-size: 0.9rem;">Select your preferred color for your 3D printed item</p>
+                    <div class="color-palette" id="prints3dColorPalette" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                        <div class="color-swatch" data-color="Red" data-hex="#E53935" style="background: #E53935;" title="Red"></div>
+                        <div class="color-swatch" data-color="Pink" data-hex="#EC407A" style="background: #EC407A;" title="Pink"></div>
+                        <div class="color-swatch" data-color="Purple" data-hex="#AB47BC" style="background: #AB47BC;" title="Purple"></div>
+                        <div class="color-swatch" data-color="Blue" data-hex="#2196F3" style="background: #2196F3;" title="Blue"></div>
+                        <div class="color-swatch" data-color="Teal" data-hex="#26A69A" style="background: #26A69A;" title="Teal"></div>
+                        <div class="color-swatch" data-color="Green" data-hex="#66BB6A" style="background: #66BB6A;" title="Green"></div>
+                        <div class="color-swatch" data-color="Yellow" data-hex="#FFEE58" style="background: #FFEE58;" title="Yellow"></div>
+                        <div class="color-swatch" data-color="Orange" data-hex="#FFA726" style="background: #FFA726;" title="Orange"></div>
+                        <div class="color-swatch" data-color="Gold" data-hex="#D4AF37" style="background: #D4AF37;" title="Gold"></div>
+                        <div class="color-swatch" data-color="Silver" data-hex="#C0C0C0" style="background: #C0C0C0;" title="Silver"></div>
+                        <div class="color-swatch" data-color="White" data-hex="#FFFFFF" style="background: #FFFFFF; border: 1px solid var(--gray-300);" title="White"></div>
+                        <div class="color-swatch" data-color="Black" data-hex="#212121" style="background: #212121;" title="Black"></div>
                     </div>
+                    <p id="prints3dColorLabel" style="text-align: center; margin-top: 1rem; font-weight: 500; color: var(--gray-700); min-height: 1.5rem;">No color selected</p>
+                    <!-- Hidden input for form submission -->
+                    <input type="hidden" id="prints3d_color_preference" name="color_preference" value="">
                 </div>
                 
                 <!-- Products -->
@@ -1615,27 +1658,27 @@
                     <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">Accepted formats: JPG, PNG, PDF, AI, SVG</p>
                 </div>
                 
-                <!-- Material Selection -->
-                <div class="material-section" style="margin-bottom: 3rem;">
-                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Choose Your Material</h3>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🪵</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Wood</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🔩</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Metal</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🥛</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Glass</p>
-                        </div>
-                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <span style="font-size: 1.5rem;">🧴</span>
-                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Leather</p>
-                        </div>
+                <!-- Color Preference Section (replaced material selection) -->
+                <div class="color-preference-section" style="margin-bottom: 3rem;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Pick a Color</h3>
+                    <p style="text-align: center; color: var(--gray-600); margin-bottom: 1rem; font-size: 0.9rem;">Select your preferred color for your engraved item</p>
+                    <div class="color-palette" id="engravingColorPalette" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+                        <div class="color-swatch" data-color="Red" data-hex="#E53935" style="background: #E53935;" title="Red"></div>
+                        <div class="color-swatch" data-color="Pink" data-hex="#EC407A" style="background: #EC407A;" title="Pink"></div>
+                        <div class="color-swatch" data-color="Purple" data-hex="#AB47BC" style="background: #AB47BC;" title="Purple"></div>
+                        <div class="color-swatch" data-color="Blue" data-hex="#2196F3" style="background: #2196F3;" title="Blue"></div>
+                        <div class="color-swatch" data-color="Teal" data-hex="#26A69A" style="background: #26A69A;" title="Teal"></div>
+                        <div class="color-swatch" data-color="Green" data-hex="#66BB6A" style="background: #66BB6A;" title="Green"></div>
+                        <div class="color-swatch" data-color="Yellow" data-hex="#FFEE58" style="background: #FFEE58;" title="Yellow"></div>
+                        <div class="color-swatch" data-color="Orange" data-hex="#FFA726" style="background: #FFA726;" title="Orange"></div>
+                        <div class="color-swatch" data-color="Gold" data-hex="#D4AF37" style="background: #D4AF37;" title="Gold"></div>
+                        <div class="color-swatch" data-color="Silver" data-hex="#C0C0C0" style="background: #C0C0C0;" title="Silver"></div>
+                        <div class="color-swatch" data-color="White" data-hex="#FFFFFF" style="background: #FFFFFF; border: 1px solid var(--gray-300);" title="White"></div>
+                        <div class="color-swatch" data-color="Black" data-hex="#212121" style="background: #212121;" title="Black"></div>
                     </div>
+                    <p id="engravingColorLabel" style="text-align: center; margin-top: 1rem; font-weight: 500; color: var(--gray-700); min-height: 1.5rem;">No color selected</p>
+                    <!-- Hidden input for form submission -->
+                    <input type="hidden" id="engraving_color_preference" name="engraving_color_preference" value="">
                 </div>
                 
                 <!-- Products -->
@@ -2211,11 +2254,14 @@
         };
         let currentFilter = 'all';
         // Navigation
-        function navigate(page) {
+        function navigate(page, addToHistory = true) {
             // Hide all pages
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             // Show target page
-            document.getElementById('page-' + page).classList.add('active');
+            const targetPage = document.getElementById('page-' + page);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
             // Update nav buttons
             document.querySelectorAll('.nav-desktop button, .mobile-menu button[data-page]').forEach(btn => {
@@ -2233,6 +2279,55 @@
                 renderCatalog();
             } else if (page === 'services') {
                 renderServices();
+            }
+            
+            // ============================================
+            // BROWSER HISTORY SUPPORT (for back/forward)
+            // ============================================
+            // Push state to browser history so back/forward buttons work
+            // Only add to history if this is a user-initiated navigation
+            // (not when handling popstate/initial load)
+            if (addToHistory) {
+                const newUrl = window.location.pathname + '#' + page;
+                history.pushState({ page: page }, '', newUrl);
+            }
+        }
+        
+        // ============================================
+        // HANDLE BROWSER BACK/FORWARD BUTTONS
+        // ============================================
+        // Listen for popstate event (fired when user clicks back/forward)
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page) {
+                // Navigate to the page from history state (don't add to history again)
+                navigate(event.state.page, false);
+            } else {
+                // No state - check URL hash or default to home
+                const hash = window.location.hash.replace('#', '');
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
+                if (hash && validPages.includes(hash)) {
+                    navigate(hash, false);
+                } else {
+                    navigate('home', false);
+                }
+            }
+        });
+        
+        // ============================================
+        // HANDLE INITIAL PAGE LOAD (from URL hash)
+        // ============================================
+        // On page load, check if there's a hash in the URL and navigate to that page
+        function initPageFromHash() {
+            const hash = window.location.hash.replace('#', '');
+            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
+            
+            if (hash && validPages.includes(hash)) {
+                // Navigate to the hashed page (replace initial state, don't push)
+                navigate(hash, false);
+                history.replaceState({ page: hash }, '', window.location.pathname + '#' + hash);
+            } else {
+                // No hash or invalid hash - set home as initial state
+                history.replaceState({ page: 'home' }, '', window.location.pathname);
             }
         }
         // Mobile Menu
@@ -2968,6 +3063,72 @@
         };
 
         // ============================================
+        // COLOR PALETTE SELECTION (3D Prints Page)
+        // ============================================
+        
+        const ColorPalette = {
+            // Initialize color palette functionality
+            init: function() {
+                this.bindEvents('prints3dColorPalette', 'prints3d_color_preference', 'prints3dColorLabel');
+                this.bindEvents('engravingColorPalette', 'engraving_color_preference', 'engravingColorLabel');
+            },
+            
+            // Bind click events to a color palette
+            bindEvents: function(paletteId, inputId, labelId) {
+                const palette = document.getElementById(paletteId);
+                if (!palette) return;
+                
+                const swatches = palette.querySelectorAll('.color-swatch');
+                const hiddenInput = document.getElementById(inputId);
+                const label = document.getElementById(labelId);
+                
+                swatches.forEach(swatch => {
+                    swatch.addEventListener('click', () => {
+                        // Remove selected state from all swatches in this palette
+                        swatches.forEach(s => s.classList.remove('selected', 'light-color'));
+                        
+                        // Add selected state to clicked swatch
+                        swatch.classList.add('selected');
+                        
+                        // Add light-color class for light colors (for dark checkmark)
+                        const hex = swatch.dataset.hex;
+                        if (hex === '#FFFFFF' || hex === '#FFEE58' || hex === '#C0C0C0') {
+                            swatch.classList.add('light-color');
+                        }
+                        
+                        // Get color name and hex
+                        const colorName = swatch.dataset.color;
+                        const colorHex = swatch.dataset.hex;
+                        
+                        // Update hidden input (stores both name and hex)
+                        if (hiddenInput) {
+                            hiddenInput.value = colorName;
+                        }
+                        
+                        // Update label
+                        if (label) {
+                            label.innerHTML = `Selected: <strong>${colorName}</strong> <span style="display: inline-block; width: 14px; height: 14px; background: ${colorHex}; border-radius: 50%; vertical-align: middle; margin-left: 4px; border: 1px solid rgba(0,0,0,0.1);"></span>`;
+                        }
+                    });
+                });
+            },
+            
+            // Clear selection (for testing/reset)
+            clear: function(paletteId, inputId, labelId) {
+                const palette = document.getElementById(paletteId);
+                if (!palette) return;
+                
+                const swatches = palette.querySelectorAll('.color-swatch');
+                const hiddenInput = document.getElementById(inputId);
+                const label = document.getElementById(labelId);
+                
+                swatches.forEach(s => s.classList.remove('selected', 'light-color'));
+                if (hiddenInput) hiddenInput.value = '';
+                if (label) label.textContent = 'No color selected';
+            }
+        };
+
+        // ============================================
         // INITIALIZATION
         // ============================================
         
@@ -2978,6 +3139,9 @@
             WaiverModal.init();
             ContractModal.init();
             BookingGate.init();
+            ColorPalette.init();
+            // Initialize page from URL hash (for browser history support)
+            initPageFromHash();
         });
         
         // Also run immediately if DOM already loaded
@@ -2985,8 +3149,9 @@
             WaiverModal.init();
             ContractModal.init();
             BookingGate.init();
+            ColorPalette.init();
+            initPageFromHash();
         }
     </script>
 </body>
 </html>
-       
