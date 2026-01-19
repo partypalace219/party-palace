@@ -1,0 +1,2992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Palace | Professional Event Decorations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --blue-primary: #0066FF;
+            --blue-dark: #0052CC;
+            --red-accent: #FF3366;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E8E8E8;
+            --gray-300: #D6D6D6;
+            --gray-600: #6B7280;
+            --gray-700: #4B5563;
+            --gray-900: #1A1A1A;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        
+        h1 {
+            font-size: clamp(2.25rem, 7vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        
+        h2 {
+            font-size: clamp(1.75rem, 5vw, 3rem);
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+        }
+        
+        p {
+            line-height: 1.7;
+            color: var(--gray-700);
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+        }
+        
+        @media (min-width: 768px) {
+            .section {
+                padding: 8rem 0;
+            }
+        }
+        
+        /* Header */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+        
+        .nav-desktop {
+            display: none;
+            gap: 2rem;
+        }
+        
+        .nav-actions {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .nav-desktop {
+                display: flex;
+            }
+            .nav-actions {
+                display: flex;
+            }
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+        
+        .nav-desktop button {
+            background: none;
+            border: none;
+            color: var(--gray-700);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .nav-desktop button:hover {
+            color: var(--gray-900);
+        }
+        
+        .nav-desktop button.active {
+            color: var(--gray-900);
+            border-bottom-color: var(--blue-primary);
+        }
+        
+        .coming-soon-badge {
+            display: inline-block;
+            background: var(--red-accent);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 0.15rem 0.4rem;
+            border-radius: 8px;
+            text-transform: uppercase;
+            margin-left: 0.25rem;
+            vertical-align: middle;
+        }
+        
+        .coming-soon-tab {
+            position: relative;
+        }
+        
+        .mobile-menu .coming-soon-badge {
+            font-size: 0.55rem;
+            padding: 0.1rem 0.35rem;
+        }
+        
+        .phone {
+            color: var(--gray-700);
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1.25rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: var(--blue-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+        
+        .btn-large {
+            padding: 0.875rem 1.75rem;
+            font-size: 1rem;
+        }
+        
+        .btn-gallery {
+            background: transparent;
+            color: var(--blue-primary);
+            border: 1px solid var(--blue-primary);
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        .btn-gallery:hover {
+            background: var(--blue-primary);
+            color: white;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+        
+        .mobile-menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--gray-900);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 999;
+            flex-direction: column;
+            padding: 1rem 0;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu button {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: left;
+            color: var(--gray-900);
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .mobile-menu button.active {
+            color: var(--blue-primary);
+            border-left-color: var(--blue-primary);
+        }
+        
+        .mobile-menu-footer {
+            padding: 1rem 2rem;
+            margin-top: auto;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .mobile-menu-footer .phone-link {
+            display: block;
+            color: var(--gray-700);
+            margin-bottom: 1rem;
+        }
+        
+        .mobile-menu-footer .btn {
+            width: 100%;
+        }
+        
+        /* Hero */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 72px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            overflow: hidden;
+        }
+        
+        .hero-small {
+            min-height: 50vh;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-small {
+                min-height: 60vh;
+            }
+        }
+        
+        .hero-content {
+            max-width: 780px;
+            margin: 0 auto;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+            padding: 2rem 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content {
+                padding: 4rem 2rem;
+            }
+        }
+        
+        .hero h1 {
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-actions {
+                flex-direction: row;
+                padding: 0;
+            }
+        }
+        
+        .hero .btn-primary {
+            background: white;
+            color: var(--blue-primary);
+        }
+        
+        .hero .btn-primary:hover {
+            background: var(--gray-50);
+            color: var(--blue-dark);
+        }
+        
+        .trust-badges {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        @media (min-width: 768px) {
+            .trust-badges {
+                gap: 2rem;
+            }
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: var(--gray-50);
+            padding: 3rem 0;
+        }
+        
+        @media (min-width: 768px) {
+            .stats-section {
+                padding: 5rem 0;
+            }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 3rem;
+            }
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--blue-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        @media (min-width: 768px) {
+            .stat-number {
+                font-size: 3rem;
+            }
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+        
+        @media (min-width: 768px) {
+            .stat-label {
+                font-size: 0.9375rem;
+            }
+        }
+        
+        /* Section Header */
+        .section-header {
+            max-width: 720px;
+            margin: 0 auto 3rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        
+        .section-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--blue-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .section-header p {
+                font-size: 1.125rem;
+            }
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--blue-primary), var(--blue-dark));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-section {
+                padding: 8rem 0;
+            }
+        }
+        
+        .cta-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .cta-content h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-content p {
+                font-size: 1.125rem;
+            }
+        }
+        
+        .cta-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-actions {
+                flex-direction: row;
+                padding: 0;
+            }
+        }
+        
+        .cta-section .btn-primary {
+            background: white;
+            color: var(--blue-primary);
+        }
+        
+        .cta-section .btn-primary:hover {
+            background: var(--gray-50);
+        }
+        
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+        }
+        
+        .product-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            border-color: var(--blue-primary);
+            box-shadow: 0 8px 30px rgba(0, 102, 255, 0.12);
+            transform: translateY(-4px);
+        }
+        
+        .product-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .product-image {
+                font-size: 3rem;
+            }
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--red-accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .product-info {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .product-info {
+                padding: 1.5rem;
+            }
+        }
+        
+        .product-category {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--blue-primary);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--gray-900);
+        }
+        
+        @media (min-width: 768px) {
+            .product-name {
+                font-size: 1.25rem;
+            }
+        }
+        
+        .product-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .product-description {
+                font-size: 0.9375rem;
+            }
+        }
+        
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .product-price {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .product-price-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 400;
+        }
+        
+        /* Catalog Filters */
+        .catalog-filters {
+            background: white;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 72px;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-start;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (min-width: 768px) {
+            .filter-buttons {
+                justify-content: center;
+                overflow-x: visible;
+                padding-bottom: 0;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+        }
+        
+        .filter-btn {
+            padding: 0.4rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: transparent;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--blue-primary);
+            color: var(--blue-primary);
+        }
+        
+        .filter-btn.active {
+            background: var(--blue-primary);
+            color: white;
+            border-color: var(--blue-primary);
+        }
+        
+        /* Contact Page */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-family: inherit;
+            background: white;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+        }
+        
+        .form-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            display: none;
+        }
+        
+        .form-status.success {
+            background: #D1FAE5;
+            color: #065F46;
+            display: block;
+        }
+        
+        .form-status.error {
+            background: #FEE2E2;
+            color: #991B1B;
+            display: block;
+        }
+        
+        .contact-info-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .contact-info-box {
+                padding: 2rem;
+            }
+        }
+        
+        .contact-info-box h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-method {
+            margin-bottom: 1.25rem;
+        }
+        
+        .contact-method:last-child {
+            margin-bottom: 0;
+        }
+        
+        .contact-method-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+        
+        .contact-method-value {
+            font-size: 1rem;
+            color: var(--gray-900);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 3rem 0 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer {
+                padding: 5rem 0 2rem;
+            }
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3rem;
+                margin-bottom: 3rem;
+            }
+        }
+        
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-logo img {
+            height: 60px;
+            width: auto;
+        }
+        
+        .footer-col h4 {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-col p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9375rem;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-col button {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9375rem;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .footer-col button:hover {
+            color: white;
+        }
+        
+        .footer-col a {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-col a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-bottom {
+                text-align: left;
+            }
+        }
+        
+        .footer-bottom p {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* ============================================
+           LIABILITY WAIVER MODAL STYLES
+           ============================================ */
+        
+        .waiver-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        
+        .waiver-modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            outline: none;
+        }
+        
+        .waiver-modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .waiver-modal-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--gray-900);
+        }
+        
+        .waiver-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+            padding: 0.25rem;
+            line-height: 1;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .waiver-modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+        
+        .waiver-modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .waiver-text-container {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+        
+        .waiver-text-container h3 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+            text-align: center;
+        }
+        
+        .waiver-text-container h4 {
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+        
+        .waiver-text-container p {
+            margin: 0.75rem 0;
+            color: var(--gray-700);
+        }
+        
+        .waiver-text-container ul {
+            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+            list-style: disc;
+        }
+        
+        .waiver-text-container li {
+            margin: 0.25rem 0;
+            color: var(--gray-700);
+        }
+        
+        .waiver-form-section {
+            border-top: 1px solid var(--gray-200);
+            padding-top: 1.5rem;
+        }
+        
+        .waiver-checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding: 1rem;
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: 8px;
+        }
+        
+        .waiver-checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .waiver-checkbox-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            cursor: pointer;
+        }
+        
+        .waiver-form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 500px) {
+            .waiver-form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .waiver-form-row.single {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .waiver-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+        
+        .waiver-form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .waiver-form-group input {
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .waiver-form-group input:focus {
+            outline: none;
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+        
+        .waiver-error {
+            display: none;
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 0.875rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .waiver-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .waiver-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.75rem;
+        }
+        
+        .waiver-status.signed {
+            background: #D1FAE5;
+        }
+        
+        .waiver-status.unsigned {
+            background: #FEE2E2;
+        }
+        
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+        
+        .booking-waiver-error {
+            display: none;
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 0.875rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="nav-wrapper">
+            <div class="logo" onclick="navigate('home')">
+                <img src="data:image/png;base64,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" alt="Party Palace">
+            </div>
+            <nav class="nav-desktop">
+                <button onclick="navigate('home')" class="active" data-page="home">Home</button>
+                <button onclick="navigate('gallery')" data-page="gallery">Gallery</button>
+                <button onclick="navigate('partydecor')" data-page="partydecor">Party Decor</button>
+                <button onclick="navigate('partyrentals')" data-page="partyrentals" class="coming-soon-tab">Party Rentals <span class="coming-soon-badge">Coming Soon</span></button>
+                <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
+                <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
+                <button onclick="navigate('contact')" data-page="contact">Contact</button>
+            </nav>
+            <div class="nav-actions">
+                <a href="tel:219-344-2416" class="phone">219-344-2416</a>
+                <button onclick="navigate('contact')" class="btn btn-primary">Get Started</button>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button onclick="navigate('home')" class="active" data-page="home">Home</button>
+        <button onclick="navigate('gallery')" data-page="gallery">Gallery</button>
+        <button onclick="navigate('partydecor')" data-page="partydecor">Party Decor</button>
+        <button onclick="navigate('partyrentals')" data-page="partyrentals" class="coming-soon-tab">Party Rentals <span class="coming-soon-badge">Coming Soon</span></button>
+        <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
+        <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
+        <button onclick="navigate('contact')" data-page="contact">Contact</button>
+        <div class="mobile-menu-footer">
+            <a href="mailto:partypalace.in@gmail.com" class="phone-link">✉️ partypalace.in@gmail.com</a>
+            <a href="tel:219-344-2416" class="phone-link">📞 219-344-2416</a>
+            <button onclick="navigate('contact')" class="btn btn-primary">Get Started</button>
+        </div>
+    </div>
+    <!-- Home Page -->
+    <div id="page-home" class="page active">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Transform celebrations into unforgettable moments</h1>
+                <p class="hero-subtitle">Professional event decorations and balloon installations for weddings, birthdays, and corporate events across Northwest Indiana and Chicagoland.</p>
+                <div class="hero-actions">
+                    <button onclick="navigate('partydecor')" class="btn btn-primary btn-large">Party Decor</button>
+                    <button onclick="navigate('gallery')" class="btn btn-secondary btn-large">View Gallery</button>
+                </div>
+                <div class="trust-badges">
+                    <span>⭐ 500+ Events</span>
+                    <span>🛡️ Professional Service</span>
+                    <span>💯 100% Satisfaction</span>
+                </div>
+            </div>
+        </section>
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Events Decorated</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">1,000+</div>
+                        <div class="stat-label">Happy Clients</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Product Options</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">What We Offer</div>
+                    <h2>Complete event decoration solutions</h2>
+                    <p>From balloon arches to full event styling, we handle every detail with professional care.</p>
+                    <button onclick="navigate('partydecor')" class="btn btn-primary btn-large">Browse Party Decor</button>
+                </div>
+            </div>
+        </section>
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to create something amazing?</h2>
+                <p>Let's bring your celebration to life. Free consultation with no obligation required.</p>
+                <div class="cta-actions">
+                    <button onclick="navigate('contact')" class="btn btn-primary btn-large">Book Consultation</button>
+                    <a href="tel:219-344-2416" class="btn btn-outline btn-large">Call 219-344-2416</a>
+                </div>
+                <p style="margin-top: 1.5rem; font-size: 0.875rem; color: rgba(255,255,255,0.8);">💳 A deposit is required to secure your booking.</p>
+            </div>
+        </section>
+    </div>
+    <!-- Catalog Page -->
+    <div id="page-partydecor" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Party Decor</h1>
+                <p class="hero-subtitle">Browse our complete selection of balloon decorations and event services</p>
+            </div>
+        </section>
+        <section class="catalog-filters">
+            <div class="container">
+                <div class="filter-buttons" id="catalogFilterButtons">
+                    <button class="filter-btn active" data-category="all" onclick="filterProducts('all')">All</button>
+                    <button class="filter-btn" data-category="arches" onclick="filterProducts('arches')">Arches</button>
+                    <button class="filter-btn" data-category="columns" onclick="filterProducts('columns')">Columns</button>
+                    <button class="filter-btn" data-category="walls" onclick="filterProducts('walls')">Walls</button>
+                    <button class="filter-btn" data-category="centerpieces" onclick="filterProducts('centerpieces')">Centerpieces</button>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <!-- Deposit Notice -->
+                <div class="deposit-notice" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; text-align: center;">
+                    <span style="font-size: 1.25rem;">💳</span>
+                    <p style="margin: 0; color: white;"><strong>Deposit Required:</strong> A deposit is required to secure your booking. Full details provided with your quote.</p>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+        </section>
+    </div>
+    <!-- Services Page -->
+    <div id="page-services" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Additional Services</h1>
+                <p class="hero-subtitle">Complete event solutions to elevate your celebration</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="products-grid" id="servicesGrid"></div>
+            </div>
+        </section>
+    </div>
+    <!-- Gallery Page -->
+    <div id="page-gallery" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Gallery</h1>
+                <p class="hero-subtitle">See our work and get inspired for your next event</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Recent Work</h2>
+                    <p>Browse through photos of our balloon installations, event decorations, and happy celebrations.</p>
+                </div>
+                <div class="gallery-placeholder" style="text-align: center; padding: 4rem 2rem; background: var(--gray-50); border-radius: 12px;">
+                    <span style="font-size: 4rem;">📸</span>
+                    <h3 style="margin-top: 1rem; margin-bottom: 0.5rem;">Gallery Coming Soon</h3>
+                    <p>We're curating our best work to showcase here. Check back soon!</p>
+                    <button onclick="navigate('contact')" class="btn btn-primary" style="margin-top: 1.5rem;">Contact Us for Photos</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Party Rentals Page -->
+    <div id="page-partyrentals" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Party Rentals</h1>
+                <p class="hero-subtitle">Tables, chairs, tents, and more for your event</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="coming-soon-page" style="text-align: center; padding: 4rem 2rem;">
+                    <span style="font-size: 5rem;">🎪</span>
+                    <h2 style="margin-top: 1.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
+                    <p style="max-width: 500px; margin: 0 auto 2rem;">We're expanding our services to include party rentals. Soon you'll be able to rent tables, chairs, tents, linens, and more!</p>
+                    <div style="background: var(--gray-50); border-radius: 12px; padding: 2rem; max-width: 400px; margin: 0 auto;">
+                        <h3 style="margin-bottom: 1rem;">Get Notified</h3>
+                        <p style="margin-bottom: 1rem;">Want to know when Party Rentals launches?</p>
+                        <button onclick="navigate('contact')" class="btn btn-primary">Contact Us</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- 3D Prints Page -->
+    <div id="page-prints3d" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>3D Prints</h1>
+                <p class="hero-subtitle">Custom 3D printed products with your designs</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <!-- Customization Note -->
+                <div class="customization-notice" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 3rem; text-align: center;">
+                    <span style="font-size: 1.5rem;">✨</span>
+                    <h3 style="margin: 0.5rem 0; color: white;">Custom Designs Welcome</h3>
+                    <p style="margin: 0; color: rgba(255,255,255,0.9);">Upload your photo or design for personalized items. <strong>Note: Complex customizations may include an additional charge.</strong></p>
+                </div>
+                
+                <!-- Upload Section -->
+                <div class="upload-section" style="background: var(--gray-50); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 2rem; margin-bottom: 3rem; text-align: center;">
+                    <span style="font-size: 3rem;">📤</span>
+                    <h3 style="margin: 1rem 0 0.5rem;">Upload Your Design</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem;">Share your photo, logo, or custom design idea</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <label class="btn btn-primary" style="cursor: pointer;">
+                            📷 Upload Photo
+                            <input type="file" accept="image/*" style="display: none;" disabled>
+                        </label>
+                        <button onclick="navigate('contact')" class="btn btn-outline" style="color: var(--blue-primary); border-color: var(--blue-primary);">✉️ Send via Email</button>
+                    </div>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">Accepted formats: JPG, PNG, PDF, AI, SVG</p>
+                </div>
+                
+                <!-- Material Selection -->
+                <div class="material-section" style="margin-bottom: 3rem;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Choose Your Material</h3>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🪵</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Wood</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🔩</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Metal</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🧱</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Acrylic</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🎨</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">PLA Plastic</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products -->
+                <div class="section-header">
+                    <h2>Available Products</h2>
+                    <p>Custom 3D printed items personalized with your design</p>
+                </div>
+                <div class="products-grid" id="prints3dGrid">
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                            <span>🪵</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Wood Items</div>
+                            <div class="product-description">Custom 3D printed wood-finish items including signs, plaques, and decorative pieces.</div>
+                            <div class="product-price">$20 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Wood Items')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
+                            <span>🔑</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Keychains</div>
+                            <div class="product-description">Personalized 3D printed keychains with names, logos, or custom shapes.</div>
+                            <div class="product-price">$8 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
+                            <span>🍵</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Coasters</div>
+                            <div class="product-description">Custom 3D printed coasters with unique designs, perfect for gifts or events.</div>
+                            <div class="product-price">$12 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
+                            <span>🧲</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Magnets</div>
+                            <div class="product-description">Fun 3D printed magnets with custom shapes, photos, or text designs.</div>
+                            <div class="product-price">$6 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
+                            <span>👛</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Wallets</div>
+                            <div class="product-description">Unique 3D printed wallet accessories and card holders with custom designs.</div>
+                            <div class="product-price">$25 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Wallets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)">
+                            <span>🍶</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Water Bottles</div>
+                            <div class="product-description">Custom 3D printed water bottle accessories and personalized bottle designs.</div>
+                            <div class="product-price">$18 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('3D Printed Water Bottles')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-50); border-radius: 12px;">
+                    <h3>Have a Custom Idea?</h3>
+                    <p style="color: var(--gray-600);">We can 3D print almost anything! Contact us to discuss your project.</p>
+                    <button onclick="navigate('contact')" class="btn btn-primary" style="margin-top: 1rem;">Request Custom Print</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Engraving Page -->
+    <div id="page-engraving" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Engraving</h1>
+                <p class="hero-subtitle">Personalized laser engraved products with your designs</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <!-- Customization Note -->
+                <div class="customization-notice" style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 3rem; text-align: center;">
+                    <span style="font-size: 1.5rem;">✨</span>
+                    <h3 style="margin: 0.5rem 0; color: white;">Custom Designs Welcome</h3>
+                    <p style="margin: 0; color: rgba(255,255,255,0.9);">Upload your photo or design for personalized engraving. <strong>Note: Complex customizations may include an additional charge.</strong></p>
+                </div>
+                
+                <!-- Upload Section -->
+                <div class="upload-section" style="background: var(--gray-50); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 2rem; margin-bottom: 3rem; text-align: center;">
+                    <span style="font-size: 3rem;">📤</span>
+                    <h3 style="margin: 1rem 0 0.5rem;">Upload Your Design</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem;">Share your photo, logo, or custom design idea</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <label class="btn btn-primary" style="cursor: pointer;">
+                            📷 Upload Photo
+                            <input type="file" accept="image/*" style="display: none;" disabled>
+                        </label>
+                        <button onclick="navigate('contact')" class="btn btn-outline" style="color: var(--blue-primary); border-color: var(--blue-primary);">✉️ Send via Email</button>
+                    </div>
+                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">Accepted formats: JPG, PNG, PDF, AI, SVG</p>
+                </div>
+                
+                <!-- Material Selection -->
+                <div class="material-section" style="margin-bottom: 3rem;">
+                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Choose Your Material</h3>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🪵</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Wood</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🔩</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Metal</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🥛</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Glass</p>
+                        </div>
+                        <div class="material-option" style="background: white; border: 2px solid var(--gray-200); border-radius: 8px; padding: 1rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.2s;">
+                            <span style="font-size: 1.5rem;">🧴</span>
+                            <p style="margin: 0.5rem 0 0; font-weight: 500;">Leather</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products -->
+                <div class="section-header">
+                    <h2>Available Products</h2>
+                    <p>Laser engraved items personalized with your design</p>
+                </div>
+                <div class="products-grid" id="engravingGrid">
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                            <span>🪵</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Wood Items</div>
+                            <div class="product-description">Custom laser engraved wooden signs, plaques, cutting boards, and decorative pieces.</div>
+                            <div class="product-price">$25 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Wood Items')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
+                            <span>🔑</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Keychains</div>
+                            <div class="product-description">Personalized engraved keychains in wood, metal, or leather with names or logos.</div>
+                            <div class="product-price">$10 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
+                            <span>🍵</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Coasters</div>
+                            <div class="product-description">Custom engraved coasters in wood, slate, or cork. Perfect for gifts or events.</div>
+                            <div class="product-price">$15 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
+                            <span>🧲</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Magnets</div>
+                            <div class="product-description">Laser engraved wooden or acrylic magnets with custom designs and photos.</div>
+                            <div class="product-price">$8 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
+                            <span>👛</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Wallets</div>
+                            <div class="product-description">Premium leather wallets with personalized laser engraved names, initials, or designs.</div>
+                            <div class="product-price">$35 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Wallets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)">
+                            <span>🍶</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Engraving</div>
+                            <div class="product-name">Water Bottles</div>
+                            <div class="product-description">Stainless steel water bottles with custom laser engraved logos, names, or artwork.</div>
+                            <div class="product-price">$22 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Water Bottles')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-50); border-radius: 12px;">
+                    <h3>Have a Custom Idea?</h3>
+                    <p style="color: var(--gray-600);">We can engrave almost anything! Contact us to discuss your project.</p>
+                    <button onclick="navigate('contact')" class="btn btn-primary" style="margin-top: 1rem;">Request Custom Engraving</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Contact Page -->
+    <div id="page-contact" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Let's talk about your event</h1>
+                <p class="hero-subtitle">Get in touch for a free consultation and custom quote</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="contact-grid">
+                    <div>
+                        <h2 style="margin-bottom: 1.5rem;">Send us a message</h2>
+                        <!-- Deposit Notice -->
+                        <div class="deposit-notice" style="background: var(--gray-50); border: 1px solid var(--gray-200); border-left: 4px solid var(--blue-primary); padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--gray-700);"><strong>💳 Deposit Required:</strong> A deposit is required to secure your booking. Details will be provided with your custom quote.</p>
+                        </div>
+                        <form id="contactForm" onsubmit="handleSubmit(event)">
+                            <div class="form-group">
+                                <label>Name *</label>
+                                <input type="text" id="contactName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="contactEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" id="contactPhone" required oninput="formatPhone(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Event Type *</label>
+                                <select id="contactEventType" required>
+                                    <option value="">Select type</option>
+                                    <option value="wedding">Wedding</option>
+                                    <option value="birthday">Birthday</option>
+                                    <option value="corporate">Corporate</option>
+                                    <option value="baby-shower">Baby Shower</option>
+                                    <option value="graduation">Graduation</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Message *</label>
+                                <textarea id="contactMessage" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%">Send Message</button>
+                            <div class="form-status" id="formStatus"></div>
+                            <div class="booking-waiver-error" id="bookingDocumentsError" style="display: none;"></div>
+                        </form>
+                    </div>
+                    <div>
+                        <div class="contact-info-box">
+                            <h3>Contact Information</h3>
+                            <div class="contact-method">
+                                <div class="contact-method-label">Phone</div>
+                                <div class="contact-method-value"><a href="tel:219-344-2416">219-344-2416</a></div>
+                            </div>
+                            <div class="contact-method">
+                                <div class="contact-method-label">Email</div>
+                                <div class="contact-method-value"><a href="mailto:partypalace.in@gmail.com">partypalace.in@gmail.com</a></div>
+                            </div>
+                            <div class="contact-method">
+                                <div class="contact-method-label">Location</div>
+                                <div class="contact-method-value">Northwest Indiana and Chicagoland</div>
+                            </div>
+                        </div>
+                        <div class="contact-info-box">
+                            <h3>Availability</h3>
+                            <div class="contact-method">
+                                <div class="contact-method-label">Consultations</div>
+                                <div class="contact-method-value">By Appointment Only</div>
+                            </div>
+                            <div class="contact-method">
+                                <div class="contact-method-label">Email & Messaging</div>
+                                <div class="contact-method-value">Available Anytime</div>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">We respond to all inquiries within 24 hours.</p>
+                        </div>
+                        <div class="contact-info-box">
+                            <h3>Follow Us</h3>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                                <a href="https://instagram.com/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
+                                    <span style="font-size: 1.25rem;">📷</span> Instagram
+                                </a>
+                                <a href="https://facebook.com/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
+                                    <span style="font-size: 1.25rem;">👍</span> Facebook
+                                </a>
+                                <a href="https://tiktok.com/@partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
+                                    <span style="font-size: 1.25rem;">🎵</span> TikTok
+                                </a>
+                                <a href="https://snapchat.com/add/partypalace.in" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--gray-700); text-decoration: none;">
+                                    <span style="font-size: 1.25rem;">👻</span> Snapchat
+                                </a>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">@partypalace.in on all platforms</p>
+                        </div>
+                        <div class="contact-info-box" style="background: var(--gray-100); border-color: var(--gray-300);">
+                            <h3>Important Documents</h3>
+                            <div class="contact-method">
+                                <div class="contact-method-label">📋 Party Decor Contract</div>
+                                <div class="contact-method-value" style="font-size: 0.875rem;">Required for all decoration services. Outlines service terms, pricing, and policies.</div>
+                                <button type="button" id="openContractBtn" class="btn btn-primary" style="margin-top: 0.75rem; width: 100%;">View & Sign Party Decor Agreement</button>
+                                <div id="contractStatus" class="waiver-status unsigned"><span style="color: #DC2626;">⚠ Contract Required</span></div>
+                            </div>
+                            <div class="contact-method" style="margin-top: 1rem;">
+                                <div class="contact-method-label">📝 Liability Waiver</div>
+                                <div class="contact-method-value" style="font-size: 0.875rem;">Required signature before event setup. Covers venue and decoration handling.</div>
+                                <button type="button" id="openWaiverBtn" class="btn btn-primary" style="margin-top: 0.75rem; width: 100%;">View & Sign Liability Waiver</button>
+                                <div id="waiverStatus" class="waiver-status unsigned"><span style="color: #DC2626;">⚠ Waiver Required</span></div>
+                            </div>
+                            <p style="font-size: 0.8rem; color: var(--gray-600); margin-top: 1rem; font-style: italic;">Both documents must be signed to complete your booking.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Liability Waiver Modal -->
+    <div id="waiverModal" class="waiver-modal" role="dialog" aria-modal="true" aria-labelledby="waiverModalTitle" aria-hidden="true">
+        <div class="waiver-modal-content" tabindex="-1">
+            <div class="waiver-modal-header">
+                <h2 id="waiverModalTitle">📝 Liability Waiver</h2>
+                <button type="button" id="closeWaiverModal" class="waiver-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="waiver-modal-body">
+                <div class="waiver-text-container">
+                    <h3>LIABILITY WAIVER & RELEASE OF CLAIMS</h3>
+                    <p style="text-align: center; font-weight: 600; color: #DC2626;">PLEASE READ CAREFULLY BEFORE PROCEEDING</p>
+                    
+                    <p>This Liability Waiver and Release of Claims ("Waiver") is entered into by the undersigned client ("Client") and Party Palace, located in Griffith, IN ("Company").</p>
+                    
+                    <p>By booking services, submitting a deposit, completing checkout, signing electronically, or receiving services from the Company, the Client acknowledges and agrees to the following terms:</p>
+                    
+                    <h4>1. ASSUMPTION OF RISK</h4>
+                    <p>The Client understands and acknowledges that event decor services, including but not limited to balloon installations, arches, columns, walls, centerpieces, rentals, custom decor, 3D printed items, and engraved products, involve inherent risks.</p>
+                    <p>These risks may include, but are not limited to:</p>
+                    <ul>
+                        <li>Tripping, slipping, or falling</li>
+                        <li>Allergic reactions, including latex exposure</li>
+                        <li>Injury to adults or children</li>
+                        <li>Property or venue damage</li>
+                        <li>Damage caused by weather, venue conditions, or guest interaction</li>
+                        <li>Improper handling or misuse of decor items</li>
+                    </ul>
+                    <p>The Client voluntarily assumes all risks, known and unknown, associated with the presence, use, or interaction with the Company's products and services.</p>
+                    
+                    <h4>2. RELEASE OF LIABILITY</h4>
+                    <p>To the fullest extent permitted by law, the Client hereby releases, waives, and discharges Party Palace, its owners, employees, contractors, agents, and representatives from any and all claims, demands, actions, damages, losses, injuries, or liabilities of any kind arising out of or related to:</p>
+                    <ul>
+                        <li>Use or presence of decor or rental items</li>
+                        <li>Installation, setup, breakdown, or removal of decor</li>
+                        <li>Event attendance or guest behavior</li>
+                        <li>Venue or property conditions</li>
+                        <li>Acts or omissions of third parties</li>
+                    </ul>
+                    <p>This release applies whether arising from negligence or otherwise.</p>
+                    
+                    <h4>3. CHILD SUPERVISION</h4>
+                    <p>The Client acknowledges that balloon decor, installations, and rental items are not toys. The Client agrees to supervise all children at all times.</p>
+                    <p>The Company is not responsible for injuries, damages, or incidents involving unsupervised children or misuse of decor items.</p>
+                    
+                    <h4>4. PROPERTY & VENUE RESPONSIBILITY</h4>
+                    <p>The Client confirms they have obtained all necessary permissions from the venue or property owner for installations.</p>
+                    <p>The Company is not responsible for:</p>
+                    <ul>
+                        <li>Damage caused by venue conditions</li>
+                        <li>Damage caused by guests, vendors, or third parties</li>
+                        <li>Damage occurring after installation is complete</li>
+                    </ul>
+                    <p>The Client agrees to assume full financial responsibility for damage to Company property resulting from misuse, negligence, or guest interference.</p>
+                    
+                    <h4>5. WEATHER & OUTDOOR EVENTS</h4>
+                    <p>For outdoor events, the Client acknowledges that weather conditions may impact decor safety and durability. The Company reserves the right to modify, secure, or remove decor if conditions pose a safety risk.</p>
+                    <p>The Company is not liable for damage, delays, or changes caused by weather.</p>
+                    
+                    <h4>6. CUSTOM WORK & APPEARANCE DISCLAIMER</h4>
+                    <p>The Client understands that all decor and custom items are handcrafted or custom-produced. While inspiration photos and color requests are used as references, exact duplication is not guaranteed.</p>
+                    <p>Minor variations in color, size, or design do not constitute a defect or breach of service.</p>
+                    
+                    <h4>7. DEPOSITS, PAYMENTS & CANCELLATIONS</h4>
+                    <p>All deposits are non-refundable and secure the event date. Remaining balances must be paid according to the agreed terms prior to service delivery or setup.</p>
+                    <p>Failure to complete payment may result in cancellation without refund.</p>
+                    
+                    <h4>8. PHOTO & MEDIA RELEASE</h4>
+                    <p>Unless the Client provides written notice otherwise, the Client grants the Company permission to photograph completed decor and installations and use such images for promotional purposes, including website and social media content.</p>
+                    
+                    <h4>9. GOVERNING LAW</h4>
+                    <p>This Waiver shall be governed by and interpreted in accordance with the laws of the State of Indiana.</p>
+                    
+                    <h4>10. ELECTRONIC ACKNOWLEDGMENT & CONSENT</h4>
+                    <p>By checking the acceptance box, typing their name and signature, and completing checkout or booking, the Client confirms that they:</p>
+                    <ul>
+                        <li>Have read and fully understand this Waiver</li>
+                        <li>Agree to all terms stated above</li>
+                        <li>Intentionally waive certain legal rights</li>
+                        <li>Consent to electronic signature and record keeping</li>
+                    </ul>
+                    <p>This electronic acknowledgment constitutes a legally binding agreement.</p>
+                    
+                    <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-300); font-weight: 600; color: #DC2626; text-align: center;">
+                        ⚠️ IMPORTANT: You must agree to this Liability Waiver in order to proceed with booking or checkout.
+                    </p>
+                </div>
+                
+                <div class="waiver-form-section">
+                    <div id="waiverError" class="waiver-error"></div>
+                    
+                    <div class="waiver-checkbox-group">
+                        <input type="checkbox" id="waiverCheckbox" name="waiverCheckbox">
+                        <label for="waiverCheckbox">I have read and agree to the Liability Waiver & Release of Claims</label>
+                    </div>
+                    
+                    <div class="waiver-form-row">
+                        <div class="waiver-form-group">
+                            <label for="waiverFullName">Client Full Name *</label>
+                            <input type="text" id="waiverFullName" name="waiverFullName" placeholder="Enter your full legal name" required>
+                        </div>
+                        <div class="waiver-form-group">
+                            <label for="waiverDate">Date *</label>
+                            <input type="date" id="waiverDate" name="waiverDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="waiver-form-row single">
+                        <div class="waiver-form-group">
+                            <label for="waiverSignature">Typed Signature *</label>
+                            <input type="text" id="waiverSignature" name="waiverSignature" placeholder="Type your full name as signature" required style="font-style: italic;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="waiver-modal-footer">
+                <button type="button" onclick="WaiverModal.close()" class="btn btn-outline" style="color: var(--gray-700); border-color: var(--gray-300);">Cancel</button>
+                <button type="button" id="signWaiverBtn" class="btn btn-primary">Sign & Continue</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden Waiver Form Inputs (for form submission) -->
+    <input type="hidden" id="waiver_accepted" name="waiver_accepted" value="false">
+    <input type="hidden" id="waiver_name" name="waiver_name" value="">
+    <input type="hidden" id="waiver_signature" name="waiver_signature" value="">
+    <input type="hidden" id="waiver_date" name="waiver_date" value="">
+
+    <!-- Party Decor & Rentals Agreement Modal -->
+    <div id="contractModal" class="waiver-modal" role="dialog" aria-modal="true" aria-labelledby="contractModalTitle" aria-hidden="true">
+        <div class="waiver-modal-content" tabindex="-1">
+            <div class="waiver-modal-header">
+                <h2 id="contractModalTitle">📋 Party Decor & Rentals Agreement</h2>
+                <button type="button" id="closeContractModal" class="waiver-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="waiver-modal-body">
+                <div class="waiver-text-container">
+                    <h3>PARTY DECOR & RENTALS AGREEMENT</h3>
+                    <p style="text-align: center; font-weight: 600; color: #DC2626;">PLEASE READ CAREFULLY BEFORE BOOKING</p>
+                    
+                    <p>This Party Decor & Rentals Agreement ("Agreement") is entered into by the undersigned client ("Client") and Party Palace, located in Griffith, IN ("Company").</p>
+                    
+                    <p>By booking services, submitting a deposit, signing electronically, or completing checkout, the Client agrees to the following terms and conditions:</p>
+                    
+                    <h4>1. SERVICES PROVIDED</h4>
+                    <p>The Company agrees to provide event decor and/or rental services as outlined in the Client's invoice, quote, or booking confirmation. Services may include, but are not limited to:</p>
+                    <ul>
+                        <li>Balloon arches, columns, walls, and centerpieces</li>
+                        <li>Custom party decor installations</li>
+                        <li>Decor rentals and related accessories</li>
+                        <li>Setup and breakdown services (if included in the booking)</li>
+                    </ul>
+                    <p>All services are subject to availability and venue approval.</p>
+                    
+                    <h4>2. EVENT DETAILS & CLIENT RESPONSIBILITIES</h4>
+                    <p>The Client is responsible for providing accurate event details, including:</p>
+                    <ul>
+                        <li>Event date and time</li>
+                        <li>Venue address</li>
+                        <li>Indoor or outdoor setup confirmation</li>
+                        <li>Setup and breakdown access times</li>
+                    </ul>
+                    <p>Any changes must be communicated in writing and may result in additional fees.</p>
+                    
+                    <h4>3. DEPOSITS & PAYMENTS</h4>
+                    <ul>
+                        <li>A non-refundable deposit is required to secure the event date.</li>
+                        <li>The remaining balance must be paid in full prior to setup, delivery, or rental release.</li>
+                        <li>Failure to complete payment may result in cancellation of services without refund.</li>
+                        <li>Deposits reserve time, materials, and labor and are not transferable.</li>
+                    </ul>
+                    
+                    <h4>4. CANCELLATIONS & RESCHEDULING</h4>
+                    <ul>
+                        <li>Deposits are non-refundable under all circumstances.</li>
+                        <li>Rescheduling is subject to availability and must be requested in writing.</li>
+                        <li>If the Company is unable to perform due to circumstances beyond its control, liability is limited to a refund of payments made, excluding the deposit where permitted by law.</li>
+                    </ul>
+                    
+                    <h4>5. RENTAL ITEMS & CARE</h4>
+                    <p>The Client agrees to:</p>
+                    <ul>
+                        <li>Use rental items only for their intended purpose</li>
+                        <li>Prevent misuse, tampering, or guest interference</li>
+                        <li>Return all rental items in the same condition received (normal wear excepted)</li>
+                    </ul>
+                    <p>The Client assumes financial responsibility for:</p>
+                    <ul>
+                        <li>Lost, stolen, or damaged rental items</li>
+                        <li>Repair or replacement costs due to misuse, negligence, or guest interference</li>
+                    </ul>
+                    
+                    <h4>6. SETUP, BREAKDOWN & ACCESS</h4>
+                    <ul>
+                        <li>Setup and breakdown times are scheduled according to the agreed event timeline.</li>
+                        <li>Delays caused by venue access issues or Client interference are not the responsibility of the Company.</li>
+                        <li>Additional labor time may result in added fees.</li>
+                    </ul>
+                    
+                    <h4>7. WEATHER & OUTDOOR EVENTS</h4>
+                    <p>For outdoor events:</p>
+                    <ul>
+                        <li>Weather conditions may impact decor safety and durability.</li>
+                        <li>The Company reserves the right to modify, secure, or remove decor if conditions pose a safety risk.</li>
+                        <li>No refunds will be issued for weather-related impacts beyond the Company's control.</li>
+                    </ul>
+                    
+                    <h4>8. CUSTOM DESIGN & APPEARANCE DISCLAIMER</h4>
+                    <p>All decor is custom-designed and handcrafted. While inspiration photos and color selections are used as references, exact replication is not guaranteed.</p>
+                    <p>Variations in size, color, or arrangement do not constitute a defect or breach of contract.</p>
+                    
+                    <h4>9. LIABILITY & INDEMNIFICATION</h4>
+                    <p>All services are provided subject to the Company's Liability Waiver & Release of Claims, which is incorporated into this Agreement by reference.</p>
+                    <p>The Client agrees to indemnify and hold harmless the Company from any claims, damages, or losses arising from:</p>
+                    <ul>
+                        <li>Guest behavior</li>
+                        <li>Venue conditions</li>
+                        <li>Improper use of decor or rental items</li>
+                    </ul>
+                    
+                    <h4>10. PHOTOGRAPHY & PROMOTIONAL USE</h4>
+                    <p>Unless the Client provides written notice otherwise, the Client grants the Company permission to photograph completed decor and installations and use such images for promotional purposes, including website and social media content.</p>
+                    
+                    <h4>11. APPOINTMENT-ONLY POLICY</h4>
+                    <p>The Company operates by appointment only. Communication is available via message or email outside of scheduled appointments.</p>
+                    
+                    <h4>12. GOVERNING LAW</h4>
+                    <p>This Agreement shall be governed by and interpreted in accordance with the laws of the State of Indiana.</p>
+                    
+                    <h4>13. ENTIRE AGREEMENT</h4>
+                    <p>This Agreement constitutes the entire agreement between the Client and the Company and supersedes all prior discussions or representations. Any modifications must be made in writing and agreed upon by both parties.</p>
+                    
+                    <h4>14. ELECTRONIC ACCEPTANCE & SIGNATURE</h4>
+                    <p>By checking the acceptance box, typing their name, signing electronically, and completing booking or checkout, the Client confirms that they:</p>
+                    <ul>
+                        <li>Have read and understand this Agreement</li>
+                        <li>Agree to all terms and conditions</li>
+                        <li>Accept electronic records and signatures as legally binding</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-300); font-weight: 600; color: #DC2626; text-align: center;">
+                        ⚠️ IMPORTANT: You must agree to this Party Decor & Rentals Agreement in order to proceed with booking or checkout.
+                    </p>
+                </div>
+                
+                <div class="waiver-form-section">
+                    <div id="contractError" class="waiver-error"></div>
+                    
+                    <div class="waiver-checkbox-group">
+                        <input type="checkbox" id="contractCheckbox" name="contractCheckbox">
+                        <label for="contractCheckbox">I have read and agree to the Party Decor & Rentals Agreement</label>
+                    </div>
+                    
+                    <div class="waiver-form-row">
+                        <div class="waiver-form-group">
+                            <label for="contractFullName">Client Full Name *</label>
+                            <input type="text" id="contractFullName" name="contractFullName" placeholder="Enter your full legal name" required>
+                        </div>
+                        <div class="waiver-form-group">
+                            <label for="contractEventDate">Event Date *</label>
+                            <input type="date" id="contractEventDate" name="contractEventDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="waiver-form-row">
+                        <div class="waiver-form-group">
+                            <label for="contractSignature">Typed Signature * <span style="font-weight: normal; font-size: 0.8rem; color: var(--gray-600);">(must match full name)</span></label>
+                            <input type="text" id="contractSignature" name="contractSignature" placeholder="Type your full name exactly as above" required style="font-style: italic;">
+                        </div>
+                        <div class="waiver-form-group">
+                            <label for="contractDate">Today's Date *</label>
+                            <input type="date" id="contractDate" name="contractDate" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="waiver-modal-footer">
+                <button type="button" onclick="ContractModal.close()" class="btn btn-outline" style="color: var(--gray-700); border-color: var(--gray-300);">Cancel</button>
+                <button type="button" id="signContractBtn" class="btn btn-primary">Sign & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Contract Form Inputs (for form submission) -->
+    <input type="hidden" id="contract_accepted" name="contract_accepted" value="false">
+    <input type="hidden" id="contract_name" name="contract_name" value="">
+    <input type="hidden" id="contract_signature" name="contract_signature" value="">
+    <input type="hidden" id="contract_date" name="contract_date" value="">
+    <input type="hidden" id="contract_event_date" name="contract_event_date" value="">
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="data:image/png;base64,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" alt="Party Palace" style="height: 60px; width: auto;">
+                    </div>
+                    <p>Northwest Indiana and Chicagoland's premier event decoration service since 2018.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><button onclick="navigate('partydecor')">Party Decor</button></li>
+                        <li><button onclick="navigate('gallery')">Gallery</button></li>
+                        <li><button onclick="navigate('prints3d')">3D Prints</button></li>
+                        <li><button onclick="navigate('engraving')">Engraving</button></li>
+                        <li><button onclick="navigate('contact')">Contact</button></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:partypalace.in@gmail.com">partypalace.in@gmail.com</a></li>
+                        <li><a href="tel:219-344-2416">219-344-2416</a></li>
+                        <li>Northwest Indiana and Chicagoland</li>
+                        <li>Consultations: By Appointment Only</li>
+                        <li>Email & Messaging: Available Anytime</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Party Palace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Product Data
+        const products = [
+            { id: 1, name: 'Spiral Arch', category: 'arches', price: 275, priceLabel: 'starting at', description: 'Classic spiral balloon arch with alternating colors. Perfect for entrances and photo backdrops.', icon: '🌀', popular: false, hasGallery: true },
+            { id: 2, name: 'Organic Arch', category: 'arches', price: 350, priceLabel: 'starting at', description: 'Modern organic balloon arch with flowing, natural asymmetric design. Trendy and Instagram-worthy.', icon: '🎈', popular: true, hasGallery: true },
+            { id: 3, name: 'L-Shaped Arch', category: 'arches', price: 325, priceLabel: 'starting at', description: 'Elegant L-shaped arch perfect for corners, cake tables, and unique photo opportunities.', icon: '📐', popular: false, hasGallery: true },
+            { id: 4, name: 'Specialty Arch', category: 'arches', price: 450, priceLabel: 'starting at', description: 'Custom specialty arch with unique designs, premium materials, and personalized elements.', icon: '✨', popular: true, hasGallery: true },
+            { id: 5, name: 'Circle Arch', category: 'arches', price: 400, priceLabel: 'starting at', description: 'Stunning full-circle arch creating a dramatic focal point for ceremonies and photos.', icon: '⭕', popular: true, hasGallery: true },
+            { id: 6, name: 'Chiara Arch', category: 'arches', price: 500, priceLabel: 'starting at', description: 'Luxurious Chiara-style arch with elegant wavy design. Perfect for weddings and upscale events.', icon: '👑', popular: true, hasGallery: true },
+            { id: 7, name: 'Balloon Centerpieces', category: 'centerpieces', price: 35, priceLabel: 'starting at', description: 'Beautiful balloon centerpieces perfect for table decor. Available in any color scheme to match your event.', icon: '🎈', popular: true, hasGallery: true },
+            { id: 8, name: 'Vases', category: 'centerpieces', price: 45, priceLabel: 'starting at', description: 'Elegant decorative vases with floral or balloon arrangements. Stunning table accents for any occasion.', icon: '🏺', popular: false, hasGallery: true },
+            { id: 9, name: 'Diaper Cakes', category: 'centerpieces', price: 65, priceLabel: 'starting at', description: 'Adorable diaper cake centerpieces for baby showers. Custom themed designs with practical gifts inside.', icon: '🍼', popular: true, hasGallery: true },
+            { id: 10, name: 'Medal Frames', category: 'centerpieces', price: 55, priceLabel: 'starting at', description: 'Custom medal and award display frames. Perfect for sports events, graduations, and achievements.', icon: '🏅', popular: false, hasGallery: true },
+            { id: 12, name: 'Spiral Columns', category: 'columns', price: 150, priceLabel: 'starting at', description: 'Classic spiral balloon columns with alternating colors. Perfect for framing entrances and stages.', icon: '🌀', popular: true, hasGallery: true },
+            { id: 13, name: 'Organic Columns', category: 'columns', price: 200, priceLabel: 'starting at', description: 'Modern organic balloon columns with flowing, natural asymmetric design. Trendy statement pieces.', icon: '🎈', popular: false, hasGallery: true },
+            { id: 14, name: 'Specialty Columns', category: 'columns', price: 250, priceLabel: 'starting at', description: 'Custom specialty columns with unique designs, premium materials, and personalized elements.', icon: '✨', popular: true, hasGallery: true },
+            { id: 15, name: 'Shimmer Walls', category: 'walls', price: 200, priceLabel: 'starting at', description: 'Stunning shimmer wall backdrops with reflective panels. Perfect for photos and creating elegant ambiance.', icon: '✨', popular: true, hasGallery: true },
+            { id: 16, name: 'Flower Walls', category: 'walls', price: 350, priceLabel: 'starting at', description: 'Beautiful artificial flower wall backdrops. Romantic and luxurious for weddings and special events.', icon: '🌸', popular: true, hasGallery: true },
+            { id: 17, name: 'Balloon Walls', category: 'walls', price: 500, priceLabel: 'starting at', description: 'Custom balloon wall backdrops in any color scheme. Eye-catching statement pieces for photos and decor.', icon: '🎈', popular: true, hasGallery: true },
+            { id: 25, name: 'Photo Stations', category: 'services', price: 400, priceLabel: 'starting at', description: 'Complete photo station setup with backdrop and props.', icon: '📸', popular: true },
+            { id: 26, name: 'Dessert Tables', category: 'services', price: 350, priceLabel: 'starting at', description: 'Styled dessert table with balloon garland and signage.', icon: '🍰', popular: false },
+            { id: 27, name: 'Custom Printwork', category: 'services', price: 150, priceLabel: 'starting at', description: 'Personalized banners, signs, and printed decorations.', icon: '🖨️', popular: false },
+            { id: 28, name: 'Full Event Decor', category: 'services', price: 1500, priceLabel: 'starting at', description: 'Complete event styling from consultation to installation.', icon: '✨', popular: true },
+            { id: 29, name: 'Drapery Backdrops', category: 'services', price: 450, priceLabel: 'starting at', description: 'Elegant fabric backdrop with professional draping.', icon: '🎭', popular: false },
+            { id: 30, name: 'Marquee Decor', category: 'services', price: 225, priceLabel: 'starting at', description: 'Custom marquee letters and numbers with LED lighting.', icon: '💡', popular: true }
+        ];
+        const gradients = {
+            arches: 'linear-gradient(135deg, #667eea, #764ba2)',
+            columns: 'linear-gradient(135deg, #4facfe, #00f2fe)',
+            walls: 'linear-gradient(135deg, #fa709a, #fee140)',
+            centerpieces: 'linear-gradient(135deg, #f093fb, #f5576c)',
+            services: 'linear-gradient(135deg, #43e97b, #38f9d7)'
+        };
+        const categoryLabels = {
+            arches: 'Arches',
+            columns: 'Columns',
+            walls: 'Walls',
+            centerpieces: 'Centerpieces',
+            services: 'Services'
+        };
+        let currentFilter = 'all';
+        // Navigation
+        function navigate(page) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show target page
+            document.getElementById('page-' + page).classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-desktop button, .mobile-menu button[data-page]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.page === page);
+            });
+            
+            // Close mobile menu
+            closeMobileMenu();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Render content if needed
+            if (page === 'partydecor') {
+                renderCatalog();
+            } else if (page === 'services') {
+                renderServices();
+            }
+        }
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const toggle = document.getElementById('mobileMenuToggle');
+            menu.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const toggle = document.getElementById('mobileMenuToggle');
+            menu.classList.remove('active');
+            toggle.classList.remove('active');
+        }
+        // Product Card HTML
+        function createProductCard(product, isService = false) {
+            const galleryLink = product.hasGallery ? `<button onclick="navigate('gallery')" class="btn btn-outline btn-gallery" style="width: 100%; margin-top: 0.5rem;">View Photos</button>` : '';
+            return `
+                <div class="product-card">
+                    <div class="product-image" style="background: ${gradients[product.category]}">
+                        <span>${product.icon}</span>
+                        ${product.popular ? '<div class="product-badge">Popular</div>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">${isService ? 'Service' : categoryLabels[product.category]}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">
+                            $${product.price}
+                            <span class="product-price-label">${product.priceLabel}</span>
+                        </div>
+                        <button onclick="inquireProduct('${product.name}')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        ${galleryLink}
+                    </div>
+                </div>
+            `;
+        }
+        // Render Catalog
+        function renderCatalog() {
+            const partyDecorCategories = ['arches', 'columns', 'walls', 'centerpieces'];
+            const filtered = currentFilter === 'all'
+                ? products.filter(p => partyDecorCategories.includes(p.category))
+                : products.filter(p => p.category === currentFilter);
+            
+            document.getElementById('productsGrid').innerHTML = filtered.map(p => createProductCard(p)).join('');
+        }
+        // Render Services
+        function renderServices() {
+            const services = products.filter(p => p.category === 'services');
+            document.getElementById('servicesGrid').innerHTML = services.map(p => createProductCard(p, true)).join('');
+        }
+        // Filter Products
+        function filterProducts(category) {
+            currentFilter = category;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            
+            renderCatalog();
+        }
+        // Inquire Product
+        function inquireProduct(productName) {
+            navigate('contact');
+            setTimeout(() => {
+                document.getElementById('contactMessage').value = `I'm interested in getting a quote for: ${productName}`;
+            }, 100);
+        }
+        // Format Phone
+        function formatPhone(input) {
+            let value = input.value.replace(/\D/g, '').slice(0, 10);
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = '(' + value;
+                } else if (value.length <= 6) {
+                    value = '(' + value.slice(0, 3) + ') ' + value.slice(3);
+                } else {
+                    value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + '-' + value.slice(6);
+                }
+            }
+            input.value = value;
+        }
+        // Form Submit
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const eventType = document.getElementById('contactEventType').value;
+            const message = document.getElementById('contactMessage').value.trim();
+            const statusDiv = document.getElementById('formStatus');
+            
+            if (!name || !email || !phone || !eventType || !message) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Please fill in all required fields.';
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Please enter a valid email address.';
+                return;
+            }
+            
+            statusDiv.className = 'form-status success';
+            statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
+            
+            document.getElementById('contactForm').reset();
+            
+            setTimeout(() => {
+                statusDiv.className = 'form-status';
+                statusDiv.textContent = '';
+            }, 5000);
+        }
+
+        // ============================================
+        // LIABILITY WAIVER MODAL SYSTEM
+        // ============================================
+        
+        const WaiverModal = {
+            // Storage key for localStorage
+            STORAGE_KEY: 'partypalace_waiver_signed',
+            
+            // Initialize the waiver system
+            init: function() {
+                this.loadSavedState();
+                this.bindEvents();
+                this.updateUI();
+            },
+            
+            // Open the modal
+            open: function() {
+                const modal = document.getElementById('waiverModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    // Focus the modal for accessibility
+                    modal.querySelector('.waiver-modal-content').focus();
+                }
+            },
+            
+            // Close the modal
+            close: function() {
+                const modal = document.getElementById('waiverModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+            },
+            
+            // Validate the waiver form
+            validate: function() {
+                const checkbox = document.getElementById('waiverCheckbox');
+                const fullName = document.getElementById('waiverFullName');
+                const signature = document.getElementById('waiverSignature');
+                const date = document.getElementById('waiverDate');
+                const errorDiv = document.getElementById('waiverError');
+                
+                let errors = [];
+                
+                // Check checkbox
+                if (!checkbox.checked) {
+                    errors.push('You must agree to the Liability Waiver');
+                }
+                
+                // Check full name
+                if (!fullName.value.trim()) {
+                    errors.push('Please enter your full name');
+                }
+                
+                // Check signature (must not be empty)
+                if (!signature.value.trim()) {
+                    errors.push('Please type your signature');
+                }
+                
+                // Check date
+                if (!date.value) {
+                    errors.push('Please select a date');
+                }
+                
+                // Show errors or proceed
+                if (errors.length > 0) {
+                    errorDiv.innerHTML = '✗ ' + errors.join('<br>✗ ');
+                    errorDiv.style.display = 'block';
+                    return false;
+                }
+                
+                errorDiv.style.display = 'none';
+                return true;
+            },
+            
+            // Sign the waiver
+            sign: function() {
+                if (!this.validate()) {
+                    return;
+                }
+                
+                const fullName = document.getElementById('waiverFullName').value.trim();
+                const signature = document.getElementById('waiverSignature').value.trim();
+                const date = document.getElementById('waiverDate').value;
+                
+                // Save to localStorage
+                const waiverData = {
+                    accepted: true,
+                    name: fullName,
+                    signature: signature,
+                    date: date,
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(waiverData));
+                
+                // Update hidden form inputs
+                this.updateHiddenInputs(waiverData);
+                
+                // Update UI (both waiver and booking button)
+                this.updateUI();
+                if (typeof BookingGate !== 'undefined') {
+                    BookingGate.updateSubmitButton();
+                }
+                
+                // Close modal
+                this.close();
+            },
+            
+            // Load saved state from localStorage
+            loadSavedState: function() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const waiverData = JSON.parse(saved);
+                        if (waiverData.accepted) {
+                            this.updateHiddenInputs(waiverData);
+                            // Pre-fill form fields
+                            const fullName = document.getElementById('waiverFullName');
+                            const signature = document.getElementById('waiverSignature');
+                            const date = document.getElementById('waiverDate');
+                            const checkbox = document.getElementById('waiverCheckbox');
+                            
+                            if (fullName) fullName.value = waiverData.name || '';
+                            if (signature) signature.value = waiverData.signature || '';
+                            if (date) date.value = waiverData.date || '';
+                            if (checkbox) checkbox.checked = true;
+                        }
+                    } catch (e) {
+                        console.error('Error loading waiver state:', e);
+                    }
+                }
+            },
+            
+            // Update hidden form inputs
+            updateHiddenInputs: function(data) {
+                const inputs = {
+                    'waiver_accepted': data.accepted ? 'true' : 'false',
+                    'waiver_name': data.name || '',
+                    'waiver_signature': data.signature || '',
+                    'waiver_date': data.date || ''
+                };
+                
+                for (const [id, value] of Object.entries(inputs)) {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.value = value;
+                    }
+                }
+            },
+            
+            // Update UI based on signed state
+            updateUI: function() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                const isSigned = saved && JSON.parse(saved).accepted;
+                
+                // Update waiver status indicator
+                const statusIndicator = document.getElementById('waiverStatus');
+                if (statusIndicator) {
+                    if (isSigned) {
+                        statusIndicator.innerHTML = '<span style="color: #059669;">✓ Waiver Signed</span>';
+                        statusIndicator.className = 'waiver-status signed';
+                    } else {
+                        statusIndicator.innerHTML = '<span style="color: #DC2626;">⚠ Waiver Required</span>';
+                        statusIndicator.className = 'waiver-status unsigned';
+                    }
+                }
+                
+                // Update booking submit button state
+                // REPLACE THIS SELECTOR IF NEEDED - targets booking form submit button
+                const bookingSubmitBtn = document.getElementById('bookingSubmitBtn') || 
+                                         document.querySelector('.booking-form button[type="submit"]') ||
+                                         document.querySelector('#bookingForm button[type="submit"]');
+                
+                if (bookingSubmitBtn) {
+                    bookingSubmitBtn.disabled = !isSigned;
+                    if (!isSigned) {
+                        bookingSubmitBtn.classList.add('btn-disabled');
+                        bookingSubmitBtn.title = 'Please sign the liability waiver first';
+                    } else {
+                        bookingSubmitBtn.classList.remove('btn-disabled');
+                        bookingSubmitBtn.title = '';
+                    }
+                }
+            },
+            
+            // Check waiver before form submission
+            checkBeforeSubmit: function(e) {
+                const saved = localStorage.getItem(WaiverModal.STORAGE_KEY);
+                const isSigned = saved && JSON.parse(saved).accepted;
+                
+                if (!isSigned) {
+                    e.preventDefault();
+                    
+                    // Show inline error
+                    const errorDiv = document.getElementById('bookingWaiverError');
+                    if (errorDiv) {
+                        errorDiv.style.display = 'block';
+                        errorDiv.innerHTML = '✗ You must sign the Liability Waiver before completing your booking.';
+                    }
+                    
+                    // Open the modal
+                    WaiverModal.open();
+                    
+                    return false;
+                }
+                return true;
+            },
+            
+            // Bind event listeners
+            bindEvents: function() {
+                // Open modal button
+                const openBtn = document.getElementById('openWaiverBtn');
+                if (openBtn) {
+                    openBtn.addEventListener('click', () => this.open());
+                }
+                
+                // Close modal button
+                const closeBtn = document.getElementById('closeWaiverModal');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.close());
+                }
+                
+                // Sign button
+                const signBtn = document.getElementById('signWaiverBtn');
+                if (signBtn) {
+                    signBtn.addEventListener('click', () => this.sign());
+                }
+                
+                // Close on backdrop click
+                const modal = document.getElementById('waiverModal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            this.close();
+                        }
+                    });
+                }
+                
+                // Close on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.close();
+                    }
+                });
+                
+                // Gate booking form submission
+                // REPLACE THIS SELECTOR IF NEEDED
+                const bookingForm = document.getElementById('bookingForm') ||
+                                   document.querySelector('.booking-form');
+                if (bookingForm) {
+                    bookingForm.addEventListener('submit', this.checkBeforeSubmit);
+                }
+            },
+            
+            // Clear saved waiver (for testing/admin)
+            clear: function() {
+                localStorage.removeItem(this.STORAGE_KEY);
+                this.updateUI();
+                if (typeof BookingGate !== 'undefined') {
+                    BookingGate.updateSubmitButton();
+                }
+                // Reset form fields
+                const checkbox = document.getElementById('waiverCheckbox');
+                const fullName = document.getElementById('waiverFullName');
+                const signature = document.getElementById('waiverSignature');
+                const date = document.getElementById('waiverDate');
+                if (checkbox) checkbox.checked = false;
+                if (fullName) fullName.value = '';
+                if (signature) signature.value = '';
+                if (date) date.value = '';
+            }
+        };
+
+        // ============================================
+        // PARTY DECOR & RENTALS AGREEMENT MODAL SYSTEM
+        // ============================================
+        
+        const ContractModal = {
+            // Storage key for localStorage
+            STORAGE_KEY: 'partypalace_contract_signed',
+            
+            // Initialize the contract system
+            init: function() {
+                this.loadSavedState();
+                this.bindEvents();
+                this.updateUI();
+            },
+            
+            // Open the modal
+            open: function() {
+                const modal = document.getElementById('contractModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    // Focus the modal for accessibility
+                    modal.querySelector('.waiver-modal-content').focus();
+                }
+            },
+            
+            // Close the modal
+            close: function() {
+                const modal = document.getElementById('contractModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+            },
+            
+            // Normalize string for comparison (lowercase, trim, collapse spaces)
+            normalizeString: function(str) {
+                return str.toLowerCase().trim().replace(/\s+/g, ' ');
+            },
+            
+            // Validate the contract form
+            validate: function() {
+                const checkbox = document.getElementById('contractCheckbox');
+                const fullName = document.getElementById('contractFullName');
+                const signature = document.getElementById('contractSignature');
+                const eventDate = document.getElementById('contractEventDate');
+                const date = document.getElementById('contractDate');
+                const errorDiv = document.getElementById('contractError');
+                
+                let errors = [];
+                
+                // Check checkbox
+                if (!checkbox.checked) {
+                    errors.push('You must agree to the Party Decor & Rentals Agreement');
+                }
+                
+                // Check full name
+                if (!fullName.value.trim()) {
+                    errors.push('Please enter your full name');
+                }
+                
+                // Check signature (must not be empty AND must match full name)
+                if (!signature.value.trim()) {
+                    errors.push('Please type your signature');
+                } else if (fullName.value.trim() && this.normalizeString(signature.value) !== this.normalizeString(fullName.value)) {
+                    errors.push('Typed signature must match your full name exactly');
+                }
+                
+                // Check event date
+                if (!eventDate.value) {
+                    errors.push('Please select your event date');
+                }
+                
+                // Check today's date
+                if (!date.value) {
+                    errors.push('Please select today\'s date');
+                }
+                
+                // Show errors or proceed
+                if (errors.length > 0) {
+                    errorDiv.innerHTML = '✗ ' + errors.join('<br>✗ ');
+                    errorDiv.style.display = 'block';
+                    return false;
+                }
+                
+                errorDiv.style.display = 'none';
+                return true;
+            },
+            
+            // Sign the contract
+            sign: function() {
+                if (!this.validate()) {
+                    return;
+                }
+                
+                const fullName = document.getElementById('contractFullName').value.trim();
+                const signature = document.getElementById('contractSignature').value.trim();
+                const eventDate = document.getElementById('contractEventDate').value;
+                const date = document.getElementById('contractDate').value;
+                
+                // Save to localStorage
+                const contractData = {
+                    accepted: true,
+                    name: fullName,
+                    signature: signature,
+                    eventDate: eventDate,
+                    date: date,
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(contractData));
+                
+                // Update hidden form inputs
+                this.updateHiddenInputs(contractData);
+                
+                // Update UI (both contract and booking button)
+                this.updateUI();
+                BookingGate.updateSubmitButton();
+                
+                // Close modal
+                this.close();
+            },
+            
+            // Load saved state from localStorage
+            loadSavedState: function() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const contractData = JSON.parse(saved);
+                        if (contractData.accepted) {
+                            this.updateHiddenInputs(contractData);
+                            // Pre-fill form fields
+                            const fullName = document.getElementById('contractFullName');
+                            const signature = document.getElementById('contractSignature');
+                            const eventDate = document.getElementById('contractEventDate');
+                            const date = document.getElementById('contractDate');
+                            const checkbox = document.getElementById('contractCheckbox');
+                            
+                            if (fullName) fullName.value = contractData.name || '';
+                            if (signature) signature.value = contractData.signature || '';
+                            if (eventDate) eventDate.value = contractData.eventDate || '';
+                            if (date) date.value = contractData.date || '';
+                            if (checkbox) checkbox.checked = true;
+                        }
+                    } catch (e) {
+                        console.error('Error loading contract state:', e);
+                    }
+                }
+            },
+            
+            // Update hidden form inputs
+            updateHiddenInputs: function(data) {
+                const inputs = {
+                    'contract_accepted': data.accepted ? 'true' : 'false',
+                    'contract_name': data.name || '',
+                    'contract_signature': data.signature || '',
+                    'contract_date': data.date || '',
+                    'contract_event_date': data.eventDate || ''
+                };
+                
+                for (const [id, value] of Object.entries(inputs)) {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.value = value;
+                    }
+                }
+            },
+            
+            // Update UI based on signed state
+            updateUI: function() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                const isSigned = saved && JSON.parse(saved).accepted;
+                
+                // Update contract status indicator
+                const statusIndicator = document.getElementById('contractStatus');
+                if (statusIndicator) {
+                    if (isSigned) {
+                        statusIndicator.innerHTML = '<span style="color: #059669;">✓ Contract Signed</span>';
+                        statusIndicator.className = 'waiver-status signed';
+                    } else {
+                        statusIndicator.innerHTML = '<span style="color: #DC2626;">⚠ Contract Required</span>';
+                        statusIndicator.className = 'waiver-status unsigned';
+                    }
+                }
+            },
+            
+            // Bind event listeners
+            bindEvents: function() {
+                // Open modal button
+                const openBtn = document.getElementById('openContractBtn');
+                if (openBtn) {
+                    openBtn.addEventListener('click', () => this.open());
+                }
+                
+                // Close modal button
+                const closeBtn = document.getElementById('closeContractModal');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.close());
+                }
+                
+                // Sign button
+                const signBtn = document.getElementById('signContractBtn');
+                if (signBtn) {
+                    signBtn.addEventListener('click', () => this.sign());
+                }
+                
+                // Close on backdrop click
+                const modal = document.getElementById('contractModal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            this.close();
+                        }
+                    });
+                }
+                
+                // Close on Escape key (shared with waiver modal)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.close();
+                    }
+                });
+            },
+            
+            // Clear saved contract (for testing/admin)
+            clear: function() {
+                localStorage.removeItem(this.STORAGE_KEY);
+                this.updateUI();
+                BookingGate.updateSubmitButton();
+                // Reset form fields
+                const checkbox = document.getElementById('contractCheckbox');
+                const fullName = document.getElementById('contractFullName');
+                const signature = document.getElementById('contractSignature');
+                const eventDate = document.getElementById('contractEventDate');
+                const date = document.getElementById('contractDate');
+                if (checkbox) checkbox.checked = false;
+                if (fullName) fullName.value = '';
+                if (signature) signature.value = '';
+                if (eventDate) eventDate.value = '';
+                if (date) date.value = '';
+            }
+        };
+
+        // ============================================
+        // BOOKING GATE - REQUIRES BOTH DOCUMENTS SIGNED
+        // ============================================
+        
+        const BookingGate = {
+            // Check if waiver is signed
+            isWaiverSigned: function() {
+                const saved = localStorage.getItem(WaiverModal.STORAGE_KEY);
+                return saved && JSON.parse(saved).accepted;
+            },
+            
+            // Check if contract is signed
+            isContractSigned: function() {
+                const saved = localStorage.getItem(ContractModal.STORAGE_KEY);
+                return saved && JSON.parse(saved).accepted;
+            },
+            
+            // Check if both documents are signed
+            areBothSigned: function() {
+                return this.isWaiverSigned() && this.isContractSigned();
+            },
+            
+            // Update the booking submit button state
+            updateSubmitButton: function() {
+                // REPLACE THIS SELECTOR IF NEEDED - targets booking form submit button
+                const bookingSubmitBtn = document.getElementById('bookingSubmitBtn') || 
+                                         document.querySelector('.booking-form button[type="submit"]') ||
+                                         document.querySelector('#bookingForm button[type="submit"]');
+                
+                const bothSigned = this.areBothSigned();
+                
+                if (bookingSubmitBtn) {
+                    bookingSubmitBtn.disabled = !bothSigned;
+                    if (!bothSigned) {
+                        bookingSubmitBtn.classList.add('btn-disabled');
+                        let missingDocs = [];
+                        if (!this.isContractSigned()) missingDocs.push('Party Decor Agreement');
+                        if (!this.isWaiverSigned()) missingDocs.push('Liability Waiver');
+                        bookingSubmitBtn.title = 'Please sign: ' + missingDocs.join(' and ');
+                    } else {
+                        bookingSubmitBtn.classList.remove('btn-disabled');
+                        bookingSubmitBtn.title = '';
+                    }
+                }
+            },
+            
+            // Check before form submission - opens missing modal
+            checkBeforeSubmit: function(e) {
+                const contractSigned = BookingGate.isContractSigned();
+                const waiverSigned = BookingGate.isWaiverSigned();
+                
+                if (!contractSigned || !waiverSigned) {
+                    e.preventDefault();
+                    
+                    // Show inline error
+                    const errorDiv = document.getElementById('bookingDocumentsError');
+                    if (errorDiv) {
+                        let missingDocs = [];
+                        if (!contractSigned) missingDocs.push('Party Decor & Rentals Agreement');
+                        if (!waiverSigned) missingDocs.push('Liability Waiver');
+                        errorDiv.style.display = 'block';
+                        errorDiv.innerHTML = '✗ You must sign the following before completing your booking:<br>• ' + missingDocs.join('<br>• ');
+                    }
+                    
+                    // Open the first missing document's modal (contract first, then waiver)
+                    if (!contractSigned) {
+                        ContractModal.open();
+                    } else if (!waiverSigned) {
+                        WaiverModal.open();
+                    }
+                    
+                    return false;
+                }
+                return true;
+            },
+            
+            // Initialize booking gate
+            init: function() {
+                this.updateSubmitButton();
+                
+                // Gate booking form submission
+                // REPLACE THIS SELECTOR IF NEEDED
+                const bookingForm = document.getElementById('bookingForm') ||
+                                   document.querySelector('.booking-form');
+                if (bookingForm) {
+                    // Remove old single-document check if exists
+                    bookingForm.removeEventListener('submit', WaiverModal.checkBeforeSubmit);
+                    // Add dual-document check
+                    bookingForm.addEventListener('submit', this.checkBeforeSubmit);
+                }
+            }
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        // Initialize all systems when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCatalog();
+            renderServices();
+            WaiverModal.init();
+            ContractModal.init();
+            BookingGate.init();
+        });
+        
+        // Also run immediately if DOM already loaded
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            WaiverModal.init();
+            ContractModal.init();
+            BookingGate.init();
+        }
+    </script>
+</body>
+</html>
+       
