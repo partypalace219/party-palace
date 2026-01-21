@@ -257,8 +257,8 @@
                         <div class="product-name">${product.name}</div>
                         <div class="product-description">${product.description}</div>
                         <div class="product-price">
-                            $${product.price}
-                            <span class="product-price-label">${product.priceLabel}</span>
+                            <span class="product-price-label">Starting at</span>
+                            <span class="product-price-amount">$${product.price}</span>
                         </div>
                         <button onclick="event.stopPropagation(); inquireProduct('${product.name}')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         <button onclick="event.stopPropagation(); navigateToProduct('${productSlug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
@@ -352,7 +352,8 @@
                         <span class="product-detail-category">${categoryLabels[product.category] || product.category}</span>
                         <h1 class="product-detail-title">${product.name}</h1>
                         <div class="product-detail-price">
-                            $${product.price} <span class="label">${product.priceLabel}</span>
+                            <span class="label">Starting at</span>
+                            <span class="amount">$${product.price}</span>
                         </div>
                         <p class="product-detail-description">${product.description}</p>
                         

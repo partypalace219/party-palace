@@ -676,14 +676,18 @@
             }
         }
         .product-detail-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
+            display: flex;
+            flex-direction: column;
         }
         .product-detail-price .label {
             font-size: 1rem;
             font-weight: 400;
             color: var(--gray-600);
+        }
+        .product-detail-price .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
         }
         .product-detail-description {
             font-size: 1.1rem;
@@ -1195,22 +1199,27 @@
         }
         
         .product-price {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--gray-900);
+            display: flex;
+            flex-direction: column;
             margin-bottom: 1rem;
         }
-        
-        @media (min-width: 768px) {
-            .product-price {
-                font-size: 1.5rem;
-            }
-        }
-        
+
         .product-price-label {
             font-size: 0.875rem;
             color: var(--gray-600);
             font-weight: 400;
+        }
+
+        .product-price-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        @media (min-width: 768px) {
+            .product-price-amount {
+                font-size: 1.75rem;
+            }
         }
         
         /* Catalog Filters */
