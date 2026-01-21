@@ -37,12 +37,10 @@
                     });
                 }
 
-                // Set popular products
+                // Set popular products (override database values)
                 const popularProducts = ['Specialty Arch', 'Chiara Arch', 'Spiral Columns', 'Flower Walls', 'Balloon Centerpieces', 'Vases'];
                 products.forEach(product => {
-                    if (popularProducts.includes(product.name)) {
-                        product.popular = true;
-                    }
+                    product.popular = popularProducts.includes(product.name);
                 });
                 
                 console.log('Loaded', products.length, 'products from Supabase');
