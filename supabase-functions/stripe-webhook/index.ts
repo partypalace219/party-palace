@@ -1,15 +1,22 @@
 // Supabase Edge Function: stripe-webhook
-// Handles Stripe webhook events and sends confirmation emails
+// Handles Stripe webhook events and sends confirmation emails via SMTP
 // Deploy this via Supabase Dashboard > Edge Functions > Create Function
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import Stripe from 'https://esm.sh/stripe@13.6.0?target=deno'
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
   apiVersion: '2023-10-16',
 })
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+// SMTP Configuration - Use Gmail SMTP
+// For Gmail, you need to use an App Password (not your regular password)
+// Go to: Google Account > Security > 2-Step Verification > App passwords
+const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
+const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
+const SMTP_USER = Deno.env.get('SMTP_USER') // Your Gmail address: partypalace.in@gmail.com
+const SMTP_PASS = Deno.env.get('SMTP_PASS') // Your Gmail App Password
 
 serve(async (req) => {
   const signature = req.headers.get('stripe-signature')
@@ -40,34 +47,39 @@ serve(async (req) => {
       const depositAmount = metadata.deposit_amount || '50'
       const notes = metadata.notes || ''
 
-      // Send confirmation email to customer
-      if (customerEmail && RESEND_API_KEY) {
-        await sendConfirmationEmail({
-          to: customerEmail,
-          customerName,
-          customerPhone,
-          eventDate,
-          eventType,
-          venue,
-          orderItems,
-          estimatedTotal,
-          depositAmount,
-          notes,
-        })
+      // Send emails if SMTP is configured
+      if (customerEmail && SMTP_USER && SMTP_PASS) {
+        try {
+          // Send confirmation email to customer
+          await sendConfirmationEmail({
+            to: customerEmail,
+            customerName,
+            customerPhone,
+            eventDate,
+            eventType,
+            venue,
+            orderItems,
+            estimatedTotal,
+            depositAmount,
+            notes,
+          })
 
-        // Also send notification to business
-        await sendBusinessNotification({
-          customerEmail,
-          customerName,
-          customerPhone,
-          eventDate,
-          eventType,
-          venue,
-          orderItems,
-          estimatedTotal,
-          depositAmount,
-          notes,
-        })
+          // Also send notification to business
+          await sendBusinessNotification({
+            customerEmail,
+            customerName,
+            customerPhone,
+            eventDate,
+            eventType,
+            venue,
+            orderItems,
+            estimatedTotal,
+            depositAmount,
+            notes,
+          })
+        } catch (emailError) {
+          console.error('Email sending error:', emailError)
+        }
       }
     }
 
@@ -80,6 +92,20 @@ serve(async (req) => {
     return new Response(`Webhook Error: ${error.message}`, { status: 400 })
   }
 })
+
+async function getSmtpClient() {
+  return new SMTPClient({
+    connection: {
+      hostname: SMTP_HOST,
+      port: SMTP_PORT,
+      tls: true,
+      auth: {
+        username: SMTP_USER!,
+        password: SMTP_PASS!,
+      },
+    },
+  })
+}
 
 async function sendConfirmationEmail(data: {
   to: string
@@ -104,12 +130,11 @@ async function sendConfirmationEmail(data: {
     .content { padding: 30px; background: #f9f9f9; }
     .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .section h2 { color: #667eea; margin-top: 0; font-size: 18px; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
-    .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .detail-row { padding: 8px 0; border-bottom: 1px solid #eee; }
     .detail-label { font-weight: bold; color: #666; }
-    .highlight { background: #667eea; color: white; padding: 15px; border-radius: 8px; text-align: center; }
+    .highlight { background: #667eea; color: white; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0; }
     .highlight .amount { font-size: 32px; font-weight: bold; }
     .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
-    .cta { background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 15px; }
   </style>
 </head>
 <body>
@@ -130,16 +155,13 @@ async function sendConfirmationEmail(data: {
     <div class="section">
       <h2>Event Details</h2>
       <div class="detail-row">
-        <span class="detail-label">Event Type:</span>
-        <span>${data.eventType || 'To be confirmed'}</span>
+        <span class="detail-label">Event Type:</span> ${data.eventType || 'To be confirmed'}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Event Date:</span>
-        <span>${data.eventDate || 'To be confirmed'}</span>
+        <span class="detail-label">Event Date:</span> ${data.eventDate || 'To be confirmed'}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Venue:</span>
-        <span>${data.venue || 'To be confirmed'}</span>
+        <span class="detail-label">Venue:</span> ${data.venue || 'To be confirmed'}
       </div>
     </div>
 
@@ -189,25 +211,19 @@ async function sendConfirmationEmail(data: {
 </html>
   `
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'Party Palace <bookings@partypalace.in>',
+  const client = await getSmtpClient()
+
+  try {
+    await client.send({
+      from: `Party Palace <${SMTP_USER}>`,
       to: data.to,
       subject: 'Booking Confirmed - Party Palace',
+      content: 'Your booking has been confirmed!',
       html: emailHtml,
-    }),
-  })
-
-  if (!response.ok) {
-    const error = await response.text()
-    console.error('Failed to send customer email:', error)
-  } else {
+    })
     console.log('Confirmation email sent to:', data.to)
+  } finally {
+    await client.close()
   }
 }
 
@@ -278,24 +294,18 @@ async function sendBusinessNotification(data: {
 </html>
   `
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'Party Palace Bookings <bookings@partypalace.in>',
-      to: 'partypalace.in@gmail.com',
-      subject: `New Booking: ${data.customerName} - ${data.eventType || 'Event'}`,
-      html: emailHtml,
-    }),
-  })
+  const client = await getSmtpClient()
 
-  if (!response.ok) {
-    const error = await response.text()
-    console.error('Failed to send business notification:', error)
-  } else {
+  try {
+    await client.send({
+      from: `Party Palace Bookings <${SMTP_USER}>`,
+      to: SMTP_USER!, // Send to yourself
+      subject: `New Booking: ${data.customerName} - ${data.eventType || 'Event'}`,
+      content: `New booking from ${data.customerName}`,
+      html: emailHtml,
+    })
     console.log('Business notification sent')
+  } finally {
+    await client.close()
   }
 }
