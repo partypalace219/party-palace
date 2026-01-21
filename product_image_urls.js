@@ -75,9 +75,14 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic12.jpeg',  // 752x690, 61KB
     ],
     'Specialty Arch': [
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty2.jpeg',  // 1600x1200, 158KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty1.jpeg',  // 1600x1200, 140KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/speicalty3.jpeg',  // 1600x1200, 136KB
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty2.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty3.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty4.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty5.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty6.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty7.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty8.jpeg',
     ],
     'Spiral Columns': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns1.jpeg',  // 1500x2000, 494KB
