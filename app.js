@@ -231,11 +231,11 @@
             
             // Check if product has real images
             const hasImages = product.images && product.images.length > 0;
-            const imageContent = hasImages 
-                ? `<img src="${product.images[0]}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+            const imageContent = hasImages
+                ? `<img src="${product.images[0]}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">`
                 : `<span>${product.icon}</span>`;
-            const imageStyle = hasImages 
-                ? 'overflow: hidden;' 
+            const imageStyle = hasImages
+                ? 'overflow: hidden;'
                 : `background: ${gradients[product.category]}`;
             
             return `
