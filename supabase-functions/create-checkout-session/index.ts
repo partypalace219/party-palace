@@ -20,20 +20,49 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     })
 
-    const { items, customerInfo } = await req.json()
+    const { items, customerInfo, paymentType, depositAmount } = await req.json()
 
-    // Build line items from cart
-    const lineItems = items.map((item: any) => ({
-      price_data: {
-        currency: 'usd',
-        product_data: {
-          name: item.name,
-          images: item.image ? [item.image] : [],
+    // Determine if this is a deposit or full payment
+    const isDeposit = paymentType === 'deposit'
+
+    let lineItems: any[]
+
+    if (isDeposit) {
+      // For deposit: create a single line item for the deposit amount
+      const itemNames = items.map((item: any) => item.name).join(', ')
+      const fullTotal = items.reduce((sum: number, item: any) => sum + item.price, 0)
+      const remainingBalance = fullTotal - depositAmount
+
+      lineItems = [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Booking Deposit',
+            description: `Deposit for: ${itemNames}. Remaining balance: $${remainingBalance} due after design confirmation.`,
+          },
+          unit_amount: Math.round(depositAmount * 100), // Stripe uses cents
         },
-        unit_amount: Math.round(item.price * 100), // Stripe uses cents
-      },
-      quantity: 1,
-    }))
+        quantity: 1,
+      }]
+    } else {
+      // For full payment: create line items for each cart item
+      lineItems = items.map((item: any) => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.name,
+            images: item.image ? [item.image] : [],
+          },
+          unit_amount: Math.round(item.price * 100), // Stripe uses cents
+        },
+        quantity: 1,
+      }))
+    }
+
+    // Calculate totals for metadata
+    const fullTotal = items.reduce((sum: number, item: any) => sum + item.price, 0)
+    const amountPaid = isDeposit ? depositAmount : fullTotal
+    const remainingBalance = isDeposit ? fullTotal - depositAmount : 0
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -50,6 +79,11 @@ serve(async (req) => {
         event_type: customerInfo.eventType,
         venue: customerInfo.venue || '',
         notes: customerInfo.notes || '',
+        payment_type: isDeposit ? 'deposit' : 'full',
+        order_items: items.map((item: any) => item.name).join(', '),
+        full_total: fullTotal.toString(),
+        amount_paid: amountPaid.toString(),
+        remaining_balance: remainingBalance.toString(),
       },
     })
 

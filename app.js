@@ -182,9 +182,13 @@
             renderCheckoutItems();
         }
 
+        // Deposit amount constant
+        const DEPOSIT_AMOUNT = 50;
+
         function renderCheckoutItems() {
             const container = document.getElementById('checkoutItems');
             const totalEl = document.getElementById('checkoutTotal');
+            const fullAmountEl = document.getElementById('fullAmount');
 
             if (!container) return;
 
@@ -195,8 +199,89 @@
                 </div>
             `).join('');
 
+            const total = getCartTotal();
+
             if (totalEl) {
-                totalEl.textContent = '$' + getCartTotal();
+                totalEl.textContent = '$' + total;
+            }
+
+            // Update full amount display in payment options
+            if (fullAmountEl) {
+                fullAmountEl.textContent = '$' + total;
+            }
+
+            // Update button text based on current selection
+            updatePaymentButtonText();
+        }
+
+        // Handle payment option selection
+        function updatePaymentOption(radio) {
+            // Update visual selection
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            radio.closest('.payment-option').classList.add('selected');
+
+            // Update button text
+            updatePaymentButtonText();
+        }
+
+        // Update button text based on selected payment option
+        function updatePaymentButtonText() {
+            const btnText = document.getElementById('checkoutBtnText');
+            const selectedOption = document.querySelector('input[name="paymentOption"]:checked');
+
+            if (!btnText || !selectedOption) return;
+
+            if (selectedOption.value === 'deposit') {
+                btnText.textContent = `Pay Deposit - $${DEPOSIT_AMOUNT}`;
+            } else {
+                btnText.textContent = `Pay Full Amount - $${getCartTotal()}`;
+            }
+        }
+
+        // Display order summary on success page
+        function displaySuccessOrderSummary(orderInfo) {
+            const summaryEl = document.getElementById('successOrderSummary');
+            const messageEl = document.getElementById('successPaymentMessage');
+            const amountPaidEl = document.getElementById('successAmountPaid');
+            const orderTotalEl = document.getElementById('successOrderTotal');
+            const remainingBalanceEl = document.getElementById('successRemainingBalance');
+            const balanceRowEl = document.getElementById('successBalanceRow');
+            const balanceNoteEl = document.getElementById('successBalanceNote');
+            const balanceStepEl = document.getElementById('successBalanceStep');
+
+            if (!summaryEl) return;
+
+            const isDeposit = orderInfo.paymentType === 'deposit';
+
+            // Update message based on payment type
+            if (messageEl) {
+                if (isDeposit) {
+                    messageEl.textContent = 'Your deposit has been received. Your booking is now secured!';
+                } else {
+                    messageEl.textContent = 'Your full payment has been processed successfully.';
+                }
+            }
+
+            // Show the summary section
+            summaryEl.style.display = 'block';
+
+            // Update amounts
+            if (amountPaidEl) amountPaidEl.textContent = '$' + orderInfo.amountPaid;
+            if (orderTotalEl) orderTotalEl.textContent = '$' + orderInfo.total;
+
+            // Handle remaining balance display
+            if (isDeposit && orderInfo.remainingBalance > 0) {
+                if (remainingBalanceEl) remainingBalanceEl.textContent = '$' + orderInfo.remainingBalance;
+                if (balanceRowEl) balanceRowEl.style.display = 'flex';
+                if (balanceNoteEl) balanceNoteEl.style.display = 'block';
+                if (balanceStepEl) balanceStepEl.style.display = 'list-item';
+            } else {
+                // Full payment - hide balance-related elements
+                if (balanceRowEl) balanceRowEl.style.display = 'none';
+                if (balanceNoteEl) balanceNoteEl.style.display = 'none';
+                if (balanceStepEl) balanceStepEl.style.display = 'none';
             }
         }
 
@@ -228,6 +313,10 @@
             const btnText = document.getElementById('checkoutBtnText');
             const btnLoading = document.getElementById('checkoutBtnLoading');
 
+            // Get selected payment option
+            const paymentOption = document.querySelector('input[name="paymentOption"]:checked')?.value || 'deposit';
+            const isDeposit = paymentOption === 'deposit';
+
             const formData = {
                 name: document.getElementById('checkoutName').value,
                 email: document.getElementById('checkoutEmail').value,
@@ -237,7 +326,10 @@
                 venue: document.getElementById('checkoutVenue').value,
                 notes: document.getElementById('checkoutNotes').value,
                 items: cart.map(item => `${item.name} ($${item.price})`).join(', '),
-                total: getCartTotal()
+                total: getCartTotal(),
+                paymentType: isDeposit ? 'deposit' : 'full',
+                amountPaid: isDeposit ? DEPOSIT_AMOUNT : getCartTotal(),
+                remainingBalance: isDeposit ? getCartTotal() - DEPOSIT_AMOUNT : 0
             };
 
             // Validate cart is not empty
@@ -255,19 +347,6 @@
                 // Store order info in localStorage for retrieval after payment
                 localStorage.setItem('partyPalaceOrderInfo', JSON.stringify(formData));
 
-                // Build line items for Stripe Checkout
-                const lineItems = cart.map(item => ({
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: item.name,
-                            description: `Event: ${formData.eventType} on ${formData.eventDate}`,
-                        },
-                        unit_amount: Math.round(item.price * 100), // Stripe uses cents
-                    },
-                    quantity: 1,
-                }));
-
                 // Create Checkout Session via Supabase Edge Function
                 const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/create-checkout-session', {
                     method: 'POST',
@@ -277,7 +356,9 @@
                     },
                     body: JSON.stringify({
                         items: cart,
-                        customerInfo: formData
+                        customerInfo: formData,
+                        paymentType: isDeposit ? 'deposit' : 'full',
+                        depositAmount: DEPOSIT_AMOUNT
                     })
                 });
 
@@ -477,8 +558,17 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 }
             }
 
-            // Handle checkout success - clear cart and show success page
+            // Handle checkout success - show success page with order details
             if (hash === 'checkout-success') {
+                // Get order info before clearing
+                const orderInfo = JSON.parse(localStorage.getItem('partyPalaceOrderInfo') || '{}');
+
+                // Display order summary if available
+                if (orderInfo.paymentType) {
+                    displaySuccessOrderSummary(orderInfo);
+                }
+
+                // Clear cart and order info
                 clearCart();
                 localStorage.removeItem('partyPalaceOrderInfo');
                 navigate('checkout-success', false);
