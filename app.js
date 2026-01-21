@@ -608,8 +608,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             
             const hasImages = product.images && product.images.length > 0;
             const gradient = gradients[product.category] || 'linear-gradient(135deg, #667eea, #764ba2)';
-            const backPage = getCategoryPage(product.category);
-            const backLabel = categoryLabels[product.category] || 'Back';
+            const backPage = 'partydecor';
+            const backLabel = 'Party Decor';
             
             // Generate main image (clickable to open lightbox)
             const mainImage = hasImages
