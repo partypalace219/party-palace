@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Diagnostic</title>
+</head>
+<body>
+    <h1>Checking JavaScript Files...</h1>
+    <div id="results"></div>
+
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        results.innerHTML = '<p style="color: green;">✓ Supabase CDN loaded</p>';
+
+        if (typeof supabaseClient !== 'undefined') {
+            results.innerHTML += '<p style="color: green;">✓ supabaseClient defined</p>';
+        } else {
+            results.innerHTML += '<p style="color: red;">✗ supabaseClient NOT defined</p>';
+        }
+    </script>
+
+    <!-- Load app.js -->
+    <script src="app.js"></script>
+    <script>
+        if (typeof navigate !== 'undefined') {
+            results.innerHTML += '<p style="color: green;">✓ navigate function defined</p>';
+        } else {
+            results.innerHTML += '<p style="color: red;">✗ navigate function NOT defined</p>';
+        }
+
+        results.innerHTML += '<p><strong>If you see red X marks above, there are JavaScript errors. Check browser console (F12) for details.</strong></p>';
+    </script>
+</body>
+</html>

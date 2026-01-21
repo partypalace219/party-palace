@@ -1,0 +1,14 @@
+{
+  "name": "party-palace",
+  "version": "1.0.0",
+  "description": "Party Palace - Event Decoration & Rental Services",
+  "scripts": {
+    "start": "npx serve -s . -l 3000"
+  },
+  "keywords": ["party", "decorations", "events", "balloons"],
+  "author": "Party Palace",
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
