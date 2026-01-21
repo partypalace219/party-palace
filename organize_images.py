@@ -23,7 +23,7 @@ folder_mapping = {
     'shimmer-wall': {'name': 'Shimmer Walls', 'prefix': 'shimmer'},
     'flower-wall': {'name': 'Flower Walls', 'prefix': 'flower'},
     'organic-arch': {'name': 'Organic Arch', 'prefix': 'organic'},
-    'speciality-columns': {'name': 'Specialty Columns', 'prefix': 'speciality'},
+    'specialty-arch': {'name': 'Specialty Arch', 'prefix': 'specialty'},
     'Columns': {'name': 'Spiral Columns', 'prefix': 'columns'}
 }
 

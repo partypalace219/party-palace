@@ -20,7 +20,7 @@ INSERT INTO products (name, category, description, price, price_label, featured,
 ('Diaper Cakes', 'centerpieces', 'Adorable diaper cake centerpieces for baby showers. Custom themed designs with practical gifts inside.', 15.0, 'starting at', true, '🍼'),
 ('Spiral Columns', 'columns', 'Classic spiral balloon columns with alternating colors. Perfect for framing entrances and stages.', 60.0, 'starting at', true, '🌀'),
 ('Organic Columns', 'columns', 'Modern organic balloon columns with flowing, natural asymmetric design. Trendy statement pieces.', 90.0, 'starting at', false, '🎈'),
-('Specialty Columns', 'columns', 'Custom specialty columns with unique designs, premium materials, and personalized elements.', 100.0, 'starting at', true, '✨'),
+('Specialty Arch', 'arches', 'Custom specialty arch with unique designs, premium materials, and personalized elements.', 300.0, 'starting at', true, '✨'),
 ('Balloon Walls', 'walls', 'Custom balloon wall backdrops in any color scheme. Eye-catching statement pieces for photos and decor.', 300.0, 'starting at', true, '🎈'),
 ('Flower Walls', 'walls', 'Beautiful artificial flower wall backdrops. Romantic and luxurious for weddings and special events.', 275.0, 'starting at', true, '🌸'),
 ('Shimmer Walls', 'walls', 'Stunning shimmer wall backdrops with reflective panels. Perfect for photos and creating elegant ambiance.', 275.0, 'starting at', true, '✨'),
@@ -176,9 +176,9 @@ SELECT id, 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/pr
 UNION ALL
 SELECT id, 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic14.jpeg', 14 FROM products WHERE name = 'Organic Arch';
 
--- Specialty Columns images
+-- Specialty Arch images
 INSERT INTO product_images (product_id, image_url, display_order)
-SELECT id, 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/speciality-columns/speciality1.jpeg', 1 FROM products WHERE name = 'Specialty Columns';
+SELECT id, 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty1.jpeg', 1 FROM products WHERE name = 'Specialty Arch';
 
 -- Done!
 SELECT 'Database setup complete! Products and images have been loaded.' AS status;
