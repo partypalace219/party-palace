@@ -1514,7 +1514,16 @@
             font-size: 0.875rem;
             color: rgba(255, 255, 255, 0.5);
         }
-        
+
+        /* Footer TikTok icon - white default, black on hover */
+        .footer-social .social-icon[title="TikTok"] {
+            color: #FFFFFF;
+        }
+
+        .footer-social .social-icon[title="TikTok"]:hover {
+            color: #000000;
+        }
+
         /* ============================================
            LIABILITY WAIVER MODAL STYLES
            ============================================ */
