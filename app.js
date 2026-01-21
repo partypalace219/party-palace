@@ -100,6 +100,8 @@
                 renderCatalog();
             } else if (page === 'services') {
                 renderServices();
+            } else if (page === 'gallery') {
+                renderGallery();
             }
             
             // ============================================
@@ -1151,6 +1153,118 @@
         };
 
         // ============================================
+        // GALLERY WITH LIGHTBOX
+        // ============================================
+
+        function renderGallery() {
+            const galleryGrid = document.querySelector('.gallery-grid');
+            if (!galleryGrid || typeof productGalleryImages === 'undefined') return;
+
+            // Collect all images from all products
+            const allImages = [];
+            for (const [productName, images] of Object.entries(productGalleryImages)) {
+                images.forEach(imageUrl => {
+                    allImages.push({
+                        url: imageUrl,
+                        title: productName,
+                        category: getCategoryForProduct(productName)
+                    });
+                });
+            }
+
+            // Render gallery items
+            galleryGrid.innerHTML = allImages.map((item, index) => `
+                <div class="gallery-item" onclick="openLightbox(${index})">
+                    <img src="${item.url}" alt="${item.title}" loading="lazy">
+                    <div class="gallery-item-overlay">
+                        <p class="gallery-item-title">${item.title}</p>
+                        <p class="gallery-item-category">${item.category}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Store images globally for lightbox
+            window.galleryImages = allImages;
+        }
+
+        function getCategoryForProduct(productName) {
+            const product = products.find(p => p.name === productName);
+            if (!product) return 'Gallery';
+            return categoryLabels[product.category] || 'Gallery';
+        }
+
+        // Lightbox functionality
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            if (!lightbox) {
+                createLightbox();
+            }
+            updateLightboxImage();
+            document.getElementById('lightbox').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function changeLightboxImage(direction) {
+            const images = window.galleryImages || [];
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = images.length - 1;
+            if (currentLightboxIndex >= images.length) currentLightboxIndex = 0;
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            const images = window.galleryImages || [];
+            const image = images[currentLightboxIndex];
+            if (!image) return;
+
+            document.getElementById('lightboxImg').src = image.url;
+            document.getElementById('lightboxTitle').textContent = image.title;
+            document.getElementById('lightboxCategory').textContent = image.category;
+            document.getElementById('lightboxCounter').textContent = `${currentLightboxIndex + 1} / ${images.length}`;
+        }
+
+        function createLightbox() {
+            const lightboxHTML = `
+                <div id="lightbox" class="lightbox" onclick="if(event.target === this) closeLightbox()">
+                    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+                    <button class="lightbox-prev" onclick="event.stopPropagation(); changeLightboxImage(-1)">&#10094;</button>
+                    <div class="lightbox-content">
+                        <img id="lightboxImg" src="" alt="">
+                        <div class="lightbox-caption">
+                            <p id="lightboxTitle"></p>
+                            <p id="lightboxCategory"></p>
+                            <p id="lightboxCounter"></p>
+                        </div>
+                    </div>
+                    <button class="lightbox-next" onclick="event.stopPropagation(); changeLightboxImage(1)">&#10095;</button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', lightboxHTML);
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (document.getElementById('lightbox').style.display === 'flex') {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+                    if (e.key === 'ArrowRight') changeLightboxImage(1);
+                }
+            });
+        }
+
+        // Make functions global
+        window.openLightbox = openLightbox;
+        window.closeLightbox = closeLightbox;
+        window.changeLightboxImage = changeLightboxImage;
+
+        // ============================================
         // INITIALIZATION
         // ============================================
 
@@ -1158,6 +1272,7 @@
         function initializeApp() {
             renderCatalog();
             renderServices();
+            renderGallery();
             WaiverModal.init();
             ContractModal.init();
             BookingGate.init();
