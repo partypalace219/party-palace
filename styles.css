@@ -1909,6 +1909,9 @@
         }
         .social-link.snapchat {
             background: #FFFC00;
+            color: #000000;
+        }
+        .social-link.snapchat svg {
             color: #FFFFFF;
         }
         /* Homepage social section */
