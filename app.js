@@ -378,7 +378,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             // Update nav buttons (desktop and mobile)
             // For product pages, highlight the parent category
             const navPage = page === 'product' ? 'partydecor' : page;
-            document.querySelectorAll('.nav-desktop button[data-page], .mobile-menu button[data-page]').forEach(btn => {
+            document.querySelectorAll('.nav-left button[data-page], .nav-right-links button[data-page], .mobile-menu button[data-page]').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.page === navPage);
             });
             
@@ -666,10 +666,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         
                         <div class="product-detail-cta">
                             <button onclick="addToCart('${product.name}')" class="btn btn-primary">
-                                🛒 Add to Cart
-                            </button>
-                            <button onclick="inquireProduct('${product.name}')" class="btn btn-outline">
-                                ✉️ Request a Quote
+                                Add to Cart
                             </button>
                         </div>
                     </div>
