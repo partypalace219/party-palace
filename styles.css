@@ -140,6 +140,12 @@
             width: auto;
         }
 
+        .logo-img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
         .logo-icon {
             font-size: 1.75rem;
             line-height: 1;
@@ -1196,6 +1202,12 @@
         .footer-logo img {
             height: 60px;
             width: auto;
+        }
+
+        .footer-logo .logo-img {
+            height: 80px;
+            width: auto;
+            filter: brightness(0) invert(1);
         }
 
         .footer-logo .logo-icon {

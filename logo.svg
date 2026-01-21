@@ -1,0 +1,35 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main circle -->
+  <circle cx="200" cy="200" r="180" stroke="#0066FF" stroke-width="4" fill="none"/>
+
+  <!-- Decorative stars/sparkles -->
+  <!-- Top left stars -->
+  <g transform="translate(80, 120)">
+    <path d="M0,-15 L3,-3 L15,0 L3,3 L0,15 L-3,3 L-15,0 L-3,-3 Z" fill="#0066FF"/>
+  </g>
+  <g transform="translate(110, 100)">
+    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#0066FF"/>
+  </g>
+  <g transform="translate(65, 160)">
+    <path d="M0,-12 L2.5,-2.5 L12,0 L2.5,2.5 L0,12 L-2.5,2.5 L-12,0 L-2.5,-2.5 Z" fill="#0066FF"/>
+  </g>
+
+  <!-- Bottom right stars -->
+  <g transform="translate(320, 280)">
+    <path d="M0,-15 L3,-3 L15,0 L3,3 L0,15 L-3,3 L-15,0 L-3,-3 Z" fill="#0066FF"/>
+  </g>
+  <g transform="translate(300, 310)">
+    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#0066FF"/>
+  </g>
+  <g transform="translate(335, 250)">
+    <path d="M0,-12 L2.5,-2.5 L12,0 L2.5,2.5 L0,12 L-2.5,2.5 L-12,0 L-2.5,-2.5 Z" fill="#0066FF"/>
+  </g>
+
+  <!-- Text: Party Palace -->
+  <text x="200" y="190" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#0066FF" text-anchor="middle" font-style="italic">
+    Party
+  </text>
+  <text x="200" y="260" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#0066FF" text-anchor="middle" font-style="italic">
+    Palace
+  </text>
+</svg>
