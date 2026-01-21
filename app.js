@@ -217,11 +217,16 @@
             }, 2500);
         }
 
+        // Initialize Stripe
+        const stripe = Stripe('pk_test_51Ss8GcRqRN4ptpIlzNOiVPtsFZa1NPtmFAKU29aKRxzLKzsabhsNu81Ozn1Kmjv0B6dwN9n22TJPjvKhayF9zg2100EoROvh9I');
+
         async function handleCheckoutSubmit(event) {
             event.preventDefault();
 
             const statusEl = document.getElementById('checkoutFormStatus');
-            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('checkoutSubmitBtn');
+            const btnText = document.getElementById('checkoutBtnText');
+            const btnLoading = document.getElementById('checkoutBtnLoading');
 
             const formData = {
                 name: document.getElementById('checkoutName').value,
@@ -235,15 +240,82 @@
                 total: getCartTotal()
             };
 
+            // Validate cart is not empty
+            if (cart.length === 0) {
+                statusEl.innerHTML = '<div class="form-error">Your cart is empty. Please add items before checkout.</div>';
+                return;
+            }
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
             statusEl.innerHTML = '';
 
             try {
-                // Send to email using EmailJS or your backend
-                // For now, we'll construct a mailto link as fallback
-                const subject = encodeURIComponent(`New Order Request from ${formData.name}`);
-                const body = encodeURIComponent(`
+                // Store order info in localStorage for retrieval after payment
+                localStorage.setItem('partyPalaceOrderInfo', JSON.stringify(formData));
+
+                // Build line items for Stripe Checkout
+                const lineItems = cart.map(item => ({
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: item.name,
+                            description: `Event: ${formData.eventType} on ${formData.eventDate}`,
+                        },
+                        unit_amount: Math.round(item.price * 100), // Stripe uses cents
+                    },
+                    quantity: 1,
+                }));
+
+                // Create Checkout Session via Supabase Edge Function
+                const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
+                    },
+                    body: JSON.stringify({
+                        items: cart,
+                        customerInfo: formData
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const { url } = await response.json();
+
+                // Redirect to Stripe Checkout
+                window.location.href = url;
+
+            } catch (error) {
+                console.error('Checkout error:', error);
+
+                // Fallback: Use email submission if Stripe fails
+                statusEl.innerHTML = `
+                    <div class="form-error">
+                        Payment system temporarily unavailable.
+                        <br><br>
+                        <button type="button" onclick="submitViaEmail()" class="btn btn-outline" style="margin-top: 0.5rem;">
+                            Submit Order via Email Instead
+                        </button>
+                    </div>
+                `;
+
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+
+        // Fallback email submission
+        function submitViaEmail() {
+            const formData = JSON.parse(localStorage.getItem('partyPalaceOrderInfo') || '{}');
+
+            const subject = encodeURIComponent(`New Order Request from ${formData.name}`);
+            const body = encodeURIComponent(`
 New Order Request
 
 Customer Information:
@@ -263,26 +335,16 @@ Estimated Total: $${formData.total}
 
 Additional Notes:
 ${formData.notes || 'None'}
-                `.trim());
 
-                // Open email client with pre-filled data
-                window.location.href = `mailto:partypalace.in@gmail.com?subject=${subject}&body=${body}`;
+NOTE: This order was submitted via email fallback. Payment was not collected online.
+            `.trim());
 
-                statusEl.innerHTML = '<div class="form-success">Opening your email client... If it doesn\'t open, please email us directly at partypalace.in@gmail.com</div>';
+            window.location.href = `mailto:partypalace.in@gmail.com?subject=${subject}&body=${body}`;
 
-                // Clear cart after successful submission
-                clearCart();
+            // Clear cart
+            clearCart();
 
-                setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Order Request';
-                }, 2000);
-
-            } catch (error) {
-                statusEl.innerHTML = '<div class="form-error">Something went wrong. Please try again or contact us directly.</div>';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Order Request';
-            }
+            showNotification('Order submitted via email!', 'success');
         }
         // Navigation
         function navigate(page, addToHistory = true, customHash = null) {
@@ -401,8 +463,8 @@ ${formData.notes || 'None'}
         // On page load, check if there's a hash in the URL and navigate to that page
         function initPageFromHash() {
             const hash = window.location.hash.replace('#', '');
-            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
-            
+            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+
             // Check if it's a product page (hash starts with "product-")
             if (hash && hash.startsWith('product-')) {
                 const slug = hash.replace('product-', '');
@@ -414,7 +476,16 @@ ${formData.notes || 'None'}
                     return;
                 }
             }
-            
+
+            // Handle checkout success - clear cart and show success page
+            if (hash === 'checkout-success') {
+                clearCart();
+                localStorage.removeItem('partyPalaceOrderInfo');
+                navigate('checkout-success', false);
+                history.replaceState({ page: 'checkout-success', hash: hash }, '', window.location.pathname + '#' + hash);
+                return;
+            }
+
             if (hash && validPages.includes(hash)) {
                 // Navigate to the hashed page
                 navigate(hash, false);
