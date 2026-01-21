@@ -139,9 +139,17 @@
             height: 50px;
             width: auto;
         }
-        
+
         .logo-icon {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--blue-primary);
+            letter-spacing: -0.02em;
         }
         
         .nav-desktop {
@@ -1188,6 +1196,17 @@
         .footer-logo img {
             height: 60px;
             width: auto;
+        }
+
+        .footer-logo .logo-icon {
+            font-size: 2rem;
+        }
+
+        .footer-logo .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.02em;
         }
         
         .footer-col h4 {
