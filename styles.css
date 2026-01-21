@@ -106,6 +106,9 @@
         .section-with-image {
             position: relative;
             overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
         }
 
         .section-bg-image {
@@ -124,12 +127,6 @@
             object-position: center 20%;
         }
 
-        .section-with-image {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-        }
-
         .section-bg-image::after {
             content: '';
             position: absolute;
@@ -137,15 +134,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
         }
 
         .section-with-image .container {
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            width: 100%;
         }
 
         .section-with-image .section-header {
+            color: white;
+        }
+
+        .section-with-image .section-header h2 {
             color: white;
         }
 

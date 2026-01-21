@@ -118,15 +118,16 @@
                 </div>
             </div>
         </section>
-        <section class="section section-with-image">
-            <div class="section-bg-image">
-                <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/spiral-arch/spiral1.jpeg" alt="Spiral Arch Decoration">
+        <section class="section" style="position: relative; min-height: 80vh; display: flex; align-items: center; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
+                <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/spiral-arch/spiral1.jpeg" alt="Spiral Arch Decoration" style="width: 100%; height: 100%; object-fit: cover; object-position: center 20%;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4);"></div>
             </div>
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-label">What We Offer</div>
-                    <h2>Complete event decoration solutions</h2>
-                    <p>From balloon arches to full event styling, we handle every detail with professional care.</p>
+            <div class="container" style="position: relative; z-index: 1;">
+                <div class="section-header" style="color: white;">
+                    <div class="section-label" style="color: white;">What We Offer</div>
+                    <h2 style="color: white;">Complete event decoration solutions</h2>
+                    <p style="color: rgba(255,255,255,0.9);">From balloon arches to full event styling, we handle every detail with professional care.</p>
                     <button onclick="navigate('partydecor')" class="btn btn-primary btn-large">Browse Party Decor</button>
                 </div>
             </div>
