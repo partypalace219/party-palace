@@ -276,6 +276,60 @@
             color: var(--blue-primary);
         }
 
+        .nav-social {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-left: 1rem;
+            border-left: 1px solid var(--gray-200);
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.15);
+        }
+
+        /* Instagram - gradient */
+        .social-icon[title="Instagram"] {
+            color: #E4405F;
+        }
+
+        /* Facebook - blue */
+        .social-icon[title="Facebook"] {
+            color: #1877F2;
+        }
+
+        /* TikTok - black/pink */
+        .social-icon[title="TikTok"] {
+            color: #000000;
+        }
+
+        /* WhatsApp - green */
+        .social-icon[title="WhatsApp"] {
+            color: #25D366;
+        }
+
+        /* Snapchat - yellow rounded square with white ghost */
+        .social-icon[title="Snapchat"] {
+            color: #FFFFFF;
+            background: #FFFC00;
+            border-radius: 5px;
+            padding: 2px;
+            width: 24px;
+            height: 24px;
+        }
+
+        .social-icon[title="Snapchat"] svg {
+            width: 18px;
+            height: 18px;
+        }
+
         @media (min-width: 1024px) {
             .nav-left {
                 display: flex;
