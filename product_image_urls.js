@@ -93,10 +93,14 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara6.jpeg',
     ],
     'Spiral Columns': [
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns1.jpeg',  // 1500x2000, 494KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns4.jpeg',  // 1170x1951, 218KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns2.jpeg',  // 1026x1824, 122KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns3.jpeg',  // 1170x1429, 141KB
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/spiral-columns/spiral1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/spiral-columns/spiral2.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/spiral-columns/spiral3.jpeg',
+    ],
+    'Organic Columns': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-columns/organic1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-columns/organic2.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-columns/organic3.jpeg',
     ],
 };
 
