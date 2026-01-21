@@ -84,6 +84,14 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty7.jpeg',
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/specialty-arch/specialty8.jpeg',
     ],
+    'Chiara Arch': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara2.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara3.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara4.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara5.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/chiara-arch/chiara6.jpeg',
+    ],
     'Spiral Columns': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns1.jpeg',  // 1500x2000, 494KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/Columns/columns4.jpeg',  // 1170x1951, 218KB
