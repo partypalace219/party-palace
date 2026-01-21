@@ -47,21 +47,14 @@
                 products = [];
             }
         }
-        
-        // Call loadProducts when page loads
-        loadProducts();
-// Add this code after the products array definition in app.js
-// This attaches Supabase Storage images to products
 
-// Attach images from productGalleryImages to products
-if (typeof productGalleryImages !== 'undefined') {
-    products.forEach(product => {
-        const images = productGalleryImages[product.name];
-        if (images && images.length > 0) {
-            product.images = images;
+        // Wait for DOM to be ready, then load products
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadProducts);
+        } else {
+            // DOM already loaded
+            loadProducts();
         }
-    });
-}
 
 
         const gradients = {
@@ -1170,14 +1163,4 @@ if (typeof productGalleryImages !== 'undefined') {
             BookingGate.init();
             ColorPalette.init();
             initPageFromHash();
-        }
-
-        // Wait for DOM to be ready before loading products
-        document.addEventListener('DOMContentLoaded', function() {
-            // Products will be loaded by loadProducts() function which calls initializeApp()
-        });
-
-        // Also run immediately if DOM already loaded
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            // Products will be loaded by loadProducts() function which calls initializeApp()
         }
