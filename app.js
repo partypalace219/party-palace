@@ -430,8 +430,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } else {
                 // Fallback: check URL hash
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
-                
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
                     const slug = hash.replace('product-', '');
@@ -458,8 +458,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (event.persisted) {
                 // Page was restored from bfcache - sync display with URL
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact'];
-                
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
                     const slug = hash.replace('product-', '');
