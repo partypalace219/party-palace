@@ -1,7 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nPrepare Party Palace for Railway deployment\n\n- Split CSS and JS into external files for better performance\n- Add Supabase backend integration for products and forms\n- Add product gallery images \\(Chiara Arch, Specialty Columns\\)\n- Create Railway deployment configuration\n- Add package.json for static file serving\n- Update README with deployment info\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(awk:*)",
+      "Bash(node -c:*)",
+      "Bash(npm --version:*)",
+      "Bash(where:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(start index.html)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nMigrate product images to Supabase Storage\n\n- Uploaded 51 product images to Supabase Storage bucket\n- Reduced app.js from 17.7MB to 1.4MB \\(92% reduction\\)\n- Reduced index.html from 17MB to 95KB\n- Created product_image_urls.js to map products to Supabase URLs\n- Images now served from Supabase CDN for faster loading\n- Fixed navigation button functionality\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(dir /b)",
+      "Bash(findstr:*)",
+      "Bash(curl:*)"
     ]
   }
 }
