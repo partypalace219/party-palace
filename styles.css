@@ -1222,6 +1222,10 @@
             z-index: 100;
             border-bottom: 1px solid var(--gray-200);
         }
+
+        .catalog-filters + .section {
+            padding-top: 2rem;
+        }
         
         .filter-buttons {
             display: flex;
