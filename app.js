@@ -78,6 +78,212 @@
             services: 'Services'
         };
         let currentFilter = 'all';
+
+        // Shopping Cart
+        let cart = JSON.parse(localStorage.getItem('partyPalaceCart')) || [];
+
+        function saveCart() {
+            localStorage.setItem('partyPalaceCart', JSON.stringify(cart));
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function updateCartCount() {
+            const countEl = document.getElementById('cartCount');
+            if (countEl) {
+                countEl.textContent = cart.length;
+                countEl.style.display = cart.length > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function addToCart(productName) {
+            const product = products.find(p => p.name === productName);
+            if (!product) return;
+
+            // Check if already in cart
+            if (cart.find(item => item.name === productName)) {
+                showNotification('Item already in cart!', 'info');
+                return;
+            }
+
+            cart.push({
+                name: product.name,
+                price: product.price,
+                category: product.category,
+                image: product.images ? product.images[0] : null
+            });
+
+            saveCart();
+            showNotification(`${product.name} added to cart!`, 'success');
+        }
+
+        function removeFromCart(productName) {
+            cart = cart.filter(item => item.name !== productName);
+            saveCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            saveCart();
+        }
+
+        function getCartTotal() {
+            return cart.reduce((sum, item) => sum + item.price, 0);
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            const isOpen = sidebar.classList.contains('open');
+
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.style.overflow = isOpen ? '' : 'hidden';
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItems');
+            const footer = document.getElementById('cartFooter');
+            const totalEl = document.getElementById('cartTotal');
+
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="cart-empty"><p>Your cart is empty</p><button class="btn btn-primary" onclick="toggleCart(); navigate(\'partydecor\')">Browse Products</button></div>';
+                if (footer) footer.style.display = 'none';
+                return;
+            }
+
+            if (footer) footer.style.display = 'block';
+
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image" style="background-image: url('${item.image || ''}'); background-color: ${gradients[item.category] ? '#f0f0f0' : '#f0f0f0'}"></div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price}</div>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">&times;</button>
+                </div>
+            `).join('');
+
+            if (totalEl) {
+                totalEl.textContent = '$' + getCartTotal();
+            }
+        }
+
+        function goToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!', 'error');
+                return;
+            }
+            toggleCart();
+            navigate('checkout');
+            renderCheckoutItems();
+        }
+
+        function renderCheckoutItems() {
+            const container = document.getElementById('checkoutItems');
+            const totalEl = document.getElementById('checkoutTotal');
+
+            if (!container) return;
+
+            container.innerHTML = cart.map(item => `
+                <div class="checkout-item">
+                    <span class="checkout-item-name">${item.name}</span>
+                    <span class="checkout-item-price">$${item.price}</span>
+                </div>
+            `).join('');
+
+            if (totalEl) {
+                totalEl.textContent = '$' + getCartTotal();
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Remove existing notification
+            const existing = document.querySelector('.cart-notification');
+            if (existing) existing.remove();
+
+            const notification = document.createElement('div');
+            notification.className = `cart-notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 10);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        async function handleCheckoutSubmit(event) {
+            event.preventDefault();
+
+            const statusEl = document.getElementById('checkoutFormStatus');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+
+            const formData = {
+                name: document.getElementById('checkoutName').value,
+                email: document.getElementById('checkoutEmail').value,
+                phone: document.getElementById('checkoutPhone').value,
+                eventDate: document.getElementById('checkoutEventDate').value,
+                eventType: document.getElementById('checkoutEventType').value,
+                venue: document.getElementById('checkoutVenue').value,
+                notes: document.getElementById('checkoutNotes').value,
+                items: cart.map(item => `${item.name} ($${item.price})`).join(', '),
+                total: getCartTotal()
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            statusEl.innerHTML = '';
+
+            try {
+                // Send to email using EmailJS or your backend
+                // For now, we'll construct a mailto link as fallback
+                const subject = encodeURIComponent(`New Order Request from ${formData.name}`);
+                const body = encodeURIComponent(`
+New Order Request
+
+Customer Information:
+- Name: ${formData.name}
+- Email: ${formData.email}
+- Phone: ${formData.phone}
+
+Event Details:
+- Date: ${formData.eventDate}
+- Type: ${formData.eventType}
+- Venue: ${formData.venue || 'Not specified'}
+
+Order Items:
+${cart.map(item => `- ${item.name}: $${item.price}`).join('\n')}
+
+Estimated Total: $${formData.total}
+
+Additional Notes:
+${formData.notes || 'None'}
+                `.trim());
+
+                // Open email client with pre-filled data
+                window.location.href = `mailto:partypalace.in@gmail.com?subject=${subject}&body=${body}`;
+
+                statusEl.innerHTML = '<div class="form-success">Opening your email client... If it doesn\'t open, please email us directly at partypalace.in@gmail.com</div>';
+
+                // Clear cart after successful submission
+                clearCart();
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Order Request';
+                }, 2000);
+
+            } catch (error) {
+                statusEl.innerHTML = '<div class="form-error">Something went wrong. Please try again or contact us directly.</div>';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Order Request';
+            }
+        }
         // Navigation
         function navigate(page, addToHistory = true, customHash = null) {
             // Hide all pages
@@ -260,7 +466,7 @@
                             <span class="product-price-label">Starting at</span>
                             <span class="product-price-amount">$${product.price}</span>
                         </div>
-                        <button onclick="event.stopPropagation(); inquireProduct('${product.name}')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        <button onclick="event.stopPropagation(); addToCart('${product.name}')" class="btn btn-primary" style="width: 100%">Add to Cart</button>
                         <button onclick="event.stopPropagation(); navigateToProduct('${productSlug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
                     </div>
                 </div>
@@ -360,11 +566,11 @@
                         ${features}
                         
                         <div class="product-detail-cta">
-                            <button onclick="inquireProduct('${product.name}')" class="btn btn-primary">
-                                ✉️ Request a Quote
+                            <button onclick="addToCart('${product.name}')" class="btn btn-primary">
+                                🛒 Add to Cart
                             </button>
-                            <button onclick="navigate('contact')" class="btn btn-outline">
-                                📞 Contact Us
+                            <button onclick="inquireProduct('${product.name}')" class="btn btn-outline">
+                                ✉️ Request a Quote
                             </button>
                         </div>
                     </div>
@@ -1306,4 +1512,6 @@
             BookingGate.init();
             ColorPalette.init();
             initPageFromHash();
+            updateCartCount();
+            renderCartItems();
         }
