@@ -59,9 +59,9 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flower-wall/flower3.jpeg',  // 1200x1600, 201KB
     ],
     'Organic Arch': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic11.jpeg',  // 1600x1200, 216KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic4.jpeg',  // 1200x1600, 246KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic5.jpeg',  // 1200x1600, 245KB
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic11.jpeg',  // 1600x1200, 216KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic7.jpeg',  // 1600x1200, 208KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic1.jpeg',  // 1600x1200, 193KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/organic-arch/organic6.jpeg',  // 1600x1200, 189KB
