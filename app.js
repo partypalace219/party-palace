@@ -204,40 +204,6 @@
             if (totalEl) {
                 totalEl.textContent = '$' + total;
             }
-
-            // Update full amount display in payment options
-            if (fullAmountEl) {
-                fullAmountEl.textContent = '$' + total;
-            }
-
-            // Update button text based on current selection
-            updatePaymentButtonText();
-        }
-
-        // Handle payment option selection
-        function updatePaymentOption(radio) {
-            // Update visual selection
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            radio.closest('.payment-option').classList.add('selected');
-
-            // Update button text
-            updatePaymentButtonText();
-        }
-
-        // Update button text based on selected payment option
-        function updatePaymentButtonText() {
-            const btnText = document.getElementById('checkoutBtnText');
-            const selectedOption = document.querySelector('input[name="paymentOption"]:checked');
-
-            if (!btnText || !selectedOption) return;
-
-            if (selectedOption.value === 'deposit') {
-                btnText.textContent = `Pay Deposit - $${DEPOSIT_AMOUNT}`;
-            } else {
-                btnText.textContent = `Pay Full Amount - $${getCartTotal()}`;
-            }
         }
 
         // Display order summary on success page
@@ -246,22 +212,12 @@
             const messageEl = document.getElementById('successPaymentMessage');
             const amountPaidEl = document.getElementById('successAmountPaid');
             const orderTotalEl = document.getElementById('successOrderTotal');
-            const remainingBalanceEl = document.getElementById('successRemainingBalance');
-            const balanceRowEl = document.getElementById('successBalanceRow');
-            const balanceNoteEl = document.getElementById('successBalanceNote');
-            const balanceStepEl = document.getElementById('successBalanceStep');
 
             if (!summaryEl) return;
 
-            const isDeposit = orderInfo.paymentType === 'deposit';
-
-            // Update message based on payment type
+            // Update message
             if (messageEl) {
-                if (isDeposit) {
-                    messageEl.textContent = 'Your deposit has been received. Your booking is now secured!';
-                } else {
-                    messageEl.textContent = 'Your full payment has been processed successfully.';
-                }
+                messageEl.textContent = 'Your $' + orderInfo.amountPaid + ' deposit has been received. Your booking is now secured!';
             }
 
             // Show the summary section
@@ -269,20 +225,7 @@
 
             // Update amounts
             if (amountPaidEl) amountPaidEl.textContent = '$' + orderInfo.amountPaid;
-            if (orderTotalEl) orderTotalEl.textContent = '$' + orderInfo.total;
-
-            // Handle remaining balance display
-            if (isDeposit && orderInfo.remainingBalance > 0) {
-                if (remainingBalanceEl) remainingBalanceEl.textContent = '$' + orderInfo.remainingBalance;
-                if (balanceRowEl) balanceRowEl.style.display = 'flex';
-                if (balanceNoteEl) balanceNoteEl.style.display = 'block';
-                if (balanceStepEl) balanceStepEl.style.display = 'list-item';
-            } else {
-                // Full payment - hide balance-related elements
-                if (balanceRowEl) balanceRowEl.style.display = 'none';
-                if (balanceNoteEl) balanceNoteEl.style.display = 'none';
-                if (balanceStepEl) balanceStepEl.style.display = 'none';
-            }
+            if (orderTotalEl) orderTotalEl.textContent = orderInfo.estimatedTotal ? ('$' + orderInfo.estimatedTotal + ' (estimated)') : 'To be confirmed';
         }
 
         function showNotification(message, type = 'info') {
@@ -313,10 +256,6 @@
             const btnText = document.getElementById('checkoutBtnText');
             const btnLoading = document.getElementById('checkoutBtnLoading');
 
-            // Get selected payment option
-            const paymentOption = document.querySelector('input[name="paymentOption"]:checked')?.value || 'deposit';
-            const isDeposit = paymentOption === 'deposit';
-
             const formData = {
                 name: document.getElementById('checkoutName').value,
                 email: document.getElementById('checkoutEmail').value,
@@ -326,10 +265,9 @@
                 venue: document.getElementById('checkoutVenue').value,
                 notes: document.getElementById('checkoutNotes').value,
                 items: cart.map(item => `${item.name} ($${item.price})`).join(', '),
-                total: getCartTotal(),
-                paymentType: isDeposit ? 'deposit' : 'full',
-                amountPaid: isDeposit ? DEPOSIT_AMOUNT : getCartTotal(),
-                remainingBalance: isDeposit ? getCartTotal() - DEPOSIT_AMOUNT : 0
+                estimatedTotal: getCartTotal(),
+                paymentType: 'deposit',
+                amountPaid: DEPOSIT_AMOUNT
             };
 
             // Validate cart is not empty
@@ -357,7 +295,7 @@
                     body: JSON.stringify({
                         items: cart,
                         customerInfo: formData,
-                        paymentType: isDeposit ? 'deposit' : 'full',
+                        paymentType: 'deposit',
                         depositAmount: DEPOSIT_AMOUNT
                     })
                 });

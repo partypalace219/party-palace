@@ -2440,84 +2440,40 @@
     line-height: 1.5;
 }
 
-/* Payment Option Styles */
-.payment-option-group {
+/* Deposit Info Box Styles */
+.deposit-info-box {
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.05), rgba(0, 102, 255, 0.02));
+    border: 2px solid var(--blue-primary);
+    border-radius: 12px;
+    padding: 1.25rem;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-.payment-options {
+.deposit-info-header {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.payment-option {
-    display: block;
-    cursor: pointer;
-    border: 2px solid var(--gray-200);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    transition: all 0.2s ease;
-    background: white;
-}
-
-.payment-option:hover {
-    border-color: var(--gray-300);
-}
-
-.payment-option.selected {
-    border-color: var(--blue-primary);
-    background: rgba(0, 102, 255, 0.03);
-}
-
-.payment-option input[type="radio"] {
-    display: none;
-}
-
-.payment-option-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.payment-option-header {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
-.payment-option-title {
+.deposit-info-title {
     font-weight: 600;
     color: var(--gray-900);
     font-size: 1rem;
 }
 
-.payment-option-badge {
-    background: #059669;
-    color: white;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.payment-option-price {
+.deposit-info-amount {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--blue-primary);
-    margin: 0.25rem 0;
 }
 
-.payment-option-desc {
+.deposit-info-desc {
     font-size: 0.85rem;
     color: var(--gray-600);
-    line-height: 1.4;
-}
-
-.payment-option.selected .payment-option-title {
-    color: var(--blue-primary);
+    line-height: 1.5;
+    margin: 0;
 }
 
 .form-success {

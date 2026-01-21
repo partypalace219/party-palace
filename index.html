@@ -1494,36 +1494,17 @@
                                 <textarea id="checkoutNotes" rows="4" placeholder="Color preferences, theme details, special requests..."></textarea>
                             </div>
 
-                            <!-- Payment Option Selection -->
-                            <div class="form-group payment-option-group">
-                                <label>Payment Option *</label>
-                                <div class="payment-options">
-                                    <label class="payment-option selected" data-option="deposit">
-                                        <input type="radio" name="paymentOption" value="deposit" checked onchange="updatePaymentOption(this)">
-                                        <div class="payment-option-content">
-                                            <div class="payment-option-header">
-                                                <span class="payment-option-title">Pay Deposit</span>
-                                                <span class="payment-option-badge">Recommended</span>
-                                            </div>
-                                            <div class="payment-option-price" id="depositAmount">$50</div>
-                                            <div class="payment-option-desc">Secure your booking with a $50 deposit. Remaining balance due after design confirmation.</div>
-                                        </div>
-                                    </label>
-                                    <label class="payment-option" data-option="full">
-                                        <input type="radio" name="paymentOption" value="full" onchange="updatePaymentOption(this)">
-                                        <div class="payment-option-content">
-                                            <div class="payment-option-header">
-                                                <span class="payment-option-title">Pay Full Amount</span>
-                                            </div>
-                                            <div class="payment-option-price" id="fullAmount">$0</div>
-                                            <div class="payment-option-desc">Pay the full estimated total now. Final adjustments made if needed.</div>
-                                        </div>
-                                    </label>
+                            <!-- Deposit Info Box -->
+                            <div class="deposit-info-box">
+                                <div class="deposit-info-header">
+                                    <span class="deposit-info-title">Booking Deposit</span>
+                                    <span class="deposit-info-amount">$50</span>
                                 </div>
+                                <p class="deposit-info-desc">Pay a $50 deposit to secure your booking. Final pricing will be confirmed after we discuss your design, colors, and customizations. Remaining balance due before your event.</p>
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-large" style="width: 100%" id="checkoutSubmitBtn">
-                                <span id="checkoutBtnText">Pay Deposit - $50</span>
+                                <span id="checkoutBtnText">Pay $50 Deposit to Book</span>
                                 <span id="checkoutBtnLoading" style="display: none;">Processing...</span>
                             </button>
                             <div class="form-status" id="checkoutFormStatus"></div>
@@ -1542,12 +1523,13 @@
                             <p class="checkout-note">This is an estimate. Final pricing will be confirmed after consultation based on your specific requirements, color choices, and event details.</p>
                         </div>
                         <div class="checkout-info-box">
-                            <h4>How Payment Works</h4>
+                            <h4>How It Works</h4>
                             <ol>
-                                <li>Fill in your information above</li>
-                                <li>Click "Proceed to Payment"</li>
-                                <li>Complete secure payment via Stripe</li>
-                                <li>We'll contact you within 24 hours to confirm details</li>
+                                <li>Pay $50 deposit to secure your booking</li>
+                                <li>We'll contact you within 24 hours</li>
+                                <li>Discuss your design, colors, and customizations</li>
+                                <li>Receive final pricing based on your choices</li>
+                                <li>Pay remaining balance before your event</li>
                             </ol>
                             <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600);">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
@@ -1582,21 +1564,17 @@
                     <p style="color: #065f46;" id="successPaymentMessage">Your payment has been processed successfully.</p>
                 </div>
                 <div id="successOrderSummary" style="background: white; border: 1px solid var(--gray-200); border-radius: 12px; padding: 1.5rem; text-align: left; margin-bottom: 1.5rem; display: none;">
-                    <h4 style="margin-bottom: 1rem; color: var(--gray-900);">Payment Summary</h4>
+                    <h4 style="margin-bottom: 1rem; color: var(--gray-900);">Deposit Receipt</h4>
                     <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100);">
-                        <span style="color: var(--gray-600);">Amount Paid:</span>
-                        <span style="font-weight: 600; color: #059669;" id="successAmountPaid">$0</span>
+                        <span style="color: var(--gray-600);">Deposit Paid:</span>
+                        <span style="font-weight: 600; color: #059669;" id="successAmountPaid">$50</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-100);">
-                        <span style="color: var(--gray-600);">Order Total:</span>
-                        <span style="font-weight: 600;" id="successOrderTotal">$0</span>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                        <span style="color: var(--gray-600);">Estimated Total:</span>
+                        <span style="font-weight: 600;" id="successOrderTotal">To be confirmed</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;" id="successBalanceRow">
-                        <span style="color: var(--gray-600);">Remaining Balance:</span>
-                        <span style="font-weight: 600; color: var(--blue-primary);" id="successRemainingBalance">$0</span>
-                    </div>
-                    <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-100);" id="successBalanceNote">
-                        Remaining balance will be due after we confirm your design details.
+                    <p style="font-size: 0.85rem; color: var(--gray-500); margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-100);">
+                        Final pricing will be confirmed after we discuss your design, colors, and customizations.
                     </p>
                 </div>
                 <div style="background: var(--gray-50); border-radius: 12px; padding: 1.5rem; text-align: left; margin-bottom: 2rem;">
@@ -1604,8 +1582,9 @@
                     <ol style="padding-left: 1.25rem; color: var(--gray-700);">
                         <li style="margin-bottom: 0.75rem;">You'll receive a confirmation email shortly</li>
                         <li style="margin-bottom: 0.75rem;">Our team will contact you within 24 hours</li>
-                        <li style="margin-bottom: 0.75rem;">We'll finalize your event details, colors, and design</li>
-                        <li style="margin-bottom: 0.75rem;" id="successBalanceStep">Once approved, we'll send a link to pay the remaining balance</li>
+                        <li style="margin-bottom: 0.75rem;">We'll discuss your design, colors, and customizations</li>
+                        <li style="margin-bottom: 0.75rem;">You'll receive final pricing based on your choices</li>
+                        <li style="margin-bottom: 0.75rem;">Pay remaining balance before your event</li>
                         <li>Setup will be coordinated for your event date</li>
                     </ol>
                 </div>
