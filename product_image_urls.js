@@ -75,6 +75,12 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/speciality-columns/specialty2.jpeg',
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/speciality-columns/speicalty3.jpeg',
     ],
+    'Spiral Columns': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/columns/columns1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/columns/columns2.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/columns/columns3.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/columns/columns4.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
