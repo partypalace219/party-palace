@@ -1524,6 +1524,22 @@
             color: #000000;
         }
 
+        /* Footer Snapchat icon - yellow background with outlined ghost */
+        .footer-social .social-icon[title="Snapchat"] {
+            background: #FFFC00;
+            border-radius: 6px;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-social .social-icon[title="Snapchat"] svg {
+            fill: none;
+            stroke: #000000;
+            stroke-width: 1.5;
+        }
+
         /* ============================================
            LIABILITY WAIVER MODAL STYLES
            ============================================ */
