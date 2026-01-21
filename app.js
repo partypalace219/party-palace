@@ -300,17 +300,24 @@
             const backPage = getCategoryPage(product.category);
             const backLabel = categoryLabels[product.category] || 'Back';
             
-            // Generate main image
-            const mainImage = hasImages 
-                ? `<img src="${product.images[0]}" alt="${product.name}" id="productMainImage">`
+            // Generate main image (clickable to open lightbox)
+            const mainImage = hasImages
+                ? `<img src="${product.images[0]}" alt="${product.name}" id="productMainImage" onclick="openProductLightbox(0)" style="cursor: pointer;">`
                 : `<div class="placeholder" style="background: ${gradient}">${product.icon}</div>`;
-            
-            // Generate thumbnails
+
+            // Store current product images for lightbox
+            window.currentProductImages = hasImages ? product.images.map((img, idx) => ({
+                url: img,
+                title: product.name,
+                category: categoryLabels[product.category] || product.category
+            })) : [];
+
+            // Generate thumbnails (also clickable)
             let thumbnailsHtml = '';
             if (hasImages && product.images.length > 1) {
                 thumbnailsHtml = `<div class="product-detail-thumbnails">
                     ${product.images.map((img, idx) => `
-                        <div class="product-detail-thumb ${idx === 0 ? 'active' : ''}" onclick="changeProductImage('${img}', this)">
+                        <div class="product-detail-thumb ${idx === 0 ? 'active' : ''}" onclick="changeProductImage('${img}', this, ${idx})">
                             <img src="${img}" alt="${product.name} ${idx + 1}">
                         </div>
                     `).join('')}
@@ -359,10 +366,12 @@
         }
         
         // Change main product image (for thumbnail clicks)
-        function changeProductImage(src, thumb) {
+        function changeProductImage(src, thumb, index) {
             const mainImg = document.getElementById('productMainImage');
             if (mainImg) {
                 mainImg.src = src;
+                // Update the onclick to open lightbox at the correct index
+                mainImg.onclick = () => openProductLightbox(index || 0);
             }
             // Update active thumbnail
             document.querySelectorAll('.product-detail-thumb').forEach(t => t.classList.remove('active'));
@@ -1259,8 +1268,20 @@
             });
         }
 
+        // Open lightbox for product detail page images
+        function openProductLightbox(index) {
+            // Use current product images if available, otherwise fallback to gallery
+            const images = window.currentProductImages || window.galleryImages || [];
+            if (images.length === 0) return;
+
+            // Temporarily switch to product images
+            window.galleryImages = images;
+            openLightbox(index);
+        }
+
         // Make functions global
         window.openLightbox = openLightbox;
+        window.openProductLightbox = openProductLightbox;
         window.closeLightbox = closeLightbox;
         window.changeLightboxImage = changeLightboxImage;
 

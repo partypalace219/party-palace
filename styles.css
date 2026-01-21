@@ -377,7 +377,7 @@
             margin-bottom: 2rem;
         }
         .product-detail-back {
-            background: var(--gray-100);
+            background: var(--blue-primary);
             border: none;
             padding: 0.5rem 1rem;
             border-radius: 8px;
@@ -386,11 +386,11 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.9rem;
-            color: var(--gray-700);
+            color: white;
             transition: all 0.2s;
         }
         .product-detail-back:hover {
-            background: var(--gray-200);
+            background: var(--blue-dark);
         }
         .product-detail-content {
             display: grid;
@@ -1834,4 +1834,18 @@
     .lightbox-content img {
         max-height: 70vh;
     }
+}
+
+/* Make product images look clickable */
+.product-detail-main-image img {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.product-detail-main-image img:hover {
+    transform: scale(1.02);
+}
+
+.product-detail-thumb img {
+    cursor: pointer;
 }
