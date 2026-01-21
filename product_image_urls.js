@@ -42,6 +42,9 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/diaper-cake/diaper2.jpeg',  // 1500x2000, 323KB
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/diaper-cake/diaper1.jpeg',  // 1500x2000, 226KB
     ],
+    'Balloon Centerpiece': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/balloon-centerpiece/balloon1.jpeg',
+    ],
     'Medal Frames': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/medal-centerpieces/metal1.jpeg',  // 1500x2000, 150KB
     ],
