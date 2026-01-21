@@ -4,6 +4,7 @@ app.js.backup*
 index.html.backup*
 
 # Local image folders (images are on Supabase)
+balloon-centerpiece/
 balloon-walls/
 circle/
 diaper-cake/

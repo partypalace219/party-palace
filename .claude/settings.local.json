@@ -16,7 +16,8 @@
       "Bash(git commit:*)",
       "Bash(dir /b)",
       "Bash(findstr:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
