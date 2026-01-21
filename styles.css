@@ -119,31 +119,113 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 72px;
+            height: 80px;
             max-width: 1440px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 2rem;
+            position: relative;
         }
-        
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 600;
+
+        /* Left navigation */
+        .nav-left {
+            display: none;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .nav-left button,
+        .nav-right-links button {
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            cursor: pointer;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-left button:hover,
+        .nav-right-links button:hover {
+            color: var(--blue-primary);
+        }
+
+        .nav-left button.active,
+        .nav-right-links button.active {
             color: var(--gray-900);
+        }
+
+        .nav-left button.active::after,
+        .nav-right-links button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-900);
+        }
+
+        /* Center logo */
+        .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
             cursor: pointer;
-        }
-        
-        .logo img {
-            height: 50px;
-            width: auto;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .logo-img {
-            height: 60px;
+            height: 65px;
             width: auto;
             display: block;
+        }
+
+        /* Right navigation and actions */
+        .nav-right {
+            display: none;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .nav-right-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .phone-link {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            text-decoration: none;
+            padding-left: 1rem;
+            border-left: 1px solid var(--gray-200);
+        }
+
+        .phone-link:hover {
+            color: var(--blue-primary);
+        }
+
+        @media (min-width: 1024px) {
+            .nav-left {
+                display: flex;
+            }
+            .nav-right {
+                display: flex;
+            }
         }
 
         .logo-icon {
@@ -157,16 +239,10 @@
             color: var(--blue-primary);
             letter-spacing: -0.02em;
         }
-        
+
         .nav-desktop {
             display: none;
             gap: 2rem;
-        }
-        
-        .nav-actions {
-            display: none;
-            align-items: center;
-            gap: 1rem;
         }
         
         @media (min-width: 768px) {

@@ -29,23 +29,31 @@
     <!-- Header -->
     <header id="header">
         <div class="nav-wrapper">
-            <div class="logo" onclick="navigate('home')">
-                <span class="logo-icon">🎈</span>
-                <span class="logo-text">Party Palace</span>
-            </div>
-            <nav class="nav-desktop">
+            <!-- Left: Navigation Links -->
+            <nav class="nav-left">
                 <button onclick="navigate('home')" class="active" data-page="home">Home</button>
                 <button onclick="navigate('gallery')" data-page="gallery">Gallery</button>
                 <button onclick="navigate('partydecor')" data-page="partydecor">Party Decor</button>
                 <button onclick="navigate('partyrentals')" data-page="partyrentals" class="coming-soon-tab">Party Rentals <span class="coming-soon-badge">Coming Soon</span></button>
-                <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
-                <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
-                <button onclick="navigate('contact')" data-page="contact">Contact</button>
             </nav>
-            <div class="nav-actions">
-                <a href="tel:219-344-2416" class="phone">219-344-2416</a>
-                <button onclick="navigate('contact')" class="btn btn-primary">Get Started</button>
+
+            <!-- Center: Logo -->
+            <div class="logo" onclick="navigate('home')">
+                <img src="logo.png" alt="Party Palace" class="logo-img">
             </div>
+
+            <!-- Right: Actions -->
+            <div class="nav-right">
+                <nav class="nav-right-links">
+                    <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
+                    <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
+                    <button onclick="navigate('contact')" data-page="contact">Contact</button>
+                </nav>
+                <div class="nav-actions">
+                    <a href="tel:219-344-2416" class="phone-link">(219) 344-2416</a>
+                </div>
+            </div>
+
             <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -1429,8 +1437,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div class="footer-logo">
-                        <span class="logo-icon">🎈</span>
-                        <span class="logo-text">Party Palace</span>
+                        <img src="logo.png" alt="Party Palace" class="logo-img">
                     </div>
                     <p>Northwest Indiana and Chicagoland's premier event decoration service since 2022.</p>
                 </div>
