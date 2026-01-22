@@ -52,17 +52,8 @@
                 <nav class="nav-right-links">
                     <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
                     <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
-                    <button onclick="navigate('jewelry')" data-page="jewelry">Jewelry</button>
                     <button onclick="navigate('contact')" data-page="contact">Contact</button>
                 </nav>
-                <button class="cart-icon" onclick="toggleCart()" title="Shopping Cart">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="m1 1 4 4 2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span class="cart-count" id="cartCount">0</span>
-                </button>
                 <div class="nav-social">
                     <a href="https://www.instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-icon" title="Instagram">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -97,7 +88,6 @@
         <button onclick="navigate('partyrentals')" data-page="partyrentals" class="coming-soon-tab">Party Rentals <span class="coming-soon-badge">Coming Soon</span></button>
         <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
         <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
-        <button onclick="navigate('jewelry')" data-page="jewelry">Jewelry</button>
         <button onclick="navigate('contact')" data-page="contact">Contact</button>
         <div class="mobile-menu-footer">
             <a href="mailto:partypalace.in@gmail.com" class="phone-link">✉️ partypalace.in@gmail.com</a>
@@ -119,7 +109,7 @@
                     <button onclick="navigate('gallery')" class="btn btn-secondary btn-large">View Gallery</button>
                 </div>
                 <div class="trust-badges">
-                    <span>⭐ 58 Events</span>
+                    <span>⭐ 100+ Events</span>
                     <span>🛡️ Professional Service</span>
                     <span>💯 100% Satisfaction</span>
                 </div>
@@ -129,11 +119,11 @@
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat">
-                        <div class="stat-number">58</div>
+                        <div class="stat-number">100+</div>
                         <div class="stat-label">Events Decorated</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-number">57</div>
+                        <div class="stat-number">100+</div>
                         <div class="stat-label">Happy Clients</div>
                     </div>
                     <div class="stat">
@@ -790,30 +780,7 @@
                         <a href="mailto:partypalace.in@gmail.com" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white;">📧 Email Us Directly</a>
                     </div>
                 </div>
-                
-                <!-- Color Preference Section -->
-                <div class="color-preference-section" style="margin-bottom: 3rem;">
-                    <h3 style="text-align: center; margin-bottom: 1.5rem;">Pick a Color</h3>
-                    <p style="text-align: center; color: var(--gray-600); margin-bottom: 1rem; font-size: 0.9rem;">Select your preferred color for your 3D printed plastic item</p>
-                    <div class="color-palette" id="prints3dColorPalette" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-                        <div class="color-swatch" data-color="Red" data-hex="#E53935" style="background: #E53935;" title="Red"></div>
-                        <div class="color-swatch" data-color="Pink" data-hex="#EC407A" style="background: #EC407A;" title="Pink"></div>
-                        <div class="color-swatch" data-color="Purple" data-hex="#AB47BC" style="background: #AB47BC;" title="Purple"></div>
-                        <div class="color-swatch" data-color="Blue" data-hex="#2196F3" style="background: #2196F3;" title="Blue"></div>
-                        <div class="color-swatch" data-color="Teal" data-hex="#26A69A" style="background: #26A69A;" title="Teal"></div>
-                        <div class="color-swatch" data-color="Green" data-hex="#66BB6A" style="background: #66BB6A;" title="Green"></div>
-                        <div class="color-swatch" data-color="Yellow" data-hex="#FFEE58" style="background: #FFEE58;" title="Yellow"></div>
-                        <div class="color-swatch" data-color="Orange" data-hex="#FFA726" style="background: #FFA726;" title="Orange"></div>
-                        <div class="color-swatch" data-color="Gold" data-hex="#D4AF37" style="background: #D4AF37;" title="Gold"></div>
-                        <div class="color-swatch" data-color="Silver" data-hex="#C0C0C0" style="background: #C0C0C0;" title="Silver"></div>
-                        <div class="color-swatch" data-color="White" data-hex="#FFFFFF" style="background: #FFFFFF; border: 1px solid var(--gray-300);" title="White"></div>
-                        <div class="color-swatch" data-color="Black" data-hex="#212121" style="background: #212121;" title="Black"></div>
-                    </div>
-                    <p id="prints3dColorLabel" style="text-align: center; margin-top: 1rem; font-weight: 500; color: var(--gray-700); min-height: 1.5rem;">No color selected</p>
-                    <!-- Hidden input for form submission -->
-                    <input type="hidden" id="prints3d_color_preference" name="color_preference" value="">
-                </div>
-                
+
                 <!-- Products -->
                 <div class="section-header">
                     <h2>Available Products</h2>
@@ -822,17 +789,24 @@
                 <div class="products-grid" id="prints3dGrid">
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                            <span>🪧</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Signs</div>
+                            <div class="product-description">Custom 3D printed plastic signs and plaques with names, logos, or custom text.</div>
+                            <button onclick="inquireProduct('3D Printed Signs')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #764ba2, #667eea)">
                             <span>🏠</span>
                         </div>
                         <div class="product-info">
                             <div class="product-category">3D Prints</div>
-                            <div class="product-name">Signs & Decor</div>
-                            <div class="product-description">Custom 3D printed plastic signs, plaques, and decorative pieces for home or events.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$20</span>
-                            </div>
-                            <button onclick="inquireProduct('3D Printed Signs & Decor')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div class="product-name">Decor</div>
+                            <div class="product-description">Custom 3D printed decorative pieces for home or events.</div>
+                            <button onclick="inquireProduct('3D Printed Decor')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                     <div class="product-card">
@@ -843,10 +817,6 @@
                             <div class="product-category">3D Prints</div>
                             <div class="product-name">Keychains</div>
                             <div class="product-description">Personalized 3D printed keychains with names, logos, or custom shapes.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$8</span>
-                            </div>
                             <button onclick="inquireProduct('3D Printed Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -858,10 +828,6 @@
                             <div class="product-category">3D Prints</div>
                             <div class="product-name">Coasters</div>
                             <div class="product-description">Custom 3D printed coasters with unique designs, perfect for gifts or events.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$12</span>
-                            </div>
                             <button onclick="inquireProduct('3D Printed Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -873,10 +839,6 @@
                             <div class="product-category">3D Prints</div>
                             <div class="product-name">Magnets</div>
                             <div class="product-description">Fun 3D printed magnets with custom shapes, photos, or text designs.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$6</span>
-                            </div>
                             <button onclick="inquireProduct('3D Printed Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -888,10 +850,6 @@
                             <div class="product-category">3D Prints</div>
                             <div class="product-name">Toys</div>
                             <div class="product-description">Custom 3D printed toys and figurines with personalized designs for any occasion.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$25</span>
-                            </div>
                             <button onclick="inquireProduct('3D Printed Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -903,11 +861,18 @@
                             <div class="product-category">3D Prints</div>
                             <div class="product-name">Mics</div>
                             <div class="product-description">Custom 3D printed microphone accessories and personalized mic designs.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$18</span>
-                            </div>
                             <button onclick="inquireProduct('3D Printed Mics')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #f5af19, #f12711)">
+                            <span>💎</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">3D Prints</div>
+                            <div class="product-name">Jewelry</div>
+                            <div class="product-description">Custom 3D printed jewelry including pendants, rings, and personalized accessories.</div>
+                            <button onclick="inquireProduct('3D Printed Jewelry')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                 </div>
@@ -962,10 +927,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Wood Items</div>
                             <div class="product-description">Custom laser engraved wooden signs, plaques, cutting boards, and decorative pieces.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$25</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Wood Items')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -977,10 +938,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Keychains</div>
                             <div class="product-description">Personalized engraved keychains in wood, metal, or leather with names or logos.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$10</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -992,10 +949,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Coasters</div>
                             <div class="product-description">Custom engraved coasters in wood, slate, or cork. Perfect for gifts or events.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$15</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -1007,10 +960,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Magnets</div>
                             <div class="product-description">Laser engraved wooden or acrylic magnets with custom designs and photos.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$8</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -1022,10 +971,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Toys</div>
                             <div class="product-description">Custom laser engraved toys and game pieces with personalized names or designs.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$20</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
@@ -1037,10 +982,6 @@
                             <div class="product-category">Engraving</div>
                             <div class="product-name">Mics</div>
                             <div class="product-description">Custom laser engraved microphone accessories and personalized mic plates.</div>
-                            <div class="product-price">
-                                <span class="product-price-label">Starting at</span>
-                                <span class="product-price-amount">$25</span>
-                            </div>
                             <button onclick="inquireProduct('Engraved Mics')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
