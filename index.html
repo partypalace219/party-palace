@@ -1107,19 +1107,19 @@
                             </div>
                             <div class="form-group">
                                 <label>Order Type *</label>
-                                <select id="customOrderType" required onchange="updateProductOptions()">
+                                <select id="customOrderType" required>
                                     <option value="">Select type</option>
                                     <option value="3d-print">3D Printed Item</option>
                                     <option value="engraving">Engraving</option>
                                     <option value="both">Both 3D Print & Engraving</option>
                                 </select>
                             </div>
-                            <div class="form-group" id="productSelectGroup" style="display: none;">
+                            <div class="form-group" id="productSelectGroup">
                                 <label>Product to Customize *</label>
-                                <select id="customOrderProduct">
+                                <select id="customOrderProduct" required>
                                     <option value="">Select product</option>
                                     <!-- 3D Print Options -->
-                                    <optgroup label="3D Printed Items" id="printOptionsGroup">
+                                    <optgroup label="3D Printed Items">
                                         <option value="3d-figurine">Custom Figurine</option>
                                         <option value="3d-sign">Name Sign / Letters</option>
                                         <option value="3d-topper">Cake Topper</option>
@@ -1130,7 +1130,7 @@
                                         <option value="3d-other">Other 3D Item</option>
                                     </optgroup>
                                     <!-- Engraving Options -->
-                                    <optgroup label="Engraving Items" id="engravingOptionsGroup">
+                                    <optgroup label="Engraving Items">
                                         <option value="eng-tumbler">Tumbler/Cup</option>
                                         <option value="eng-cutting-board">Cutting Board</option>
                                         <option value="eng-plaque">Plaque/Sign</option>
