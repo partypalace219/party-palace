@@ -1014,15 +1014,41 @@
     <div id="page-contact" class="page">
         <section class="hero hero-small">
             <div class="hero-content">
-                <h1>Let's talk about your event</h1>
-                <p class="hero-subtitle">Get in touch for a free consultation and custom quote</p>
+                <h1>Get in Touch</h1>
+                <p class="hero-subtitle">Choose the service you're interested in below</p>
             </div>
         </section>
-        <section class="section">
+
+        <!-- Service Selection Cards -->
+        <section class="section" style="padding-bottom: 0;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Party Decor Card -->
+                    <div class="contact-service-card" id="partyDecorCard" onclick="selectContactService('partyDecor')" style="cursor: pointer; border: 3px solid var(--primary); background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s ease;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎈</div>
+                        <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Party Decor</h3>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Balloon arches, walls, centerpieces, and event decorations</p>
+                        <span style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Selected</span>
+                    </div>
+
+                    <!-- 3D & Engraving Card -->
+                    <div class="contact-service-card" id="customOrderCard" onclick="selectContactService('customOrder')" style="cursor: pointer; border: 3px solid var(--gray-300); background: white; border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s ease;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🖨️</div>
+                        <h3 style="color: var(--gray-700); margin-bottom: 0.5rem;">3D Prints & Engraving</h3>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">Custom 3D printed items and personalized engravings</p>
+                        <span style="display: none; margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Selected</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="padding-top: 1rem;">
             <div class="container">
                 <div class="contact-grid">
-                    <div>
-                        <h2 style="margin-bottom: 1.5rem;">Send us a message</h2>
+                    <!-- Party Decor Form -->
+                    <div id="partyDecorForm">
+                        <h2 style="margin-bottom: 0.5rem;">Party Decor Inquiry</h2>
+                        <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Tell us about your upcoming event and we'll create something amazing!</p>
                         <form id="contactForm" onsubmit="handleSubmit(event)">
                             <div class="form-group">
                                 <label>Name *</label>
@@ -1049,12 +1075,55 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Message *</label>
-                                <textarea id="contactMessage" rows="5" required></textarea>
+                                <label>Event Date</label>
+                                <input type="date" id="contactEventDate">
                             </div>
-                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%">Send Message</button>
+                            <div class="form-group">
+                                <label>Message *</label>
+                                <textarea id="contactMessage" rows="4" required placeholder="Tell us about your vision - colors, theme, decorations you're interested in..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%">Send Party Decor Inquiry</button>
                             <div class="form-status" id="formStatus"></div>
                             <div class="booking-waiver-error" id="bookingDocumentsError" style="display: none;"></div>
+                        </form>
+                    </div>
+
+                    <!-- Custom Order Form (3D & Engraving) -->
+                    <div id="customOrderForm" style="display: none;">
+                        <h2 style="margin-bottom: 0.5rem;">3D Prints & Engraving</h2>
+                        <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Request a custom 3D print or personalized engraving</p>
+                        <form id="customOrderContactForm" onsubmit="handleCustomOrderSubmit(event)">
+                            <div class="form-group">
+                                <label>Name *</label>
+                                <input type="text" id="customOrderName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="customOrderEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone *</label>
+                                <input type="tel" id="customOrderPhone" required oninput="formatPhone(this)">
+                            </div>
+                            <div class="form-group">
+                                <label>Order Type *</label>
+                                <select id="customOrderType" required>
+                                    <option value="">Select type</option>
+                                    <option value="3d-print">3D Printed Item</option>
+                                    <option value="engraving">Engraving</option>
+                                    <option value="both">Both 3D Print & Engraving</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Project Description *</label>
+                                <textarea id="customOrderDescription" rows="4" required placeholder="Describe what you'd like created - include dimensions, materials, text for engraving, or any reference images you can share..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Needed By Date</label>
+                                <input type="date" id="customOrderDate">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%">Submit Custom Order Request</button>
+                            <div class="form-status" id="customOrderFormStatus"></div>
                         </form>
                     </div>
                     <div>

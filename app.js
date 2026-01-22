@@ -755,34 +755,110 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             input.value = value;
         }
         // Form Submit
+        // Contact page service selection
+        function selectContactService(service) {
+            const partyDecorCard = document.getElementById('partyDecorCard');
+            const customOrderCard = document.getElementById('customOrderCard');
+            const partyDecorForm = document.getElementById('partyDecorForm');
+            const customOrderForm = document.getElementById('customOrderForm');
+
+            if (service === 'partyDecor') {
+                // Style party decor card as selected
+                partyDecorCard.style.border = '3px solid var(--primary)';
+                partyDecorCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))';
+                partyDecorCard.querySelector('h3').style.color = 'var(--primary)';
+                partyDecorCard.querySelector('span').style.display = 'inline-block';
+
+                // Style custom order card as unselected
+                customOrderCard.style.border = '3px solid var(--gray-300)';
+                customOrderCard.style.background = 'white';
+                customOrderCard.querySelector('h3').style.color = 'var(--gray-700)';
+                customOrderCard.querySelector('span').style.display = 'none';
+
+                // Show/hide forms
+                partyDecorForm.style.display = 'block';
+                customOrderForm.style.display = 'none';
+            } else {
+                // Style custom order card as selected
+                customOrderCard.style.border = '3px solid var(--primary)';
+                customOrderCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))';
+                customOrderCard.querySelector('h3').style.color = 'var(--primary)';
+                customOrderCard.querySelector('span').style.display = 'inline-block';
+
+                // Style party decor card as unselected
+                partyDecorCard.style.border = '3px solid var(--gray-300)';
+                partyDecorCard.style.background = 'white';
+                partyDecorCard.querySelector('h3').style.color = 'var(--gray-700)';
+                partyDecorCard.querySelector('span').style.display = 'none';
+
+                // Show/hide forms
+                partyDecorForm.style.display = 'none';
+                customOrderForm.style.display = 'block';
+            }
+        }
+
         function handleSubmit(e) {
             e.preventDefault();
-            
+
             const name = document.getElementById('contactName').value.trim();
             const email = document.getElementById('contactEmail').value.trim();
             const phone = document.getElementById('contactPhone').value.trim();
             const eventType = document.getElementById('contactEventType').value;
             const message = document.getElementById('contactMessage').value.trim();
             const statusDiv = document.getElementById('formStatus');
-            
+
             if (!name || !email || !phone || !eventType || !message) {
                 statusDiv.className = 'form-status error';
                 statusDiv.textContent = '✗ Please fill in all required fields.';
                 return;
             }
-            
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 statusDiv.className = 'form-status error';
                 statusDiv.textContent = '✗ Please enter a valid email address.';
                 return;
             }
-            
+
             statusDiv.className = 'form-status success';
             statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
-            
+
             document.getElementById('contactForm').reset();
-            
+
+            setTimeout(() => {
+                statusDiv.className = 'form-status';
+                statusDiv.textContent = '';
+            }, 5000);
+        }
+
+        function handleCustomOrderSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('customOrderName').value.trim();
+            const email = document.getElementById('customOrderEmail').value.trim();
+            const phone = document.getElementById('customOrderPhone').value.trim();
+            const orderType = document.getElementById('customOrderType').value;
+            const description = document.getElementById('customOrderDescription').value.trim();
+            const statusDiv = document.getElementById('customOrderFormStatus');
+
+            if (!name || !email || !phone || !orderType || !description) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Please fill in all required fields.';
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Please enter a valid email address.';
+                return;
+            }
+
+            statusDiv.className = 'form-status success';
+            statusDiv.textContent = "✓ Thank you! Your custom order request has been received. We'll contact you within 24-48 hours with a quote.";
+
+            document.getElementById('customOrderContactForm').reset();
+
             setTimeout(() => {
                 statusDiv.className = 'form-status';
                 statusDiv.textContent = '';
