@@ -831,6 +831,38 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             }, 5000);
         }
 
+        // Update product dropdown based on order type selection
+        function updateProductOptions() {
+            const orderType = document.getElementById('customOrderType').value;
+            const productGroup = document.getElementById('productSelectGroup');
+            const productSelect = document.getElementById('customOrderProduct');
+            const printOptions = document.getElementById('3dPrintOptions');
+            const engravingOptions = document.getElementById('engravingOptions');
+
+            if (!orderType) {
+                productGroup.style.display = 'none';
+                productSelect.required = false;
+                return;
+            }
+
+            // Show the product dropdown
+            productGroup.style.display = 'block';
+            productSelect.required = true;
+            productSelect.value = ''; // Reset selection
+
+            // Show/hide option groups based on order type
+            if (orderType === '3d-print') {
+                printOptions.style.display = 'block';
+                engravingOptions.style.display = 'none';
+            } else if (orderType === 'engraving') {
+                printOptions.style.display = 'none';
+                engravingOptions.style.display = 'block';
+            } else if (orderType === 'both') {
+                printOptions.style.display = 'block';
+                engravingOptions.style.display = 'block';
+            }
+        }
+
         function handleCustomOrderSubmit(e) {
             e.preventDefault();
 
@@ -838,10 +870,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const email = document.getElementById('customOrderEmail').value.trim();
             const phone = document.getElementById('customOrderPhone').value.trim();
             const orderType = document.getElementById('customOrderType').value;
+            const product = document.getElementById('customOrderProduct').value;
             const description = document.getElementById('customOrderDescription').value.trim();
             const statusDiv = document.getElementById('customOrderFormStatus');
 
-            if (!name || !email || !phone || !orderType || !description) {
+            if (!name || !email || !phone || !orderType || !product || !description) {
                 statusDiv.className = 'form-status error';
                 statusDiv.textContent = '✗ Please fill in all required fields.';
                 return;

@@ -1107,11 +1107,40 @@
                             </div>
                             <div class="form-group">
                                 <label>Order Type *</label>
-                                <select id="customOrderType" required>
+                                <select id="customOrderType" required onchange="updateProductOptions()">
                                     <option value="">Select type</option>
                                     <option value="3d-print">3D Printed Item</option>
                                     <option value="engraving">Engraving</option>
                                     <option value="both">Both 3D Print & Engraving</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="productSelectGroup" style="display: none;">
+                                <label>Product to Customize *</label>
+                                <select id="customOrderProduct">
+                                    <option value="">Select product</option>
+                                    <!-- 3D Print Options -->
+                                    <optgroup label="3D Printed Items" id="3dPrintOptions">
+                                        <option value="3d-figurine">Custom Figurine</option>
+                                        <option value="3d-sign">Name Sign / Letters</option>
+                                        <option value="3d-topper">Cake Topper</option>
+                                        <option value="3d-holder">Phone/Tablet Stand</option>
+                                        <option value="3d-planter">Planter/Vase</option>
+                                        <option value="3d-keychain">Custom Keychain</option>
+                                        <option value="3d-ornament">Ornament/Decoration</option>
+                                        <option value="3d-other">Other 3D Item</option>
+                                    </optgroup>
+                                    <!-- Engraving Options -->
+                                    <optgroup label="Engraving Items" id="engravingOptions">
+                                        <option value="eng-tumbler">Tumbler/Cup</option>
+                                        <option value="eng-cutting-board">Cutting Board</option>
+                                        <option value="eng-plaque">Plaque/Sign</option>
+                                        <option value="eng-jewelry">Jewelry</option>
+                                        <option value="eng-pen">Pen Set</option>
+                                        <option value="eng-frame">Picture Frame</option>
+                                        <option value="eng-keychain">Keychain</option>
+                                        <option value="eng-glass">Glassware</option>
+                                        <option value="eng-other">Other Engraving Item</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="form-group">
