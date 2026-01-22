@@ -836,8 +836,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const orderType = document.getElementById('customOrderType').value;
             const productGroup = document.getElementById('productSelectGroup');
             const productSelect = document.getElementById('customOrderProduct');
-            const printOptions = document.getElementById('3dPrintOptions');
-            const engravingOptions = document.getElementById('engravingOptions');
+            const printOptions = document.getElementById('printOptionsGroup');
+            const engravingOptions = document.getElementById('engravingOptionsGroup');
 
             if (!orderType) {
                 productGroup.style.display = 'none';
