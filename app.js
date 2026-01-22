@@ -430,7 +430,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } else {
                 // Fallback: check URL hash
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
 
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
@@ -458,7 +458,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (event.persisted) {
                 // Page was restored from bfcache - sync display with URL
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
 
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
@@ -482,7 +482,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         // On page load, check if there's a hash in the URL and navigate to that page
         function initPageFromHash() {
             const hash = window.location.hash.replace('#', '');
-            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'contact', 'checkout', 'checkout-success'];
+            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
 
             // Check if it's a product page (hash starts with "product-")
             if (hash && hash.startsWith('product-')) {
@@ -565,7 +565,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             <span class="product-price-label">Starting at</span>
                             <span class="product-price-amount">$${product.price}</span>
                         </div>
-                        <button onclick="event.stopPropagation(); addToCart('${product.name}')" class="btn btn-primary" style="width: 100%">Add to Cart</button>
+                        <button onclick="event.stopPropagation(); bookConsultation('${product.name}', ${product.price})" class="btn btn-primary" style="width: 100%">Book Free Consultation</button>
                         <button onclick="event.stopPropagation(); navigateToProduct('${productSlug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
                     </div>
                 </div>
@@ -584,7 +584,30 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 navigate('product', true, 'product-' + slug);
             }
         }
-        
+
+        // Book consultation - navigate to contact page with product info pre-filled
+        function bookConsultation(productName, productPrice) {
+            // Store selected product info for the contact form
+            window.consultationProduct = {
+                name: productName,
+                price: productPrice
+            };
+
+            // Navigate to contact page and select the Party Decor form
+            navigate('contact');
+
+            // Wait for page to load, then select Party Decor and pre-fill info
+            setTimeout(() => {
+                selectContactService('partyDecor');
+
+                // Pre-fill the message with product info
+                const messageEl = document.getElementById('contactMessage');
+                if (messageEl) {
+                    messageEl.value = `I'm interested in booking a consultation for: ${productName} (Starting at $${productPrice})\n\nPlease contact me to discuss my event details.`;
+                }
+            }, 100);
+        }
+
         // Get product by slug
         function getProductBySlug(slug) {
             return products.find(p => {
@@ -665,8 +688,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         ${features}
                         
                         <div class="product-detail-cta">
-                            <button onclick="addToCart('${product.name}')" class="btn btn-primary">
-                                Add to Cart
+                            <button onclick="bookConsultation('${product.name}', ${product.price})" class="btn btn-primary">
+                                Book Free Consultation
                             </button>
                         </div>
                     </div>

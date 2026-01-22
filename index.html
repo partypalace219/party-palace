@@ -52,6 +52,7 @@
                 <nav class="nav-right-links">
                     <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
                     <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
+                    <button onclick="navigate('jewelry')" data-page="jewelry">Jewelry</button>
                     <button onclick="navigate('contact')" data-page="contact">Contact</button>
                 </nav>
                 <button class="cart-icon" onclick="toggleCart()" title="Shopping Cart">
@@ -96,6 +97,7 @@
         <button onclick="navigate('partyrentals')" data-page="partyrentals" class="coming-soon-tab">Party Rentals <span class="coming-soon-badge">Coming Soon</span></button>
         <button onclick="navigate('prints3d')" data-page="prints3d">3D Prints</button>
         <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
+        <button onclick="navigate('jewelry')" data-page="jewelry">Jewelry</button>
         <button onclick="navigate('contact')" data-page="contact">Contact</button>
         <div class="mobile-menu-footer">
             <a href="mailto:partypalace.in@gmail.com" class="phone-link">✉️ partypalace.in@gmail.com</a>
@@ -868,26 +870,26 @@
                     </div>
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
-                            <span>👛</span>
+                            <span>🧸</span>
                         </div>
                         <div class="product-info">
                             <div class="product-category">3D Prints</div>
-                            <div class="product-name">Wallets</div>
-                            <div class="product-description">Unique 3D printed wallet accessories and card holders with custom designs.</div>
+                            <div class="product-name">Toys</div>
+                            <div class="product-description">Custom 3D printed toys and figurines with personalized designs for any occasion.</div>
                             <div class="product-price">$25 <span class="product-price-label">starting at</span></div>
-                            <button onclick="inquireProduct('3D Printed Wallets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <button onclick="inquireProduct('3D Printed Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)">
-                            <span>🍶</span>
+                            <span>🎤</span>
                         </div>
                         <div class="product-info">
                             <div class="product-category">3D Prints</div>
-                            <div class="product-name">Water Bottles</div>
-                            <div class="product-description">Custom 3D printed water bottle accessories and personalized bottle designs.</div>
+                            <div class="product-name">Mics</div>
+                            <div class="product-description">Custom 3D printed microphone accessories and personalized mic designs.</div>
                             <div class="product-price">$18 <span class="product-price-label">starting at</span></div>
-                            <button onclick="inquireProduct('3D Printed Water Bottles')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <button onclick="inquireProduct('3D Printed Mics')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                 </div>
@@ -984,26 +986,106 @@
                     </div>
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
-                            <span>👛</span>
+                            <span>🧸</span>
                         </div>
                         <div class="product-info">
                             <div class="product-category">Engraving</div>
-                            <div class="product-name">Wallets</div>
-                            <div class="product-description">Premium leather wallets with personalized laser engraved names, initials, or designs.</div>
-                            <div class="product-price">$35 <span class="product-price-label">starting at</span></div>
-                            <button onclick="inquireProduct('Engraved Wallets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div class="product-name">Toys</div>
+                            <div class="product-description">Custom laser engraved toys and game pieces with personalized names or designs.</div>
+                            <div class="product-price">$20 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                     <div class="product-card">
                         <div class="product-image" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)">
-                            <span>🍶</span>
+                            <span>🎤</span>
                         </div>
                         <div class="product-info">
                             <div class="product-category">Engraving</div>
-                            <div class="product-name">Water Bottles</div>
-                            <div class="product-description">Stainless steel water bottles with custom laser engraved logos, names, or artwork.</div>
-                            <div class="product-price">$22 <span class="product-price-label">starting at</span></div>
-                            <button onclick="inquireProduct('Engraved Water Bottles')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div class="product-name">Mics</div>
+                            <div class="product-description">Custom laser engraved microphone accessories and personalized mic plates.</div>
+                            <div class="product-price">$25 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Mics')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Jewelry Page -->
+    <div id="page-jewelry" class="page">
+        <section class="hero hero-small">
+            <div class="hero-content">
+                <h1>Custom Jewelry</h1>
+                <p class="hero-subtitle">Personalized engraved jewelry pieces for that special touch</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <!-- Image Upload CTA -->
+                <div style="background: linear-gradient(135deg, rgba(245, 175, 25, 0.1), rgba(241, 39, 17, 0.1)); border: 2px dashed var(--primary); border-radius: 16px; padding: 2rem; text-align: center; margin-bottom: 3rem;">
+                    <span style="font-size: 3rem;">💎</span>
+                    <h3 style="margin: 1rem 0 0.5rem;">Custom Jewelry Engraving</h3>
+                    <p style="color: var(--gray-600); margin-bottom: 0.5rem;">Have a piece you'd like personalized? Send us details for a quote.</p>
+                    <p style="color: var(--gray-500); font-size: 0.85rem; margin-bottom: 1rem;">(We can engrave on most jewelry materials)</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="navigate('contact')" class="btn btn-primary">✉️ Request a Quote</button>
+                        <a href="mailto:partypalace.in@gmail.com" class="btn btn-outline" style="color: var(--blue-primary); border-color: var(--blue-primary);">📧 Email Directly</a>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="section-header">
+                    <h2>Available Jewelry</h2>
+                    <p>Custom engraved pieces personalized with your design</p>
+                </div>
+                <div class="products-grid" id="jewelryGrid">
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #f5af19, #f12711)">
+                            <span>📿</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Jewelry</div>
+                            <div class="product-name">Necklaces</div>
+                            <div class="product-description">Personalized engraved pendants and necklaces with names, initials, or custom designs.</div>
+                            <div class="product-price">$30 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Necklaces')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #c471ed, #f64f59)">
+                            <span>💍</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Jewelry</div>
+                            <div class="product-name">Rings</div>
+                            <div class="product-description">Custom engraved rings with special dates, names, or meaningful messages.</div>
+                            <div class="product-price">$35 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Rings')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #11998e, #38ef7d)">
+                            <span>📿</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Jewelry</div>
+                            <div class="product-name">Bracelets</div>
+                            <div class="product-description">Personalized engraved bracelets and bangles with custom text or coordinates.</div>
+                            <div class="product-price">$25 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Bracelets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #ee0979, #ff6a00)">
+                            <span>✨</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category">Jewelry</div>
+                            <div class="product-name">Earrings</div>
+                            <div class="product-description">Custom laser cut and engraved earrings in various styles and materials.</div>
+                            <div class="product-price">$20 <span class="product-price-label">starting at</span></div>
+                            <button onclick="inquireProduct('Engraved Earrings')" class="btn btn-primary" style="width: 100%">Get Quote</button>
                         </div>
                     </div>
                 </div>
@@ -1121,22 +1203,39 @@
                                     <!-- 3D Print Options -->
                                     <optgroup label="3D Printed Items">
                                         <option value="3d-figurine">Custom Figurine</option>
-                                        <option value="3d-sign">Name Sign / Letters</option>
                                         <option value="3d-topper">Cake Topper</option>
                                         <option value="3d-holder">Phone/Tablet Stand</option>
                                         <option value="3d-planter">Planter/Vase</option>
                                         <option value="3d-keychain">Custom Keychain</option>
-                                        <option value="3d-ornament">Ornament/Decoration</option>
+                                        <option value="3d-toys">Toys</option>
+                                        <option value="3d-mics">Mics</option>
                                         <option value="3d-other">Other 3D Item</option>
+                                    </optgroup>
+                                    <!-- Signs -->
+                                    <optgroup label="Signs">
+                                        <option value="sign-name">Name Sign / Letters</option>
+                                        <option value="sign-plaque">Plaque/Sign</option>
+                                        <option value="sign-other">Other Sign</option>
+                                    </optgroup>
+                                    <!-- Decor -->
+                                    <optgroup label="Decor">
+                                        <option value="decor-ornament">Ornament</option>
+                                        <option value="decor-frame">Picture Frame</option>
+                                        <option value="decor-other">Other Decor</option>
+                                    </optgroup>
+                                    <!-- Jewelry -->
+                                    <optgroup label="Jewelry">
+                                        <option value="jewelry-necklace">Necklace</option>
+                                        <option value="jewelry-bracelet">Bracelet</option>
+                                        <option value="jewelry-ring">Ring</option>
+                                        <option value="jewelry-earrings">Earrings</option>
+                                        <option value="jewelry-other">Other Jewelry</option>
                                     </optgroup>
                                     <!-- Engraving Options -->
                                     <optgroup label="Engraving Items">
                                         <option value="eng-tumbler">Tumbler/Cup</option>
                                         <option value="eng-cutting-board">Cutting Board</option>
-                                        <option value="eng-plaque">Plaque/Sign</option>
-                                        <option value="eng-jewelry">Jewelry</option>
                                         <option value="eng-pen">Pen Set</option>
-                                        <option value="eng-frame">Picture Frame</option>
                                         <option value="eng-keychain">Keychain</option>
                                         <option value="eng-glass">Glassware</option>
                                         <option value="eng-other">Other Engraving Item</option>
