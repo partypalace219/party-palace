@@ -182,13 +182,13 @@
             renderCheckoutItems();
         }
 
-        // Deposit amount constant
-        const DEPOSIT_AMOUNT = 50;
+        // Deposit amount constant (minimum)
+        const MIN_DEPOSIT_AMOUNT = 50;
 
         function renderCheckoutItems() {
             const container = document.getElementById('checkoutItems');
             const totalEl = document.getElementById('checkoutTotal');
-            const fullAmountEl = document.getElementById('fullAmount');
+            const cartTotalDisplay = document.getElementById('cartTotalDisplay');
 
             if (!container) return;
 
@@ -204,6 +204,89 @@
             if (totalEl) {
                 totalEl.textContent = '$' + total;
             }
+            if (cartTotalDisplay) {
+                cartTotalDisplay.textContent = '$' + total;
+            }
+
+            // Initialize payment options
+            initPaymentOptions();
+        }
+
+        // Payment option handling
+        function initPaymentOptions() {
+            const depositRadio = document.getElementById('paymentDeposit');
+            const fullRadio = document.getElementById('paymentFull');
+            const depositAmountSection = document.getElementById('depositAmountSection');
+            const depositAmountInput = document.getElementById('depositAmountInput');
+            const depositLabel = document.getElementById('depositOptionLabel');
+            const fullLabel = document.getElementById('fullPaymentOptionLabel');
+
+            if (!depositRadio || !fullRadio) return;
+
+            function updatePaymentUI() {
+                const isDeposit = depositRadio.checked;
+
+                // Show/hide deposit amount input
+                if (depositAmountSection) {
+                    depositAmountSection.style.display = isDeposit ? 'block' : 'none';
+                }
+
+                // Update label styles
+                if (depositLabel) {
+                    depositLabel.style.borderColor = isDeposit ? 'var(--blue-primary)' : 'var(--gray-300)';
+                    depositLabel.style.background = isDeposit ? '#EFF6FF' : 'white';
+                }
+                if (fullLabel) {
+                    fullLabel.style.borderColor = !isDeposit ? 'var(--blue-primary)' : 'var(--gray-300)';
+                    fullLabel.style.background = !isDeposit ? '#EFF6FF' : 'white';
+                }
+
+                // Update submit button text
+                updatePaymentButtonText();
+            }
+
+            depositRadio.addEventListener('change', updatePaymentUI);
+            fullRadio.addEventListener('change', updatePaymentUI);
+
+            if (depositAmountInput) {
+                depositAmountInput.addEventListener('input', updatePaymentButtonText);
+            }
+
+            // Initialize
+            updatePaymentUI();
+        }
+
+        function updatePaymentButtonText() {
+            const btnText = document.getElementById('checkoutBtnText');
+            const depositRadio = document.getElementById('paymentDeposit');
+            const depositAmountInput = document.getElementById('depositAmountInput');
+
+            if (!btnText) return;
+
+            if (depositRadio && depositRadio.checked) {
+                const amount = depositAmountInput ? parseInt(depositAmountInput.value) || MIN_DEPOSIT_AMOUNT : MIN_DEPOSIT_AMOUNT;
+                btnText.textContent = `Pay $${amount} Deposit to Book`;
+            } else {
+                const total = getCartTotal();
+                btnText.textContent = `Pay $${total} in Full`;
+            }
+        }
+
+        function getSelectedPaymentAmount() {
+            const depositRadio = document.getElementById('paymentDeposit');
+            const depositAmountInput = document.getElementById('depositAmountInput');
+
+            if (depositRadio && depositRadio.checked) {
+                const amount = depositAmountInput ? parseInt(depositAmountInput.value) || MIN_DEPOSIT_AMOUNT : MIN_DEPOSIT_AMOUNT;
+                return Math.max(amount, MIN_DEPOSIT_AMOUNT); // Ensure minimum
+            } else {
+                return getCartTotal();
+            }
+        }
+
+        function getPaymentType() {
+            const depositRadio = document.getElementById('paymentDeposit');
+            return depositRadio && depositRadio.checked ? 'deposit' : 'full';
         }
 
         // Display order summary on success page
@@ -280,6 +363,9 @@
             const btnText = document.getElementById('checkoutBtnText');
             const btnLoading = document.getElementById('checkoutBtnLoading');
 
+            const paymentType = getPaymentType();
+            const paymentAmount = getSelectedPaymentAmount();
+
             const formData = {
                 name: document.getElementById('checkoutName').value,
                 email: document.getElementById('checkoutEmail').value,
@@ -290,13 +376,19 @@
                 notes: document.getElementById('checkoutNotes').value,
                 items: cart.map(item => `${item.name} ($${item.price})`).join(', '),
                 estimatedTotal: getCartTotal(),
-                paymentType: 'deposit',
-                amountPaid: DEPOSIT_AMOUNT
+                paymentType: paymentType,
+                amountPaid: paymentAmount
             };
 
             // Validate cart is not empty
             if (cart.length === 0) {
                 statusEl.innerHTML = '<div class="form-error">Your cart is empty. Please add items before checkout.</div>';
+                return;
+            }
+
+            // Validate deposit amount
+            if (paymentType === 'deposit' && paymentAmount < MIN_DEPOSIT_AMOUNT) {
+                statusEl.innerHTML = `<div class="form-error">Minimum deposit amount is $${MIN_DEPOSIT_AMOUNT}.</div>`;
                 return;
             }
 
@@ -319,8 +411,8 @@
                     body: JSON.stringify({
                         items: cart,
                         customerInfo: formData,
-                        paymentType: 'deposit',
-                        depositAmount: DEPOSIT_AMOUNT
+                        paymentType: paymentType,
+                        paymentAmount: paymentAmount
                     })
                 });
 

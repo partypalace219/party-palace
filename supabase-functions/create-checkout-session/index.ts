@@ -20,21 +20,29 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     })
 
-    const { items, customerInfo, depositAmount } = await req.json()
+    const { items, customerInfo, paymentType, paymentAmount } = await req.json()
 
-    // Get item names for the deposit description
+    // Get item names for the description
     const itemNames = items.map((item: any) => item.name).join(', ')
     const estimatedTotal = items.reduce((sum: number, item: any) => sum + item.price, 0)
 
-    // Create a single line item for the deposit
+    // Determine payment details based on type
+    const isFullPayment = paymentType === 'full'
+    const amount = isFullPayment ? estimatedTotal : paymentAmount
+
+    // Create line item based on payment type
     const lineItems = [{
       price_data: {
         currency: 'usd',
         product_data: {
-          name: 'Booking Deposit - Party Palace',
-          description: `Deposit to secure booking for: ${itemNames}. Final pricing confirmed after design consultation.`,
+          name: isFullPayment
+            ? 'Party Palace Order - Full Payment'
+            : 'Booking Deposit - Party Palace',
+          description: isFullPayment
+            ? `Full payment for: ${itemNames}.`
+            : `Deposit to secure booking for: ${itemNames}. Remaining balance of $${estimatedTotal - amount} due before event.`,
         },
-        unit_amount: Math.round(depositAmount * 100), // Stripe uses cents
+        unit_amount: Math.round(amount * 100), // Stripe uses cents
       },
       quantity: 1,
     }]
@@ -44,8 +52,8 @@ serve(async (req) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/#checkout-success`,
-      cancel_url: `${req.headers.get('origin')}/#checkout`,
+      success_url: 'https://partypalace219.github.io/party-palace/#checkout-success',
+      cancel_url: 'https://partypalace219.github.io/party-palace/#checkout',
       customer_email: customerInfo.email,
       metadata: {
         customer_name: customerInfo.name,
@@ -56,7 +64,9 @@ serve(async (req) => {
         notes: customerInfo.notes || '',
         order_items: itemNames,
         estimated_total: estimatedTotal.toString(),
-        deposit_amount: depositAmount.toString(),
+        payment_type: paymentType,
+        amount_paid: amount.toString(),
+        remaining_balance: isFullPayment ? '0' : (estimatedTotal - amount).toString(),
       },
     })
 
