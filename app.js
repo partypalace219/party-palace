@@ -86,46 +86,6 @@
         // Engraving products data
         const engravingProducts = [
             {
-                name: 'Wood Items',
-                slug: 'wood-items',
-                category: 'engraving',
-                price: 15,
-                description: 'Custom laser engraved signs, plaques, cutting boards, and decorative pieces.',
-                icon: '🪵',
-                size: 'Various sizes available',
-                images: []
-            },
-            {
-                name: 'Keychains',
-                slug: 'keychains',
-                category: 'engraving',
-                price: 8,
-                description: 'Personalized engraved keychains with names or logos.',
-                icon: '🔑',
-                size: '2" x 1"',
-                images: []
-            },
-            {
-                name: 'Coasters',
-                slug: 'coasters',
-                category: 'engraving',
-                price: 10,
-                description: 'Custom engraved coasters. Perfect for gifts or events.',
-                icon: '🍵',
-                size: '4" x 4"',
-                images: []
-            },
-            {
-                name: 'Magnets',
-                slug: 'magnets',
-                category: 'engraving',
-                price: 6,
-                description: 'Laser engraved magnets with custom designs and photos.',
-                icon: '🧲',
-                size: '2" x 2"',
-                images: []
-            },
-            {
                 name: 'Edge Glued Square Panel',
                 slug: 'edge-glued-square-panel',
                 category: 'engraving',
