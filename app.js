@@ -132,6 +132,49 @@
             showNotification(`${product.name} added to cart!`, 'success');
         }
 
+        // Add engraving product to cart with quantity and special instructions
+        function addEngravingToCart(productName, basePrice, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+
+            // Create unique name with quantity if more than 1
+            const itemName = qty > 1 ? `${productName} (x${qty})` : productName;
+            const totalPrice = basePrice * qty;
+
+            // Check if same item already in cart (without instructions comparison for simplicity)
+            const existingIndex = cart.findIndex(item => item.name.startsWith(productName.split(' (x')[0]));
+            if (existingIndex !== -1) {
+                // Update existing item
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    instructions: instructions,
+                    quantity: qty
+                };
+                showNotification(`${productName} updated in cart!`, 'success');
+            } else {
+                // Add new item
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    instructions: instructions,
+                    quantity: qty
+                });
+                showNotification(`${itemName} added to cart!`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();

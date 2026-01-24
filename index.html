@@ -917,100 +917,117 @@
                     <span style="font-size: 1.25rem;">🚚 <strong>FREE SHIPPING</strong> on orders $75+ </span>
                 </div>
 
-                <!-- Have a Custom Idea? - Moved to Top -->
-                <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #43e97b, #38f9d7); border-radius: 12px; margin-bottom: 3rem; color: white;">
-                    <span style="font-size: 2rem;">💡</span>
-                    <h3 style="margin: 0.5rem 0; color: white;">Have a Custom Idea?</h3>
-                    <p style="margin: 0.5rem 0 1rem; color: rgba(255,255,255,0.95);">Custom designs must be requested via message or email.<br>We'll send you product photos and pricing once we review your request.</p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <button onclick="navigate('contact')" class="btn" style="background: white; color: #38a169; font-weight: 600;">✉️ Send Us a Message</button>
-                        <a href="mailto:partypalace.in@gmail.com" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white;">📧 Email Us Directly</a>
-                    </div>
-                </div>
-                
-                <!-- Upload Section - For sending reference images -->
-                <div class="upload-section" style="background: var(--gray-50); border: 2px dashed var(--gray-300); border-radius: 12px; padding: 2rem; margin-bottom: 3rem; text-align: center;">
-                    <span style="font-size: 3rem;">📤</span>
-                    <h3 style="margin: 1rem 0 0.5rem;">Send Reference Images</h3>
-                    <p style="color: var(--gray-600); margin-bottom: 0.5rem;">Have an image you'd like engraved? Send it to us for a quote.</p>
-                    <p style="color: var(--gray-500); font-size: 0.85rem; margin-bottom: 1rem;">(This is for reference only — we'll contact you with pricing)</p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <button onclick="navigate('contact')" class="btn btn-primary">✉️ Send via Contact Form</button>
-                        <a href="mailto:partypalace.in@gmail.com" class="btn btn-outline" style="color: var(--blue-primary); border-color: var(--blue-primary);">📧 Email Directly</a>
-                    </div>
-                    <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">Accepted formats: JPG, PNG, PDF, SVG, STL, 3MF, DXF</p>
-                </div>
-                
                 <!-- Products -->
                 <div class="section-header">
                     <h2>Available Products</h2>
                     <p>Laser engraved items personalized with your design</p>
                 </div>
                 <div class="products-grid" id="engravingGrid">
-                    <div class="product-card">
+                    <!-- Wood Items -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
                         <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
                             <span>🪵</span>
                         </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name">Wood Items</div>
                             <div class="product-description">Custom laser engraved wooden signs, plaques, cutting boards, and decorative pieces.</div>
-                            <button onclick="inquireProduct('Engraved Wood Items')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> Various sizes available
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Starting at</span>
+                                <span class="product-price-amount">$15</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-wood-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-wood-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Wood Items', 15, 'engraving-wood')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-                    <div class="product-card">
+
+                    <!-- Keychains -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
                         <div class="product-image" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
                             <span>🔑</span>
                         </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name">Keychains</div>
                             <div class="product-description">Personalized engraved keychains in wood, metal, or leather with names or logos.</div>
-                            <button onclick="inquireProduct('Engraved Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> 2" x 1"
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Price</span>
+                                <span class="product-price-amount">$8</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-keychain-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-keychain-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Keychain', 8, 'engraving-keychain')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-                    <div class="product-card">
+
+                    <!-- Coasters -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
                         <div class="product-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
                             <span>🍵</span>
                         </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name">Coasters</div>
                             <div class="product-description">Custom engraved coasters in wood, slate, or cork. Perfect for gifts or events.</div>
-                            <button onclick="inquireProduct('Engraved Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> 4" x 4"
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Price</span>
+                                <span class="product-price-amount">$10</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-coaster-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-coaster-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Coaster', 10, 'engraving-coaster')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-                    <div class="product-card">
+
+                    <!-- Magnets -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
                         <div class="product-image" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
                             <span>🧲</span>
                         </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name">Magnets</div>
                             <div class="product-description">Laser engraved wooden or acrylic magnets with custom designs and photos.</div>
-                            <button onclick="inquireProduct('Engraved Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
-                            <span>🧸</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
-                            <div class="product-name">Toys</div>
-                            <div class="product-description">Custom laser engraved toys and game pieces with personalized names or designs.</div>
-                            <button onclick="inquireProduct('Engraved Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)">
-                            <span>🎤</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">Engraving</div>
-                            <div class="product-name">Mics</div>
-                            <div class="product-description">Custom laser engraved microphone accessories and personalized mic plates.</div>
-                            <button onclick="inquireProduct('Engraved Mics')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> 2" x 2"
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Price</span>
+                                <span class="product-price-amount">$6</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-magnet-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-magnet-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Magnet', 6, 'engraving-magnet')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
                 </div>
