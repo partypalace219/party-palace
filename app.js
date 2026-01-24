@@ -1222,6 +1222,16 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.querySelectorAll('#engravingFilterButtons .filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.material === material);
             });
+
+            // Show/hide products based on material
+            document.querySelectorAll('#engravingGrid .engraving-product').forEach(product => {
+                const productMaterials = product.dataset.material.split(',');
+                if (material === 'all' || productMaterials.includes(material)) {
+                    product.style.display = 'flex';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
         }
 
         // Inquire Product
