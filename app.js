@@ -140,6 +140,22 @@
                     6: 30.99,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Edge Glued Round Panel',
+                slug: 'edge-glued-round-panel',
+                category: 'engraving',
+                price: 39.99,
+                description: 'High-quality edge glued round wood panel, perfect for custom engraving projects.',
+                icon: '🪵',
+                size: '10" x 10"',
+                images: ['edge-glued-round-panel/round1.jpeg', 'edge-glued-round-panel/round2.jpeg'],
+                tieredPricing: {
+                    1: 39.99,
+                    2: 36.99,
+                    6: 30.99,
+                    11: 'contact'
+                }
             }
         ];
         let currentFilter = 'all';
