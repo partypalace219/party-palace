@@ -786,6 +786,17 @@
                 <p class="hero-subtitle">Custom plastic 3D printed products with your designs</p>
             </div>
         </section>
+        <section class="catalog-filters">
+            <div class="container">
+                <div class="filter-buttons" id="prints3dFilterButtons">
+                    <button class="filter-btn active" data-category="all" onclick="filter3DProducts('all')">All</button>
+                    <button class="filter-btn" data-category="Toys" onclick="filter3DProducts('Toys')">Toys</button>
+                    <button class="filter-btn" data-category="Home Decor" onclick="filter3DProducts('Home Decor')">Home Decor</button>
+                    <button class="filter-btn" data-category="Accessories" onclick="filter3DProducts('Accessories')">Accessories</button>
+                    <button class="filter-btn" data-category="Functional" onclick="filter3DProducts('Functional')">Functional</button>
+                </div>
+            </div>
+        </section>
         <section class="section">
             <div class="container">
                 <!-- Free Shipping Banner -->
@@ -810,84 +821,16 @@
                     <p>Custom plastic 3D printed items personalized with your design</p>
                 </div>
                 <div class="products-grid" id="prints3dGrid">
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
-                            <span>🪧</span>
-                            <div class="product-badge">Popular</div>
+                    <!-- 3D Print Products -->
+                    <div class="product-card prints3d-product" data-category="Toys" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('3-foot-snake')">
+                            <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg" alt="3 Foot Snake" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>🐍</span>';">
                         </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Signs</div>
-                            <div class="product-description">Custom 3D printed plastic signs and plaques with names, logos, or custom text.</div>
-                            <button onclick="inquireProduct('3D Printed Signs')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #764ba2, #667eea)">
-                            <span>🏠</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Decor</div>
-                            <div class="product-description">Custom 3D printed decorative pieces for home or events.</div>
-                            <button onclick="inquireProduct('3D Printed Decor')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
-                            <span>🔑</span>
-                            <div class="product-badge">Popular</div>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Keychains</div>
-                            <div class="product-description">Personalized 3D printed keychains with names, logos, or custom shapes.</div>
-                            <button onclick="inquireProduct('3D Printed Keychains')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
-                            <span>🍵</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Coasters</div>
-                            <div class="product-description">Custom 3D printed coasters with unique designs, perfect for gifts or events.</div>
-                            <button onclick="inquireProduct('3D Printed Coasters')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
-                            <span>🧲</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Magnets</div>
-                            <div class="product-description">Fun 3D printed magnets with custom shapes, photos, or text designs.</div>
-                            <button onclick="inquireProduct('3D Printed Magnets')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #fa709a, #fee140)">
-                            <span>🧸</span>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Toys</div>
-                            <div class="product-description">Custom 3D printed toys and figurines with personalized designs for any occasion.</div>
-                            <button onclick="inquireProduct('3D Printed Toys')" class="btn btn-primary" style="width: 100%">Get Quote</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image" style="background: linear-gradient(135deg, #f5af19, #f12711)">
-                            <span>💎</span>
-                            <div class="product-badge">Popular</div>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">3D Prints</div>
-                            <div class="product-name">Jewelry</div>
-                            <div class="product-description">Custom 3D printed jewelry including pendants, rings, and personalized accessories.</div>
-                            <button onclick="inquireProduct('3D Printed Jewelry')" class="btn btn-primary" style="width: 100%">Get Quote</button>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('3-foot-snake')">3 Foot Snake</div>
+                            <div class="product-description">Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors.</div>
+                            <div class="product-price" style="margin-top: auto;">$24.99</div>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addToCart({name: '3 Foot Snake', price: 24.99, image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg'})">Add to Cart</button>
                         </div>
                     </div>
                 </div>

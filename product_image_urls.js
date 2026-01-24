@@ -132,6 +132,10 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters1.jpeg',
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters2.jpeg',
     ],
+    '3 Foot Snake': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake2.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
