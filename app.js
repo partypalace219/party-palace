@@ -213,7 +213,7 @@
                 description: 'Natural unfinished rustic wood rounds. Perfect for custom engraving, centerpieces, and rustic decor.',
                 icon: '🪵',
                 size: '9-10" diameter',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds2.jpeg'],
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds1_v2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds2_v2.jpeg'],
                 tieredPricing: {
                     1: 54.99,
                     2: 51.99,
