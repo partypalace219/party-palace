@@ -220,6 +220,22 @@
                     6: 45.99,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Round Basswood Plywood Coaster',
+                slug: 'round-basswood-plywood-coaster',
+                category: 'engraving',
+                price: 5.99,
+                description: 'Custom engraved round basswood plywood coaster. Perfect for personalized gifts and home decor.',
+                icon: '🪵',
+                size: '4" diameter',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters2.jpeg'],
+                tieredPricing: {
+                    1: 5.99,
+                    2: 4.49,
+                    6: 2.49,
+                    11: 'contact'
+                }
             }
         ];
         let currentFilter = 'all';
@@ -638,6 +654,72 @@
                 pricePerUnit = 51.99;
             } else if (qty >= 6 && qty <= 10) {
                 pricePerUnit = 45.99;
+            }
+
+            const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
+            const itemName = qty > 1
+                ? `${material} ${productName} (x${qty})`
+                : `${material} ${productName}`;
+
+            // Check if same item already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(productName)
+            );
+
+            if (existingIndex !== -1) {
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                });
+                showNotification(`${itemName} added to cart! ($${pricePerUnit.toFixed(2)} each)`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
+        function addTieredCoasterToCart(productName, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = 'Wood';
+
+            // Check for 11+ quantity - redirect to contact
+            if (qty >= 11) {
+                showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                navigate('contact');
+                return;
+            }
+
+            // Calculate tiered pricing for Round Basswood Plywood Coaster
+            let pricePerUnit;
+            if (qty === 1) {
+                pricePerUnit = 5.99;
+            } else if (qty >= 2 && qty <= 5) {
+                pricePerUnit = 4.49;
+            } else if (qty >= 6 && qty <= 10) {
+                pricePerUnit = 2.49;
             }
 
             const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
