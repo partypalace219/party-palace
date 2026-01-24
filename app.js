@@ -90,9 +90,24 @@
 
         function updateCartCount() {
             const countEl = document.getElementById('cartCount');
+            const navBadge = document.getElementById('cartCountBadge');
+            const mobileCartCount = document.getElementById('mobileCartCount');
+
             if (countEl) {
                 countEl.textContent = cart.length;
                 countEl.style.display = cart.length > 0 ? 'flex' : 'none';
+            }
+
+            // Update nav bar cart badge
+            if (navBadge) {
+                navBadge.textContent = cart.length;
+                navBadge.style.display = cart.length > 0 ? 'block' : 'none';
+            }
+
+            // Update mobile menu cart count
+            if (mobileCartCount) {
+                mobileCartCount.textContent = cart.length;
+                mobileCartCount.style.display = cart.length > 0 ? 'inline-block' : 'none';
             }
         }
 
