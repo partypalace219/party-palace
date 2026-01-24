@@ -197,15 +197,24 @@
             showNotification(`${product.name} added to cart!`, 'success');
         }
 
+        // Get selected engraving material from filter buttons
+        function getSelectedEngravingMaterial() {
+            const activeBtn = document.querySelector('#engravingFilterButtons .filter-btn.active');
+            if (activeBtn) {
+                const material = activeBtn.dataset.material;
+                return material === 'all' ? 'Wood' : material; // Default to Wood if "All" is selected
+            }
+            return 'Wood';
+        }
+
         // Add engraving product to cart with quantity, material, and special instructions
         function addEngravingToCart(productName, basePrice, productId) {
             const qtyInput = document.getElementById(productId + '-qty');
             const instructionsInput = document.getElementById(productId + '-instructions');
-            const materialInput = document.getElementById(productId + '-material');
 
             const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
             const instructions = instructionsInput ? instructionsInput.value.trim() : '';
-            const material = materialInput ? materialInput.value : 'Wood';
+            const material = getSelectedEngravingMaterial();
 
             // Create item name with material and quantity
             const baseItemName = productName.replace('Engraved ', '');
@@ -248,7 +257,6 @@
             // Clear the form
             if (qtyInput) qtyInput.value = 1;
             if (instructionsInput) instructionsInput.value = '';
-            if (materialInput) materialInput.selectedIndex = 0;
         }
 
         // Add engraving product to cart from detail page
@@ -331,11 +339,10 @@
         function addTieredEngravingToCart(productName, productId) {
             const qtyInput = document.getElementById(productId + '-qty');
             const instructionsInput = document.getElementById(productId + '-instructions');
-            const materialInput = document.getElementById(productId + '-material');
 
             const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
             const instructions = instructionsInput ? instructionsInput.value.trim() : '';
-            const material = materialInput ? materialInput.value : 'Wood';
+            const material = getSelectedEngravingMaterial();
 
             // Check for 11+ quantity - redirect to contact
             if (qty >= 11) {
@@ -393,7 +400,6 @@
             // Clear the form
             if (qtyInput) qtyInput.value = 1;
             if (instructionsInput) instructionsInput.value = '';
-            if (materialInput) materialInput.selectedIndex = 0;
         }
 
         function removeFromCart(productName) {
@@ -1216,20 +1222,6 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.querySelectorAll('#engravingFilterButtons .filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.material === material);
             });
-
-            // Set all material dropdowns to the selected material
-            if (material !== 'all') {
-                const materialDropdowns = document.querySelectorAll('#engravingGrid select[id$="-material"]');
-                materialDropdowns.forEach(dropdown => {
-                    // Find the option that matches the material
-                    for (let i = 0; i < dropdown.options.length; i++) {
-                        if (dropdown.options[i].value === material) {
-                            dropdown.selectedIndex = i;
-                            break;
-                        }
-                    }
-                });
-            }
         }
 
         // Inquire Product
