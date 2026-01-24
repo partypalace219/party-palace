@@ -779,6 +779,17 @@
             });
         }
 
+        function addInfinityCubeToCart() {
+            const select = document.getElementById('infinityCubeColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Infinity Cube (${color})`,
+                price: 8.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg'
+            });
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();

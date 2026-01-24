@@ -932,6 +932,33 @@
                             <button class="btn btn-primary add-to-cart-btn" onclick="addOctagonFidgetToCart()">Add to Cart</button>
                         </div>
                     </div>
+                    <div class="product-card prints3d-product" data-category="Toys" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('infinity-cube')">
+                            <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg" alt="Infinity Cube" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>🎲</span>';">
+                        </div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('infinity-cube')">Infinity Cube</div>
+                            <div class="product-description">3D printed infinity cube fidget toy. Endlessly foldable for stress relief.</div>
+                            <div style="margin: 0.5rem 0;">
+                                <label style="font-size: 0.9rem; color: var(--gray-600); font-weight: 600;">Color:</label>
+                                <select id="infinityCubeColor" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-top: 0.25rem;">
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Orange">Orange</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Pink">Pink</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Black">Black</option>
+                                    <option value="White">White</option>
+                                    <option value="Purple">Purple</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Gray">Gray</option>
+                                </select>
+                            </div>
+                            <div class="product-price" style="margin-top: auto;">$8.99</div>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addInfinityCubeToCart()">Add to Cart</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

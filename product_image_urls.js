@@ -149,6 +149,9 @@ const productGalleryImages = {
     'Octagon Fidget': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/octagon-fidget/fidget1.jpeg',
     ],
+    'Infinity Cube': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
