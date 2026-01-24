@@ -1201,14 +1201,37 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         // Filter Products
         function filterProducts(category) {
             currentFilter = category;
-            
+
             // Update filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            document.querySelectorAll('#catalogFilterButtons .filter-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.category === category);
             });
-            
+
             renderCatalog();
         }
+
+        // Filter Engraving Products by Material
+        function filterEngravingProducts(material) {
+            // Update filter buttons
+            document.querySelectorAll('#engravingFilterButtons .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.material === material);
+            });
+
+            // Set all material dropdowns to the selected material
+            if (material !== 'all') {
+                const materialDropdowns = document.querySelectorAll('#engravingGrid select[id$="-material"]');
+                materialDropdowns.forEach(dropdown => {
+                    // Find the option that matches the material
+                    for (let i = 0; i < dropdown.options.length; i++) {
+                        if (dropdown.options[i].value === material) {
+                            dropdown.selectedIndex = i;
+                            break;
+                        }
+                    }
+                });
+            }
+        }
+
         // Inquire Product
         function inquireProduct(productName) {
             navigate('contact');
