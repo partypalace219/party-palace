@@ -124,6 +124,10 @@ const productGalleryImages = {
     'Black Acrylic Plexiglass Sheet': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/black-acrylic-plexiglass-sheet/acrylic1.jpeg',
     ],
+    'Unfinished Rustic Wood Rounds': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds2.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
