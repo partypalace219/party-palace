@@ -833,6 +833,24 @@
                             <button class="btn btn-primary add-to-cart-btn" onclick="addToCart({name: '3 Foot Snake', price: 24.99, image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg'})">Add to Cart</button>
                         </div>
                     </div>
+                    <div class="product-card prints3d-product" data-category="Toys" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('star-fidget')">
+                            <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget1.jpeg" alt="Star Fidget" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>⭐</span>';">
+                        </div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('star-fidget')">Star Fidget</div>
+                            <div class="product-description">3D printed star-shaped fidget toy. Satisfying to spin and play with.</div>
+                            <div style="margin: 0.5rem 0;">
+                                <label style="font-size: 0.9rem; color: var(--gray-600); font-weight: 600;">Size:</label>
+                                <select id="starFidgetSize" onchange="updateStarFidgetPrice()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-top: 0.25rem;">
+                                    <option value="small">Small - $6.99</option>
+                                    <option value="medium">Medium - $11.99</option>
+                                </select>
+                            </div>
+                            <div class="product-price" id="starFidgetPrice" style="margin-top: auto;">$6.99</div>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addStarFidgetToCart()">Add to Cart</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

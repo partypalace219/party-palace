@@ -723,6 +723,29 @@
             if (instructionsInput) instructionsInput.value = '';
         }
 
+        // Star Fidget size selector functions
+        function updateStarFidgetPrice() {
+            const select = document.getElementById('starFidgetSize');
+            const priceDisplay = document.getElementById('starFidgetPrice');
+            if (select && priceDisplay) {
+                const price = select.value === 'medium' ? '$11.99' : '$6.99';
+                priceDisplay.textContent = price;
+            }
+        }
+
+        function addStarFidgetToCart() {
+            const select = document.getElementById('starFidgetSize');
+            const size = select ? select.value : 'small';
+            const price = size === 'medium' ? 11.99 : 6.99;
+            const sizeName = size === 'medium' ? 'Medium' : 'Small';
+
+            addToCart({
+                name: `Star Fidget (${sizeName})`,
+                price: price,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget1.jpeg'
+            });
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();
@@ -1548,6 +1571,24 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.querySelectorAll('#engravingGrid .engraving-product').forEach(product => {
                 const productMaterials = product.dataset.material.split(',');
                 if (material === 'all' || productMaterials.includes(material)) {
+                    product.style.display = 'flex';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter 3D Prints by Category
+        function filter3DProducts(category) {
+            // Update filter buttons
+            document.querySelectorAll('#prints3dFilterButtons .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+
+            // Show/hide products based on category
+            document.querySelectorAll('#prints3dGrid .prints3d-product').forEach(product => {
+                const productCategories = product.dataset.category.split(',');
+                if (category === 'all' || productCategories.includes(category)) {
                     product.style.display = 'flex';
                 } else {
                     product.style.display = 'none';
