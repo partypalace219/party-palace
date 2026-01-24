@@ -16,6 +16,9 @@ const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
 const SMTP_USER = Deno.env.get('SMTP_USER') // partypalace.in@gmail.com
 const SMTP_PASS = Deno.env.get('SMTP_PASS') // Gmail App Password
 
+// SMS via Email Gateway (Metro/T-Mobile)
+const SMS_GATEWAY = '2193442416@tmomail.net'
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -79,6 +82,25 @@ async function getSmtpClient() {
       },
     },
   })
+}
+
+// Send SMS via email-to-SMS gateway
+async function sendSmsNotification(message: string) {
+  const client = await getSmtpClient()
+  try {
+    await client.send({
+      from: SMTP_USER!,
+      to: SMS_GATEWAY,
+      subject: '', // SMS doesn't use subject
+      content: message,
+    })
+    console.log('SMS notification sent')
+  } catch (error) {
+    console.error('SMS sending error:', error)
+    // Don't fail if SMS fails
+  } finally {
+    await client.close()
+  }
 }
 
 async function sendContactEmail(data: {
@@ -146,6 +168,10 @@ async function sendContactEmail(data: {
   } finally {
     await client.close()
   }
+
+  // Send SMS notification
+  const smsMessage = `NEW INQUIRY: ${data.name} - ${data.eventType}. Phone: ${data.phone}. Check email for details.`
+  await sendSmsNotification(smsMessage)
 }
 
 async function sendCustomOrderEmail(data: {
@@ -225,4 +251,8 @@ async function sendCustomOrderEmail(data: {
   } finally {
     await client.close()
   }
+
+  // Send SMS notification
+  const smsMessage = `CUSTOM ORDER: ${data.name} - ${orderTypeLabels[data.orderType] || data.orderType}. Phone: ${data.phone}. Check email for details.`
+  await sendSmsNotification(smsMessage)
 }
