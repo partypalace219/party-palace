@@ -186,6 +186,75 @@
             if (materialInput) materialInput.selectedIndex = 0;
         }
 
+        // Add engraving product with tiered pricing to cart
+        function addTieredEngravingToCart(productName, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+            const materialInput = document.getElementById(productId + '-material');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = materialInput ? materialInput.value : 'Wood';
+
+            // Check for 11+ quantity - redirect to contact
+            if (qty >= 11) {
+                showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                navigate('contact');
+                return;
+            }
+
+            // Calculate tiered pricing for Edge Glued Square Panel
+            let pricePerUnit;
+            if (qty === 1) {
+                pricePerUnit = 39.99;
+            } else if (qty >= 2 && qty <= 5) {
+                pricePerUnit = 36.99;
+            } else if (qty >= 6 && qty <= 10) {
+                pricePerUnit = 30.99;
+            }
+
+            const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
+            const itemName = qty > 1
+                ? `${material} ${productName} (x${qty})`
+                : `${material} ${productName}`;
+
+            // Check if same item with same material already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(productName) && item.material === material
+            );
+
+            if (existingIndex !== -1) {
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                });
+                showNotification(`${itemName} added to cart! ($${pricePerUnit.toFixed(2)} each)`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+            if (materialInput) materialInput.selectedIndex = 0;
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();
