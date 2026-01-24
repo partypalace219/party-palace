@@ -746,6 +746,17 @@
             });
         }
 
+        function addSpinnerToCart() {
+            const select = document.getElementById('spinnerColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Finger Fidget Spinner (${color})`,
+                price: 8.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/finger-fidget-spinner/spinner1.jpeg'
+            });
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();
