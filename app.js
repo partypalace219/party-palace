@@ -757,6 +757,17 @@
             });
         }
 
+        function addFlexiFishToCart() {
+            const select = document.getElementById('flexiFishColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Flexi Fish (${color})`,
+                price: 5.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg'
+            });
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();

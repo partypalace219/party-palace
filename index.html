@@ -885,8 +885,24 @@
                         <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('flexi-fish')">Flexi Fish</div>
                             <div class="product-description">3D printed flexible fish toy. Articulated and fun to wiggle.</div>
+                            <div style="margin: 0.5rem 0;">
+                                <label style="font-size: 0.9rem; color: var(--gray-600); font-weight: 600;">Color:</label>
+                                <select id="flexiFishColor" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-top: 0.25rem;">
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Orange">Orange</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Pink">Pink</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Black">Black</option>
+                                    <option value="White">White</option>
+                                    <option value="Purple">Purple</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Gray">Gray</option>
+                                </select>
+                            </div>
                             <div class="product-price" style="margin-top: auto;">$5.99</div>
-                            <button class="btn btn-primary add-to-cart-btn" onclick="addToCart({name: 'Flexi Fish', price: 5.99, image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg'})">Add to Cart</button>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addFlexiFishToCart()">Add to Cart</button>
                         </div>
                     </div>
                 </div>
