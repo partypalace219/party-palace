@@ -228,6 +228,30 @@
             if (orderTotalEl) orderTotalEl.textContent = orderInfo.estimatedTotal ? ('$' + orderInfo.estimatedTotal + ' (estimated)') : 'To be confirmed';
         }
 
+        // Save signed document to Supabase and send email notification
+        async function saveSignedDocument(documentType, documentData) {
+            try {
+                const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/save-signed-document', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
+                    },
+                    body: JSON.stringify({
+                        documentType: documentType,
+                        documentData: documentData
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to save signed document');
+                }
+            } catch (error) {
+                console.error('Error saving signed document:', error);
+                // Don't block the user - localStorage is the primary storage
+            }
+        }
+
         function showNotification(message, type = 'info') {
             // Remove existing notification
             const existing = document.querySelector('.cart-notification');
@@ -820,7 +844,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             }
         }
 
-        function handleSubmit(e) {
+        async function handleSubmit(e) {
             e.preventDefault();
 
             const name = document.getElementById('contactName').value.trim();
@@ -829,6 +853,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const eventType = document.getElementById('contactEventType').value;
             const message = document.getElementById('contactMessage').value.trim();
             const statusDiv = document.getElementById('formStatus');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
             if (!name || !email || !phone || !eventType || !message) {
                 statusDiv.className = 'form-status error';
@@ -843,10 +868,38 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 return;
             }
 
-            statusDiv.className = 'form-status success';
-            statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
+            // Show sending status
+            statusDiv.className = 'form-status';
+            statusDiv.textContent = 'Sending...';
+            if (submitBtn) submitBtn.disabled = true;
 
-            document.getElementById('contactForm').reset();
+            try {
+                const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/send-contact-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
+                    },
+                    body: JSON.stringify({
+                        formType: 'contact',
+                        formData: { name, email, phone, eventType, message }
+                    })
+                });
+
+                if (response.ok) {
+                    statusDiv.className = 'form-status success';
+                    statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
+                    document.getElementById('contactForm').reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                console.error('Error sending contact form:', error);
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Sorry, there was an error sending your message. Please try calling us at 219-344-2416.';
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
 
             setTimeout(() => {
                 statusDiv.className = 'form-status';
@@ -886,7 +939,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             }
         }
 
-        function handleCustomOrderSubmit(e) {
+        async function handleCustomOrderSubmit(e) {
             e.preventDefault();
 
             const name = document.getElementById('customOrderName').value.trim();
@@ -896,6 +949,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const product = document.getElementById('customOrderProduct').value;
             const description = document.getElementById('customOrderDescription').value.trim();
             const statusDiv = document.getElementById('customOrderFormStatus');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
             if (!name || !email || !phone || !orderType || !product || !description) {
                 statusDiv.className = 'form-status error';
@@ -910,10 +964,38 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 return;
             }
 
-            statusDiv.className = 'form-status success';
-            statusDiv.textContent = "✓ Thank you! Your custom order request has been received. We'll contact you within 24-48 hours with a quote.";
+            // Show sending status
+            statusDiv.className = 'form-status';
+            statusDiv.textContent = 'Sending...';
+            if (submitBtn) submitBtn.disabled = true;
 
-            document.getElementById('customOrderContactForm').reset();
+            try {
+                const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/send-contact-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
+                    },
+                    body: JSON.stringify({
+                        formType: 'customOrder',
+                        formData: { name, email, phone, orderType, product, description }
+                    })
+                });
+
+                if (response.ok) {
+                    statusDiv.className = 'form-status success';
+                    statusDiv.textContent = "✓ Thank you! Your custom order request has been received. We'll contact you within 24-48 hours with a quote.";
+                    document.getElementById('customOrderContactForm').reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                console.error('Error sending custom order form:', error);
+                statusDiv.className = 'form-status error';
+                statusDiv.textContent = '✗ Sorry, there was an error sending your request. Please try calling us at 219-344-2416.';
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
 
             setTimeout(() => {
                 statusDiv.className = 'form-status';
@@ -1019,16 +1101,26 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 };
                 
                 localStorage.setItem(this.STORAGE_KEY, JSON.stringify(waiverData));
-                
+
+                // Save to Supabase and send email notification
+                saveSignedDocument('waiver', {
+                    fullName: fullName,
+                    signature: signature,
+                    date: date,
+                    accepted: true,
+                    timestamp: waiverData.timestamp
+                });
+
                 // Update hidden form inputs
                 this.updateHiddenInputs(waiverData);
-                
+
                 // Update UI (both waiver and booking button)
                 this.updateUI();
                 if (typeof BookingGate !== 'undefined') {
                     BookingGate.updateSubmitButton();
+                    BookingGate.updateCheckoutDocumentStatus();
                 }
-                
+
                 // Close modal
                 this.close();
             },
@@ -1185,6 +1277,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 this.updateUI();
                 if (typeof BookingGate !== 'undefined') {
                     BookingGate.updateSubmitButton();
+                    BookingGate.updateCheckoutDocumentStatus();
                 }
                 // Reset form fields
                 const checkbox = document.getElementById('waiverCheckbox');
@@ -1311,14 +1404,25 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 };
                 
                 localStorage.setItem(this.STORAGE_KEY, JSON.stringify(contractData));
-                
+
+                // Save to Supabase and send email notification
+                saveSignedDocument('contract', {
+                    fullName: fullName,
+                    signature: signature,
+                    eventDate: eventDate,
+                    date: date,
+                    accepted: true,
+                    timestamp: contractData.timestamp
+                });
+
                 // Update hidden form inputs
                 this.updateHiddenInputs(contractData);
-                
+
                 // Update UI (both contract and booking button)
                 this.updateUI();
                 BookingGate.updateSubmitButton();
-                
+                BookingGate.updateCheckoutDocumentStatus();
+
                 // Close modal
                 this.close();
             },
@@ -1429,6 +1533,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 localStorage.removeItem(this.STORAGE_KEY);
                 this.updateUI();
                 BookingGate.updateSubmitButton();
+                BookingGate.updateCheckoutDocumentStatus();
                 // Reset form fields
                 const checkbox = document.getElementById('contractCheckbox');
                 const fullName = document.getElementById('contractFullName');
@@ -1465,73 +1570,106 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 return this.isWaiverSigned() && this.isContractSigned();
             },
             
-            // Update the booking submit button state
+            // Update the checkout submit button state
             updateSubmitButton: function() {
-                // REPLACE THIS SELECTOR IF NEEDED - targets booking form submit button
-                const bookingSubmitBtn = document.getElementById('bookingSubmitBtn') || 
-                                         document.querySelector('.booking-form button[type="submit"]') ||
-                                         document.querySelector('#bookingForm button[type="submit"]');
-                
+                // Target the checkout form submit button
+                const checkoutSubmitBtn = document.getElementById('checkoutSubmitBtn');
+
                 const bothSigned = this.areBothSigned();
-                
-                if (bookingSubmitBtn) {
-                    bookingSubmitBtn.disabled = !bothSigned;
+
+                if (checkoutSubmitBtn) {
+                    checkoutSubmitBtn.disabled = !bothSigned;
                     if (!bothSigned) {
-                        bookingSubmitBtn.classList.add('btn-disabled');
+                        checkoutSubmitBtn.classList.add('btn-disabled');
                         let missingDocs = [];
                         if (!this.isContractSigned()) missingDocs.push('Party Palace Agreement');
                         if (!this.isWaiverSigned()) missingDocs.push('Liability Waiver');
-                        bookingSubmitBtn.title = 'Please sign: ' + missingDocs.join(' and ');
+                        checkoutSubmitBtn.title = 'Please sign: ' + missingDocs.join(' and ');
                     } else {
-                        bookingSubmitBtn.classList.remove('btn-disabled');
-                        bookingSubmitBtn.title = '';
+                        checkoutSubmitBtn.classList.remove('btn-disabled');
+                        checkoutSubmitBtn.title = '';
                     }
                 }
             },
             
-            // Check before form submission - opens missing modal
+            // Check before checkout form submission - opens missing modal
             checkBeforeSubmit: function(e) {
                 const contractSigned = BookingGate.isContractSigned();
                 const waiverSigned = BookingGate.isWaiverSigned();
-                
+
                 if (!contractSigned || !waiverSigned) {
                     e.preventDefault();
-                    
-                    // Show inline error
-                    const errorDiv = document.getElementById('bookingDocumentsError');
-                    if (errorDiv) {
+
+                    // Show inline error on checkout form
+                    const statusEl = document.getElementById('checkoutFormStatus');
+                    if (statusEl) {
                         let missingDocs = [];
                         if (!contractSigned) missingDocs.push('Party Palace Agreement');
                         if (!waiverSigned) missingDocs.push('Liability Waiver');
-                        errorDiv.style.display = 'block';
-                        errorDiv.innerHTML = '✗ You must sign the following before completing your booking:<br>• ' + missingDocs.join('<br>• ');
+                        statusEl.className = 'form-status error';
+                        statusEl.innerHTML = '✗ You must sign the following before completing checkout:<br>• ' + missingDocs.join('<br>• ') + '<br><br>Click the button below to sign.';
+                        statusEl.style.display = 'block';
                     }
-                    
+
                     // Open the first missing document's modal (contract first, then waiver)
                     if (!contractSigned) {
                         ContractModal.open();
                     } else if (!waiverSigned) {
                         WaiverModal.open();
                     }
-                    
+
                     return false;
                 }
                 return true;
             },
             
-            // Initialize booking gate
+            // Update checkout page document status indicators
+            updateCheckoutDocumentStatus: function() {
+                const contractStatus = document.getElementById('checkoutContractStatus');
+                const waiverStatus = document.getElementById('checkoutWaiverStatus');
+
+                if (contractStatus) {
+                    if (this.isContractSigned()) {
+                        contractStatus.innerHTML = '✓ Signed';
+                        contractStatus.style.color = '#059669';
+                    } else {
+                        contractStatus.innerHTML = '⚠ Required';
+                        contractStatus.style.color = '#DC2626';
+                    }
+                }
+
+                if (waiverStatus) {
+                    if (this.isWaiverSigned()) {
+                        waiverStatus.innerHTML = '✓ Signed';
+                        waiverStatus.style.color = '#059669';
+                    } else {
+                        waiverStatus.innerHTML = '⚠ Required';
+                        waiverStatus.style.color = '#DC2626';
+                    }
+                }
+            },
+
+            // Initialize booking gate - only for checkout form
             init: function() {
                 this.updateSubmitButton();
-                
-                // Gate booking form submission
-                // REPLACE THIS SELECTOR IF NEEDED
-                const bookingForm = document.getElementById('bookingForm') ||
-                                   document.querySelector('.booking-form');
-                if (bookingForm) {
-                    // Remove old single-document check if exists
-                    bookingForm.removeEventListener('submit', WaiverModal.checkBeforeSubmit);
-                    // Add dual-document check
-                    bookingForm.addEventListener('submit', this.checkBeforeSubmit);
+                this.updateCheckoutDocumentStatus();
+
+                // Gate checkout form submission only
+                const checkoutForm = document.getElementById('checkoutForm');
+                if (checkoutForm) {
+                    // Add dual-document check for checkout
+                    checkoutForm.addEventListener('submit', this.checkBeforeSubmit);
+                }
+
+                // Bind checkout page document buttons
+                const checkoutContractBtn = document.getElementById('checkoutOpenContractBtn');
+                const checkoutWaiverBtn = document.getElementById('checkoutOpenWaiverBtn');
+
+                if (checkoutContractBtn) {
+                    checkoutContractBtn.addEventListener('click', () => ContractModal.open());
+                }
+                if (checkoutWaiverBtn) {
+                    checkoutWaiverBtn.addEventListener('click', () => WaiverModal.open());
                 }
             }
         };
