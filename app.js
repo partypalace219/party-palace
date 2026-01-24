@@ -133,7 +133,7 @@
                 description: 'High-quality edge glued wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
-                images: ['edge-glued-square-panel/square1.jpeg', 'edge-glued-square-panel/square2.jpeg'],
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square2.jpeg'],
                 tieredPricing: {
                     1: 39.99,
                     2: 36.99,
@@ -149,7 +149,7 @@
                 description: 'High-quality edge glued round wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
-                images: ['edge-glued-round-panel/round1.jpeg', 'edge-glued-round-panel/round2.jpeg'],
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg'],
                 tieredPricing: {
                     1: 39.99,
                     2: 36.99,
