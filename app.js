@@ -768,6 +768,17 @@
             });
         }
 
+        function addOctagonFidgetToCart() {
+            const select = document.getElementById('octagonFidgetColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Octagon Fidget (${color})`,
+                price: 4.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/octagon-fidget/fidget1.jpeg'
+            });
+        }
+
         function removeFromCart(productName) {
             cart = cart.filter(item => item.name !== productName);
             saveCart();

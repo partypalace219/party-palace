@@ -146,6 +146,9 @@ const productGalleryImages = {
     'Flexi Fish': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg',
     ],
+    'Octagon Fidget': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/octagon-fidget/fidget1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
