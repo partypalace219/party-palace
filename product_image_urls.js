@@ -143,6 +143,9 @@ const productGalleryImages = {
     'Finger Fidget Spinner': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/finger-fidget-spinner/spinner1.jpeg',
     ],
+    'Flexi Fish': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product

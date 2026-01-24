@@ -878,6 +878,17 @@
                             <button class="btn btn-primary add-to-cart-btn" onclick="addSpinnerToCart()">Add to Cart</button>
                         </div>
                     </div>
+                    <div class="product-card prints3d-product" data-category="Toys" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('flexi-fish')">
+                            <img src="https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg" alt="Flexi Fish" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>🐟</span>';">
+                        </div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('flexi-fish')">Flexi Fish</div>
+                            <div class="product-description">3D printed flexible fish toy. Articulated and fun to wiggle.</div>
+                            <div class="product-price" style="margin-top: auto;">$5.99</div>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addToCart({name: 'Flexi Fish', price: 5.99, image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg'})">Add to Cart</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
