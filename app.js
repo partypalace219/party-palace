@@ -42,8 +42,11 @@
                 products.forEach(product => {
                     product.popular = popularProducts.includes(product.name);
                 });
-                
-                console.log('Loaded', products.length, 'products from Supabase');
+
+                // Add engraving products to the products array
+                products = products.concat(engravingProducts);
+
+                console.log('Loaded', products.length, 'products (including engraving)');
                 
                 // Initialize the app after products are loaded
                 initializeApp();
@@ -68,15 +71,77 @@
             columns: 'linear-gradient(135deg, #4facfe, #00f2fe)',
             walls: 'linear-gradient(135deg, #fa709a, #fee140)',
             centerpieces: 'linear-gradient(135deg, #f093fb, #f5576c)',
-            services: 'linear-gradient(135deg, #43e97b, #38f9d7)'
+            services: 'linear-gradient(135deg, #43e97b, #38f9d7)',
+            engraving: 'linear-gradient(135deg, #8B4513, #D2691E)'
         };
         const categoryLabels = {
             arches: 'Arches',
             columns: 'Columns',
             walls: 'Walls',
             centerpieces: 'Centerpieces',
-            services: 'Services'
+            services: 'Services',
+            engraving: 'Engraving'
         };
+
+        // Engraving products data
+        const engravingProducts = [
+            {
+                name: 'Wood Items',
+                slug: 'wood-items',
+                category: 'engraving',
+                price: 15,
+                description: 'Custom laser engraved signs, plaques, cutting boards, and decorative pieces.',
+                icon: '🪵',
+                size: 'Various sizes available',
+                images: []
+            },
+            {
+                name: 'Keychains',
+                slug: 'keychains',
+                category: 'engraving',
+                price: 8,
+                description: 'Personalized engraved keychains with names or logos.',
+                icon: '🔑',
+                size: '2" x 1"',
+                images: []
+            },
+            {
+                name: 'Coasters',
+                slug: 'coasters',
+                category: 'engraving',
+                price: 10,
+                description: 'Custom engraved coasters. Perfect for gifts or events.',
+                icon: '🍵',
+                size: '4" x 4"',
+                images: []
+            },
+            {
+                name: 'Magnets',
+                slug: 'magnets',
+                category: 'engraving',
+                price: 6,
+                description: 'Laser engraved magnets with custom designs and photos.',
+                icon: '🧲',
+                size: '2" x 2"',
+                images: []
+            },
+            {
+                name: 'Edge Glued Square Panel',
+                slug: 'edge-glued-square-panel',
+                category: 'engraving',
+                price: 39.99,
+                description: 'High-quality edge glued wood panel, perfect for custom engraving projects.',
+                icon: '🪵',
+                size: '10" x 10"',
+                images: ['edge-glued-square-panel/square1.jpeg', 'edge-glued-square-panel/square2.jpeg'],
+                tieredPricing: {
+                    1: 39.99,
+                    2: 36.99,
+                    6: 30.99,
+                    11: 'contact'
+                }
+            }
+        ];
         let currentFilter = 'all';
 
         // Shopping Cart
@@ -148,6 +213,82 @@
                 ? `${material} ${baseItemName} (x${qty})`
                 : `${material} ${baseItemName}`;
             const totalPrice = basePrice * qty;
+
+            // Check if same item with same material already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(baseItemName) && item.material === material
+            );
+
+            if (existingIndex !== -1) {
+                // Update existing item
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                // Add new item
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty
+                });
+                showNotification(`${itemName} added to cart!`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+            if (materialInput) materialInput.selectedIndex = 0;
+        }
+
+        // Add engraving product to cart from detail page
+        function addEngravingToCartFromDetail(productName, basePrice, productSlug) {
+            const qtyInput = document.getElementById('detailEngravingQty');
+            const instructionsInput = document.getElementById('detailEngravingInstructions');
+            const materialInput = document.getElementById('detailEngravingMaterial');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = materialInput ? materialInput.value : 'Wood';
+
+            // Check if this is a tiered pricing product (Edge Glued Square Panel)
+            const product = products.find(p => p.slug === productSlug);
+            if (product && product.tieredPricing) {
+                // Check for 11+ quantity - redirect to contact
+                if (qty >= 11) {
+                    showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                    navigate('contact');
+                    return;
+                }
+
+                // Calculate tiered pricing
+                let pricePerUnit;
+                if (qty === 1) {
+                    pricePerUnit = 39.99;
+                } else if (qty >= 2 && qty <= 5) {
+                    pricePerUnit = 36.99;
+                } else if (qty >= 6 && qty <= 10) {
+                    pricePerUnit = 30.99;
+                }
+                basePrice = pricePerUnit;
+            }
+
+            // Create item name with material and quantity
+            const baseItemName = productName.replace('Engraved ', '');
+            const itemName = qty > 1
+                ? `${material} ${baseItemName} (x${qty})`
+                : `${material} ${baseItemName}`;
+            const totalPrice = Math.round(basePrice * qty * 100) / 100;
 
             // Check if same item with same material already in cart
             const existingIndex = cart.findIndex(item =>
@@ -882,6 +1023,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const partyDecorCategories = ['arches', 'columns', 'walls', 'centerpieces'];
             if (partyDecorCategories.includes(category)) return 'partydecor';
             if (category === 'services') return 'services';
+            if (category === 'engraving') return 'engraving';
             return 'home';
         }
         
@@ -889,11 +1031,19 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         function renderProductDetail(product) {
             const container = document.getElementById('productDetailContent');
             if (!container || !product) return;
-            
+
             const hasImages = product.images && product.images.length > 0;
             const gradient = gradients[product.category] || 'linear-gradient(135deg, #667eea, #764ba2)';
-            const backPage = 'partydecor';
-            const backLabel = 'Party Decor';
+            const backPage = getCategoryPage(product.category);
+
+            // Get back label based on category
+            const backLabels = {
+                'partydecor': 'Party Decor',
+                'services': 'Services',
+                'engraving': 'Engraving',
+                'home': 'Home'
+            };
+            const backLabel = backLabels[backPage] || 'Home';
             
             // Generate main image (clickable to open lightbox)
             const mainImage = hasImages
@@ -941,13 +1091,49 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         <span class="product-detail-category">${categoryLabels[product.category] || product.category}</span>
                         <h1 class="product-detail-title">${product.name}</h1>
                         <div class="product-detail-price">
-                            <span class="label">Starting at</span>
+                            <span class="label">${product.category === 'engraving' ? 'Price' : 'Starting at'}</span>
                             <span class="amount">$${product.price}</span>
                         </div>
                         <p class="product-detail-description">${product.description}</p>
                         
                         ${features}
-                        
+
+                        ${product.category === 'engraving' ? `
+                        <div class="product-detail-cta">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Material</label>
+                                <select id="detailEngravingMaterial" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
+                                    <option value="Wood">Wood (Popular)</option>
+                                    <option value="Metal - Anodized Aluminum">Metal - Anodized Aluminum (Popular)</option>
+                                    <option value="Leather">Leather</option>
+                                    <option value="Acrylic">Acrylic</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Special Instructions</label>
+                                <textarea id="detailEngravingInstructions" placeholder="Enter any text, names, dates, or design requests..." rows="3" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Quantity</label>
+                                <input type="number" id="detailEngravingQty" value="1" min="1" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                            ${product.tieredPricing ? `
+                            <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <p style="font-weight: 600; margin-bottom: 0.5rem; color: #166534;">Bulk Pricing:</p>
+                                <ul style="margin: 0; padding-left: 1.5rem; color: #166534;">
+                                    <li>1 item: $39.99 each</li>
+                                    <li>2-5 items: $36.99 each</li>
+                                    <li>6-10 items: $30.99 each</li>
+                                    <li>11+ items: Contact for pricing</li>
+                                </ul>
+                            </div>
+                            ` : ''}
+                            <button onclick="addEngravingToCartFromDetail('${product.name}', ${product.price}, '${product.slug}')" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                        ` : `
                         <div class="product-detail-cta">
                             <button onclick="addToCart('${product.name}')" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -957,6 +1143,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                                 Book Free Consultation
                             </button>
                         </div>
+                        `}
                     </div>
                 </div>
             `;
@@ -982,7 +1169,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 columns: ['Matching pairs available', 'Height customization', 'LED lighting options', 'Themed decorations'],
                 walls: ['Custom sizes available', 'Photo-ready backdrop', 'Delivery and setup included', 'Perfect for events of any size'],
                 centerpieces: ['Table-ready arrangements', 'Color matching available', 'Bulk discounts for large orders', 'Custom themes welcome'],
-                services: ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed']
+                services: ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed'],
+                engraving: ['Multiple material options', 'Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events']
             };
             
             const categoryFeatures = featuresByCategory[product.category] || featuresByCategory.services;
