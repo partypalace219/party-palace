@@ -156,6 +156,22 @@
                     6: 30.99,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Rectangle Wood Keychain',
+                slug: 'rectangle-wood-keychain',
+                category: 'engraving',
+                price: 5.99,
+                description: 'Custom engraved rectangle wood keychain with key ring. Perfect for personalized gifts.',
+                icon: '🔑',
+                size: '2" x 1"',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain2.jpeg'],
+                tieredPricing: {
+                    1: 5.99,
+                    2: 4.99,
+                    6: 2.99,
+                    11: 'contact'
+                }
             }
         ];
         let currentFilter = 'all';
@@ -375,6 +391,73 @@
                 pricePerUnit = 36.99;
             } else if (qty >= 6 && qty <= 10) {
                 pricePerUnit = 30.99;
+            }
+
+            const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
+            const itemName = qty > 1
+                ? `${material} ${productName} (x${qty})`
+                : `${material} ${productName}`;
+
+            // Check if same item with same material already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(productName) && item.material === material
+            );
+
+            if (existingIndex !== -1) {
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                });
+                showNotification(`${itemName} added to cart! ($${pricePerUnit.toFixed(2)} each)`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
+        // Add tiered keychain to cart (different pricing than panels)
+        function addTieredKeychainToCart(productName, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = getSelectedEngravingMaterial();
+
+            // Check for 11+ quantity - redirect to contact
+            if (qty >= 11) {
+                showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                navigate('contact');
+                return;
+            }
+
+            // Calculate tiered pricing for Rectangle Wood Keychain
+            let pricePerUnit;
+            if (qty === 1) {
+                pricePerUnit = 5.99;
+            } else if (qty >= 2 && qty <= 5) {
+                pricePerUnit = 4.99;
+            } else if (qty >= 6 && qty <= 10) {
+                pricePerUnit = 2.99;
             }
 
             const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;

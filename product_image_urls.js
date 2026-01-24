@@ -114,6 +114,10 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg',
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg',
     ],
+    'Rectangle Wood Keychain': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain2.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
