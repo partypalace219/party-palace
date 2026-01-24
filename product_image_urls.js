@@ -121,6 +121,9 @@ const productGalleryImages = {
     'Round Stainless Steel Keychain': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-stainless-steel-keychain/keychain1.jpeg',
     ],
+    'Black Acrylic Plexiglass Sheet': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/black-acrylic-plexiglass-sheet/acrylic1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product

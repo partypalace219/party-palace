@@ -188,6 +188,22 @@
                     6: 2.99,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Black Acrylic Plexiglass Sheet',
+                slug: 'black-acrylic-plexiglass-sheet',
+                category: 'engraving',
+                price: 54.99,
+                description: 'Custom engraved black acrylic plexiglass sheet. Perfect for signs, displays, and decorative pieces.',
+                icon: '🖼️',
+                size: '12" x 12"',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/black-acrylic-plexiglass-sheet/acrylic1.jpeg'],
+                tieredPricing: {
+                    1: 54.99,
+                    2: 51.99,
+                    6: 45.99,
+                    11: 'contact'
+                }
             }
         ];
         let currentFilter = 'all';
@@ -484,6 +500,72 @@
             // Check if same item with same material already in cart
             const existingIndex = cart.findIndex(item =>
                 item.name.includes(productName) && item.material === material
+            );
+
+            if (existingIndex !== -1) {
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                });
+                showNotification(`${itemName} added to cart! ($${pricePerUnit.toFixed(2)} each)`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
+        function addTieredAcrylicToCart(productName, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = 'Acrylic';
+
+            // Check for 11+ quantity - redirect to contact
+            if (qty >= 11) {
+                showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                navigate('contact');
+                return;
+            }
+
+            // Calculate tiered pricing for Black Acrylic Plexiglass Sheet
+            let pricePerUnit;
+            if (qty === 1) {
+                pricePerUnit = 54.99;
+            } else if (qty >= 2 && qty <= 5) {
+                pricePerUnit = 51.99;
+            } else if (qty >= 6 && qty <= 10) {
+                pricePerUnit = 45.99;
+            }
+
+            const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
+            const itemName = qty > 1
+                ? `${material} ${productName} (x${qty})`
+                : `${material} ${productName}`;
+
+            // Check if same item already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(productName)
             );
 
             if (existingIndex !== -1) {
