@@ -46,7 +46,10 @@
                 // Add engraving products to the products array
                 products = products.concat(engravingProducts);
 
-                console.log('Loaded', products.length, 'products (including engraving)');
+                // Add 3D prints products to the products array
+                products = products.concat(prints3dProducts);
+
+                console.log('Loaded', products.length, 'products (including engraving and 3D prints)');
                 
                 // Initialize the app after products are loaded
                 initializeApp();
@@ -72,7 +75,8 @@
             walls: 'linear-gradient(135deg, #fa709a, #fee140)',
             centerpieces: 'linear-gradient(135deg, #f093fb, #f5576c)',
             services: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-            engraving: 'linear-gradient(135deg, #8B4513, #D2691E)'
+            engraving: 'linear-gradient(135deg, #8B4513, #D2691E)',
+            prints3d: 'linear-gradient(135deg, #00d2ff, #3a7bd5)'
         };
         const categoryLabels = {
             arches: 'Arches',
@@ -80,7 +84,8 @@
             walls: 'Walls',
             centerpieces: 'Centerpieces',
             services: 'Services',
-            engraving: 'Engraving'
+            engraving: 'Engraving',
+            prints3d: '3D Prints'
         };
 
         // Engraving products data
@@ -198,6 +203,65 @@
                 }
             }
         ];
+
+        // 3D Prints products data
+        const prints3dProducts = [
+            {
+                name: '3 Foot Snake',
+                slug: '3-foot-snake',
+                category: 'prints3d',
+                price: 24.99,
+                description: 'Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors.',
+                icon: '🐍',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake2.jpeg']
+            },
+            {
+                name: 'Star Fidget',
+                slug: 'star-fidget',
+                category: 'prints3d',
+                price: 6.99,
+                description: '3D printed star-shaped fidget toy. Satisfying to spin and play with. Available in Small ($6.99) and Medium ($11.99).',
+                icon: '⭐',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget2.jpeg']
+            },
+            {
+                name: 'Finger Fidget Spinner',
+                slug: 'finger-fidget-spinner',
+                category: 'prints3d',
+                price: 8.99,
+                description: '3D printed finger fidget spinner. Fun stress relief toy for all ages. Available in 11 colors.',
+                icon: '🌀',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/finger-fidget-spinner/spinner1.jpeg']
+            },
+            {
+                name: 'Flexi Fish',
+                slug: 'flexi-fish',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed flexible fish toy. Articulated and fun to wiggle. Available in 11 colors.',
+                icon: '🐟',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg']
+            },
+            {
+                name: 'Octagon Fidget',
+                slug: 'octagon-fidget',
+                category: 'prints3d',
+                price: 4.99,
+                description: '3D printed octagon-shaped fidget toy. Satisfying tactile experience. Available in 11 colors.',
+                icon: '🔷',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/octagon-fidget/fidget1.jpeg']
+            },
+            {
+                name: 'Infinity Cube',
+                slug: 'infinity-cube',
+                category: 'prints3d',
+                price: 8.99,
+                description: '3D printed infinity cube fidget toy. Endlessly foldable for stress relief. Available in 11 colors.',
+                icon: '🎲',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg']
+            }
+        ];
+
         let currentFilter = 'all';
 
         // Shopping Cart
@@ -1418,6 +1482,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (partyDecorCategories.includes(category)) return 'partydecor';
             if (category === 'services') return 'services';
             if (category === 'engraving') return 'engraving';
+            if (category === 'prints3d') return 'prints3d';
             return 'home';
         }
         
