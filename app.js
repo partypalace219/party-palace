@@ -1574,17 +1574,21 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             updateSubmitButton: function() {
                 // Target the checkout form submit button
                 const checkoutSubmitBtn = document.getElementById('checkoutSubmitBtn');
+                const agreementCheckbox = document.getElementById('agreementCheckbox');
 
                 const bothSigned = this.areBothSigned();
+                const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
+                const allComplete = bothSigned && agreementChecked;
 
                 if (checkoutSubmitBtn) {
-                    checkoutSubmitBtn.disabled = !bothSigned;
-                    if (!bothSigned) {
+                    checkoutSubmitBtn.disabled = !allComplete;
+                    if (!allComplete) {
                         checkoutSubmitBtn.classList.add('btn-disabled');
-                        let missingDocs = [];
-                        if (!this.isContractSigned()) missingDocs.push('Party Palace Agreement');
-                        if (!this.isWaiverSigned()) missingDocs.push('Liability Waiver');
-                        checkoutSubmitBtn.title = 'Please sign: ' + missingDocs.join(' and ');
+                        let missing = [];
+                        if (!this.isContractSigned()) missing.push('Party Palace Agreement');
+                        if (!this.isWaiverSigned()) missing.push('Liability Waiver');
+                        if (!agreementChecked) missing.push('confirmation checkbox');
+                        checkoutSubmitBtn.title = 'Please complete: ' + missing.join(', ');
                     } else {
                         checkoutSubmitBtn.classList.remove('btn-disabled');
                         checkoutSubmitBtn.title = '';
@@ -1596,18 +1600,21 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             checkBeforeSubmit: function(e) {
                 const contractSigned = BookingGate.isContractSigned();
                 const waiverSigned = BookingGate.isWaiverSigned();
+                const agreementCheckbox = document.getElementById('agreementCheckbox');
+                const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
 
-                if (!contractSigned || !waiverSigned) {
+                if (!contractSigned || !waiverSigned || !agreementChecked) {
                     e.preventDefault();
 
                     // Show inline error on checkout form
                     const statusEl = document.getElementById('checkoutFormStatus');
                     if (statusEl) {
-                        let missingDocs = [];
-                        if (!contractSigned) missingDocs.push('Party Palace Agreement');
-                        if (!waiverSigned) missingDocs.push('Liability Waiver');
+                        let errors = [];
+                        if (!contractSigned) errors.push('Sign the Party Palace Agreement');
+                        if (!waiverSigned) errors.push('Sign the Liability Waiver');
+                        if (!agreementChecked) errors.push('Check the confirmation box agreeing to terms and return policy');
                         statusEl.className = 'form-status error';
-                        statusEl.innerHTML = '✗ You must sign the following before completing checkout:<br>• ' + missingDocs.join('<br>• ') + '<br><br>Click the button below to sign.';
+                        statusEl.innerHTML = '✗ Please complete the following:<br>• ' + errors.join('<br>• ');
                         statusEl.style.display = 'block';
                     }
 
@@ -1670,6 +1677,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 }
                 if (checkoutWaiverBtn) {
                     checkoutWaiverBtn.addEventListener('click', () => WaiverModal.open());
+                }
+
+                // Bind agreement checkbox to update submit button
+                const agreementCheckbox = document.getElementById('agreementCheckbox');
+                if (agreementCheckbox) {
+                    agreementCheckbox.addEventListener('change', () => this.updateSubmitButton());
                 }
             }
         };
