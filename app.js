@@ -1873,6 +1873,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             renderCatalog();
             renderServices();
             renderGallery();
+
+            // Clear signed documents on each visit - documents are saved to database,
+            // but users should sign fresh each session for checkout
+            localStorage.removeItem('partypalace_waiver_signed');
+            localStorage.removeItem('partypalace_contract_signed');
+
             WaiverModal.init();
             ContractModal.init();
             BookingGate.init();
