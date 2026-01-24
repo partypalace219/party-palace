@@ -172,6 +172,22 @@
                     6: 2.99,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Round Stainless Steel Keychain',
+                slug: 'round-stainless-steel-keychain',
+                category: 'engraving',
+                price: 5.99,
+                description: 'Custom engraved round stainless steel keychain with key ring. Durable and stylish.',
+                icon: '🔑',
+                size: '1" diameter',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-stainless-steel-keychain/keychain1.jpeg'],
+                tieredPricing: {
+                    1: 5.99,
+                    2: 4.99,
+                    6: 2.99,
+                    11: 'contact'
+                }
             }
         ];
         let currentFilter = 'all';
