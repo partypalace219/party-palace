@@ -919,18 +919,74 @@
 
                 <!-- Products -->
                 <div class="section-header">
-                    <h2>Available Products</h2>
-                    <p>Laser engraved items personalized with your design</p>
+                    <h2>Choose Your Material</h2>
+                    <p>Select a material for your custom engraved items</p>
                 </div>
                 <div class="products-grid" id="engravingGrid">
-                    <!-- Wood Items -->
+                    <!-- Wood - Popular -->
                     <div class="product-card" style="display: flex; flex-direction: column;">
-                        <div class="product-image" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        <div class="product-image" style="background: linear-gradient(135deg, #8B4513, #D2691E)">
                             <span>🪵</span>
+                            <div class="product-badge">Popular</div>
                         </div>
                         <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                            <div class="product-name">Wood Items</div>
-                            <div class="product-description">Custom laser engraved wooden signs, plaques, cutting boards, and decorative pieces.</div>
+                            <div class="product-name">Wood</div>
+                            <div class="product-description">Natural wood engraving for signs, plaques, coasters, keychains, and decorative pieces. Warm, classic look.</div>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> Various sizes available
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Starting at</span>
+                                <span class="product-price-amount">$10</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes, item type...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-wood-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-wood-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Wood Item', 10, 'engraving-wood')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Metal (Anodized Aluminum) - Popular -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: linear-gradient(135deg, #71797E, #A9A9A9)">
+                            <span>🔩</span>
+                            <div class="product-badge">Popular</div>
+                        </div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name">Metal</div>
+                            <div class="product-description">Anodized aluminum engraving for tags, keychains, nameplates, and accessories. Durable and sleek finish.</div>
+                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
+                                <strong>Size:</strong> Various sizes available
+                            </div>
+                            <div class="product-price" style="margin-bottom: 0.75rem;">
+                                <span class="product-price-label">Starting at</span>
+                                <span class="product-price-amount">$12</span>
+                            </div>
+                            <textarea placeholder="Special instructions (names, text, design notes, item type...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-metal-instructions"></textarea>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-metal-qty">
+                            </div>
+                            <button onclick="addEngravingToCart('Engraved Metal Item', 12, 'engraving-metal')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Leather -->
+                    <div class="product-card" style="display: flex; flex-direction: column;">
+                        <div class="product-image" style="background: linear-gradient(135deg, #654321, #8B4513)">
+                            <span>👝</span>
+                        </div>
+                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                            <div class="product-name">Leather</div>
+                            <div class="product-description">Genuine leather engraving for keychains, patches, wallets, and accessories. Premium rustic appeal.</div>
                             <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
                                 <strong>Size:</strong> Various sizes available
                             </div>
@@ -938,93 +994,39 @@
                                 <span class="product-price-label">Starting at</span>
                                 <span class="product-price-amount">$15</span>
                             </div>
-                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-wood-instructions"></textarea>
+                            <textarea placeholder="Special instructions (names, text, design notes, item type...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-leather-instructions"></textarea>
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
                                 <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
-                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-wood-qty">
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-leather-qty">
                             </div>
-                            <button onclick="addEngravingToCart('Engraved Wood Items', 15, 'engraving-wood')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                            <button onclick="addEngravingToCart('Engraved Leather Item', 15, 'engraving-leather')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                                 Add to Cart
                             </button>
                         </div>
                     </div>
 
-                    <!-- Keychains -->
+                    <!-- Acrylic -->
                     <div class="product-card" style="display: flex; flex-direction: column;">
-                        <div class="product-image" style="background: linear-gradient(135deg, #f093fb, #f5576c)">
-                            <span>🔑</span>
+                        <div class="product-image" style="background: linear-gradient(135deg, #00CED1, #4169E1)">
+                            <span>💎</span>
                         </div>
                         <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                            <div class="product-name">Keychains</div>
-                            <div class="product-description">Personalized engraved keychains in wood, metal, or leather with names or logos.</div>
+                            <div class="product-name">Acrylic</div>
+                            <div class="product-description">Clear or colored acrylic engraving for signs, keychains, ornaments, and display pieces. Modern, vibrant look.</div>
                             <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
-                                <strong>Size:</strong> 2" x 1"
+                                <strong>Size:</strong> Various sizes available
                             </div>
                             <div class="product-price" style="margin-bottom: 0.75rem;">
-                                <span class="product-price-label">Price</span>
+                                <span class="product-price-label">Starting at</span>
                                 <span class="product-price-amount">$8</span>
                             </div>
-                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-keychain-instructions"></textarea>
+                            <textarea placeholder="Special instructions (names, text, design notes, item type...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-acrylic-instructions"></textarea>
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
                                 <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
-                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-keychain-qty">
+                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-acrylic-qty">
                             </div>
-                            <button onclick="addEngravingToCart('Engraved Keychain', 8, 'engraving-keychain')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Coasters -->
-                    <div class="product-card" style="display: flex; flex-direction: column;">
-                        <div class="product-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe)">
-                            <span>🍵</span>
-                        </div>
-                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                            <div class="product-name">Coasters</div>
-                            <div class="product-description">Custom engraved coasters in wood, slate, or cork. Perfect for gifts or events.</div>
-                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
-                                <strong>Size:</strong> 4" x 4"
-                            </div>
-                            <div class="product-price" style="margin-bottom: 0.75rem;">
-                                <span class="product-price-label">Price</span>
-                                <span class="product-price-amount">$10</span>
-                            </div>
-                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-coaster-instructions"></textarea>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
-                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-coaster-qty">
-                            </div>
-                            <button onclick="addEngravingToCart('Engraved Coaster', 10, 'engraving-coaster')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Magnets -->
-                    <div class="product-card" style="display: flex; flex-direction: column;">
-                        <div class="product-image" style="background: linear-gradient(135deg, #43e97b, #38f9d7)">
-                            <span>🧲</span>
-                        </div>
-                        <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                            <div class="product-name">Magnets</div>
-                            <div class="product-description">Laser engraved wooden or acrylic magnets with custom designs and photos.</div>
-                            <div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);">
-                                <strong>Size:</strong> 2" x 2"
-                            </div>
-                            <div class="product-price" style="margin-bottom: 0.75rem;">
-                                <span class="product-price-label">Price</span>
-                                <span class="product-price-amount">$6</span>
-                            </div>
-                            <textarea placeholder="Special instructions (names, text, design notes...)" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.85rem; resize: vertical; min-height: 60px; margin-bottom: 0.75rem; font-family: inherit;" id="engraving-magnet-instructions"></textarea>
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                                <label style="font-size: 0.85rem; color: var(--gray-600);">Qty:</label>
-                                <input type="number" value="1" min="1" style="width: 60px; padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 6px; text-align: center;" id="engraving-magnet-qty">
-                            </div>
-                            <button onclick="addEngravingToCart('Engraved Magnet', 6, 'engraving-magnet')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                            <button onclick="addEngravingToCart('Engraved Acrylic Item', 8, 'engraving-acrylic')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                                 Add to Cart
                             </button>
