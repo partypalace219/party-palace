@@ -98,7 +98,7 @@
                 description: 'High-quality edge glued wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square2.jpeg'],
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square3.jpeg'],
                 tieredPricing: {
                     1: 39.99,
                     2: 36.99,
@@ -114,7 +114,7 @@
                 description: 'High-quality edge glued round wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg'],
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round3.jpeg'],
                 tieredPricing: {
                     1: 39.99,
                     2: 36.99,
@@ -201,6 +201,16 @@
                     6: 2.49,
                     11: 'contact'
                 }
+            },
+            {
+                name: 'Customizable Keychains',
+                slug: 'customizable-keychains',
+                category: 'engraving',
+                price: 4.99,
+                description: 'Custom engraved keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
+                icon: '🔑',
+                size: 'Various sizes',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg']
             }
         ];
 
@@ -856,6 +866,92 @@
 
             // Clear the form
             if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
+        function addCustomKeychainToCart(productName, productId) {
+            const qtyInput = document.getElementById(productId + '-qty');
+            const instructionsInput = document.getElementById(productId + '-instructions');
+
+            const qty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const material = getSelectedEngravingMaterial();
+
+            // Check for 11+ quantity - redirect to contact
+            if (qty >= 11) {
+                showNotification('For orders of 11+ items, please contact us for special pricing!', 'info');
+                navigate('contact');
+                return;
+            }
+
+            // Calculate tiered pricing for Customizable Keychains
+            let pricePerUnit;
+            if (qty === 1) {
+                pricePerUnit = 4.99;
+            } else if (qty >= 2 && qty <= 5) {
+                pricePerUnit = 3.99;
+            } else if (qty >= 6 && qty <= 10) {
+                pricePerUnit = 2.99;
+            }
+
+            const totalPrice = Math.round(pricePerUnit * qty * 100) / 100;
+            const itemName = qty > 1
+                ? `${material} ${productName} (x${qty})`
+                : `${material} ${productName}`;
+
+            // Check if same item with same material already in cart
+            const existingIndex = cart.findIndex(item =>
+                item.name.includes(productName) && item.material === material
+            );
+
+            if (existingIndex !== -1) {
+                cart[existingIndex] = {
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                };
+                showNotification(`${itemName} updated in cart!`, 'success');
+            } else {
+                cart.push({
+                    name: itemName,
+                    price: totalPrice,
+                    category: 'engraving',
+                    material: material,
+                    instructions: instructions,
+                    quantity: qty,
+                    pricePerUnit: pricePerUnit
+                });
+                showNotification(`${itemName} added to cart! ($${pricePerUnit.toFixed(2)} each)`, 'success');
+            }
+
+            saveCart();
+
+            // Clear the form
+            if (qtyInput) qtyInput.value = 1;
+            if (instructionsInput) instructionsInput.value = '';
+        }
+
+        function addCustomizableKeychainToCart() {
+            const instructionsInput = document.getElementById('custom-keychain-instructions');
+            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+
+            const item = {
+                name: 'Customizable Keychains',
+                price: 4.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg',
+                category: 'engraving',
+                instructions: instructions
+            };
+
+            cart.push(item);
+            saveCart();
+            showNotification('Customizable Keychains added to cart!', 'success');
+
+            // Clear the instructions field
             if (instructionsInput) instructionsInput.value = '';
         }
 
