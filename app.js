@@ -412,6 +412,123 @@
                 description: '3D printed Eid Mubarak sign. 8x12 inches.',
                 icon: '🌙',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg']
+            },
+            {
+                name: 'Eid Mubarak Ornaments',
+                slug: 'eid-mubarak-ornaments',
+                category: 'prints3d',
+                price: 6.99,
+                description: '3D printed Eid Mubarak double sided ornaments.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-ornaments/decor1.jpeg']
+            },
+            {
+                name: 'Palestine Map Ornament',
+                slug: 'palestine-map-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed Palestine map ornament.',
+                icon: '🇵🇸',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Kaaba Ornaments',
+                slug: 'kaaba-ornaments',
+                category: 'prints3d',
+                price: 7.49,
+                description: '3D printed Kaaba double sided ornaments.',
+                icon: '🕋',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-ornaments/decor1.jpeg']
+            },
+            {
+                name: 'Moon Ornament',
+                slug: 'moon-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed moon ornament.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Masjid Ornament',
+                slug: 'masjid-ornament',
+                category: 'prints3d',
+                price: 7.49,
+                description: '3D printed Masjid double sided ornament.',
+                icon: '🕌',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Star Ornament',
+                slug: 'star-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed star ornament.',
+                icon: '⭐',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Lantern Style 1 Ornament',
+                slug: 'lantern-style-1-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed lantern style 1 ornament.',
+                icon: '🏮',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-1-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Lantern Style 2 Ornament',
+                slug: 'lantern-style-2-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed lantern style 2 ornament.',
+                icon: '🏮',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-2-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Lantern Style 3 Ornament',
+                slug: 'lantern-style-3-ornament',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed lantern style 3 ornament.',
+                icon: '🏮',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-3-ornament/decor1.jpeg']
+            },
+            {
+                name: 'Ramadan Relief Sculpture',
+                slug: 'ramadan-relief-sculpture',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed Ramadan relief sculpture (5×5 inches).',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-relief-sculpture/decor1.jpeg']
+            },
+            {
+                name: 'Kaaba Relief Sculpture',
+                slug: 'kaaba-relief-sculpture',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed Kaaba relief sculpture (5W×3.5H inches).',
+                icon: '🕋',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-relief-sculpture/decor1.jpeg']
+            },
+            {
+                name: 'Camel Relief Sculpture',
+                slug: 'camel-relief-sculpture',
+                category: 'prints3d',
+                price: 16.99,
+                description: '3D printed camel relief sculpture (5W×6H inches).',
+                icon: '🐪',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/camel-relief-sculpture/decor1.jpeg']
+            },
+            {
+                name: 'Masjid Relief Sculpture',
+                slug: 'masjid-relief-sculpture',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed masjid relief sculpture (5×5 inches).',
+                icon: '🕌',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-relief-sculpture/decor1.jpeg']
             }
         ];
 

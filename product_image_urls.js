@@ -203,6 +203,45 @@ const productGalleryImages = {
     'Eid Mubarak Rectangle': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg',
     ],
+    'Eid Mubarak Ornaments': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-ornaments/decor1.jpeg',
+    ],
+    'Palestine Map Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map-ornament/decor1.jpeg',
+    ],
+    'Kaaba Ornaments': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-ornaments/decor1.jpeg',
+    ],
+    'Moon Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-ornament/decor1.jpeg',
+    ],
+    'Masjid Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-ornament/decor1.jpeg',
+    ],
+    'Star Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-ornament/decor1.jpeg',
+    ],
+    'Lantern Style 1 Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-1-ornament/decor1.jpeg',
+    ],
+    'Lantern Style 2 Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-2-ornament/decor1.jpeg',
+    ],
+    'Lantern Style 3 Ornament': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-3-ornament/decor1.jpeg',
+    ],
+    'Ramadan Relief Sculpture': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-relief-sculpture/decor1.jpeg',
+    ],
+    'Kaaba Relief Sculpture': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-relief-sculpture/decor1.jpeg',
+    ],
+    'Camel Relief Sculpture': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/camel-relief-sculpture/decor1.jpeg',
+    ],
+    'Masjid Relief Sculpture': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-relief-sculpture/decor1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
