@@ -152,6 +152,9 @@ const productGalleryImages = {
     'Infinity Cube': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg',
     ],
+    'Flexi Dinosaur': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product

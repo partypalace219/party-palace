@@ -259,6 +259,15 @@
                 description: '3D printed infinity cube fidget toy. Endlessly foldable for stress relief. Available in 11 colors.',
                 icon: '🎲',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg']
+            },
+            {
+                name: 'Flexi Dinosaur',
+                slug: 'flexi-dinosaur',
+                category: 'prints3d',
+                price: 5.99,
+                description: '3D printed flexible dinosaur toy. Articulated and fun to play with. Available in 11 colors.',
+                icon: '🦕',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg']
             }
         ];
 
@@ -851,6 +860,17 @@
                 name: `Infinity Cube (${color})`,
                 price: 8.99,
                 image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg'
+            });
+        }
+
+        function addFlexiDinoToCart() {
+            const select = document.getElementById('flexiDinoColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Flexi Dinosaur (${color})`,
+                price: 5.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg'
             });
         }
 
