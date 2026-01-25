@@ -444,26 +444,28 @@
         }
         
         .btn-secondary {
-            background: transparent;
+            background: #D4AF37;
             color: #000;
             border: 2px solid #D4AF37;
             transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
-            background: #D4AF37;
+            background: #C9A227;
+            border-color: #C9A227;
             color: #000;
         }
 
         .btn-outline {
-            background: transparent;
+            background: #D4AF37;
             color: #000;
             border: 2px solid #D4AF37;
             transition: all 0.3s ease;
         }
 
         .btn-outline:hover {
-            background: #D4AF37;
+            background: #C9A227;
+            border-color: #C9A227;
             color: #000;
         }
         
