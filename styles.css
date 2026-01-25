@@ -445,7 +445,7 @@
         
         .btn-secondary {
             background: transparent;
-            color: #D4AF37;
+            color: #000;
             border: 2px solid #D4AF37;
             transition: all 0.3s ease;
         }
@@ -457,7 +457,7 @@
 
         .btn-outline {
             background: transparent;
-            color: #D4AF37;
+            color: #000;
             border: 2px solid #D4AF37;
             transition: all 0.3s ease;
         }
