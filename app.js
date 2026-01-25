@@ -268,6 +268,150 @@
                 description: '3D printed flexible dinosaur toy. Articulated and fun to play with. Available in 11 colors.',
                 icon: '🦕',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg']
+            },
+            {
+                name: 'Snail',
+                slug: 'snail',
+                category: 'prints3d',
+                price: 3.99,
+                description: '3D printed snail toy. Cute and collectible fidget toy. Available in 11 colors.',
+                icon: '🐌',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/snail/snail1.jpeg']
+            },
+            {
+                name: 'Twisty Lizard',
+                slug: 'twisty-lizard',
+                category: 'prints3d',
+                price: 15.99,
+                description: '3D printed twisty lizard toy. Flexible and articulated reptile fidget. Available in 11 colors.',
+                icon: '🦎',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/twisty-lizard/lizard1.jpeg']
+            },
+            {
+                name: 'Palestine Map',
+                slug: 'palestine-map',
+                category: 'prints3d',
+                price: 9.99,
+                description: '3D printed Palestine map. 12 inches long.',
+                icon: '🗺️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map/map1.jpeg']
+            },
+            {
+                name: 'Ramadan Mubarak',
+                slug: 'ramadan-mubarak',
+                category: 'prints3d',
+                price: 16.99,
+                description: '3D printed Ramadan Mubarak sign. 8x8 inches.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-mubarak/sign1.jpeg']
+            },
+            {
+                name: 'Ramadan Kareem',
+                slug: 'ramadan-kareem',
+                category: 'prints3d',
+                price: 13.99,
+                description: '3D printed Ramadan Kareem sign. 7 inch round.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-kareem/sign1.jpeg']
+            },
+            {
+                name: 'Bismillah',
+                slug: 'bismillah',
+                category: 'prints3d',
+                price: 35.99,
+                description: '3D printed Bismillah sign. 12x9.5 inches.',
+                icon: '☪️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah/sign1.jpeg']
+            },
+            {
+                name: 'Morning Dua',
+                slug: 'morning-dua',
+                category: 'prints3d',
+                price: 34.99,
+                description: '3D printed Morning Dua sign. 13x9 inches.',
+                icon: '🌅',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/morning-dua/sign1.jpeg']
+            },
+            {
+                name: 'La ilaha ila Allah',
+                slug: 'la-ilaha-ila-allah',
+                category: 'prints3d',
+                price: 28.99,
+                description: '3D printed La ilaha ila Allah sign. 12x8 inches.',
+                icon: '☪️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/la-ilaha-ila-allah/sign1.jpeg']
+            },
+            {
+                name: 'Mohammed',
+                slug: 'mohammed',
+                category: 'prints3d',
+                price: 24.99,
+                description: '3D printed Mohammed sign. 9.5 inch round.',
+                icon: '☪️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/mohammed/sign1.jpeg']
+            },
+            {
+                name: 'Evening Dua',
+                slug: 'evening-dua',
+                category: 'prints3d',
+                price: 35.99,
+                description: '3D printed Evening Dua sign. 13x10 inches.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/evening-dua/sign1.jpeg']
+            },
+            {
+                name: 'Heart with Names',
+                slug: 'heart-with-names',
+                category: 'prints3d',
+                price: 33.99,
+                description: '3D printed heart sign with custom names. 10 inches.',
+                icon: '❤️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-names/sign1.jpeg']
+            },
+            {
+                name: 'Bismillah with Arch',
+                slug: 'bismillah-with-arch',
+                category: 'prints3d',
+                price: 21.99,
+                description: '3D printed Bismillah with arch sign. 8 inches.',
+                icon: '🕌',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah-with-arch/sign1.jpeg']
+            },
+            {
+                name: 'Allah',
+                slug: 'allah',
+                category: 'prints3d',
+                price: 33.99,
+                description: '3D printed Allah sign. 12.5 inch round.',
+                icon: '☪️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/allah/sign1.jpeg']
+            },
+            {
+                name: 'Muhammad with Background',
+                slug: 'muhammad-with-background',
+                category: 'prints3d',
+                price: 49.99,
+                description: '3D printed Muhammad sign with background. 13x9.5 inches.',
+                icon: '☪️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/muhammad-with-background/sign1.jpeg']
+            },
+            {
+                name: 'Eid Mubarak',
+                slug: 'eid-mubarak',
+                category: 'prints3d',
+                price: 47.99,
+                description: '3D printed Eid Mubarak sign. 12 inch round.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak/sign1.jpeg']
+            },
+            {
+                name: 'Eid Mubarak Rectangle',
+                slug: 'eid-mubarak-rectangle',
+                category: 'prints3d',
+                price: 31.99,
+                description: '3D printed Eid Mubarak sign. 8x12 inches.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg']
             }
         ];
 
@@ -871,6 +1015,28 @@
                 name: `Flexi Dinosaur (${color})`,
                 price: 5.99,
                 image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg'
+            });
+        }
+
+        function addSnailToCart() {
+            const select = document.getElementById('snailColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Snail (${color})`,
+                price: 3.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/snail/snail1.jpeg'
+            });
+        }
+
+        function addTwistyLizardToCart() {
+            const select = document.getElementById('twistyLizardColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `Twisty Lizard (${color})`,
+                price: 15.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/twisty-lizard/lizard1.jpeg'
             });
         }
 

@@ -155,6 +155,54 @@ const productGalleryImages = {
     'Flexi Dinosaur': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg',
     ],
+    'Snail': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/snail/snail1.jpeg',
+    ],
+    'Twisty Lizard': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/twisty-lizard/lizard1.jpeg',
+    ],
+    'Palestine Map': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map/map1.jpeg',
+    ],
+    'Ramadan Mubarak': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-mubarak/sign1.jpeg',
+    ],
+    'Ramadan Kareem': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-kareem/sign1.jpeg',
+    ],
+    'Bismillah': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah/sign1.jpeg',
+    ],
+    'Morning Dua': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/morning-dua/sign1.jpeg',
+    ],
+    'La ilaha ila Allah': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/la-ilaha-ila-allah/sign1.jpeg',
+    ],
+    'Mohammed': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/mohammed/sign1.jpeg',
+    ],
+    'Evening Dua': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/evening-dua/sign1.jpeg',
+    ],
+    'Heart with Names': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-names/sign1.jpeg',
+    ],
+    'Bismillah with Arch': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah-with-arch/sign1.jpeg',
+    ],
+    'Allah': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/allah/sign1.jpeg',
+    ],
+    'Muhammad with Background': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/muhammad-with-background/sign1.jpeg',
+    ],
+    'Eid Mubarak': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak/sign1.jpeg',
+    ],
+    'Eid Mubarak Rectangle': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg',
+    ],
 };
 
 // Helper function to get gallery images for a product
