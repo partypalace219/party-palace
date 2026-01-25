@@ -444,24 +444,27 @@
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: #D4AF37;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s ease;
         }
-        
+
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: #D4AF37;
+            color: #000;
         }
-        
+
         .btn-outline {
             background: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #D4AF37;
+            border: 2px solid #D4AF37;
+            transition: all 0.3s ease;
         }
-        
+
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: white;
+            background: #D4AF37;
+            color: #000;
         }
         
         .btn-large {
