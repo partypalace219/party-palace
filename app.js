@@ -98,6 +98,7 @@
                 description: 'High-quality edge glued wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
+                material: 'Wood',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square3.jpeg'],
                 tieredPricing: {
                     1: 39.99,
@@ -114,6 +115,7 @@
                 description: 'High-quality edge glued round wood panel, perfect for custom engraving projects.',
                 icon: '🪵',
                 size: '10" x 10"',
+                material: 'Wood',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round3.jpeg'],
                 tieredPricing: {
                     1: 39.99,
@@ -130,6 +132,7 @@
                 description: 'Custom engraved rectangle wood keychain with key ring. Perfect for personalized gifts.',
                 icon: '🔑',
                 size: '2" x 1"',
+                material: 'Wood',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain2.jpeg'],
                 tieredPricing: {
                     1: 5.99,
@@ -146,6 +149,7 @@
                 description: 'Custom engraved round stainless steel keychain with key ring. Durable and stylish.',
                 icon: '🔑',
                 size: '1" diameter',
+                material: 'Metal',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-stainless-steel-keychain/keychain1.jpeg'],
                 tieredPricing: {
                     1: 5.99,
@@ -162,6 +166,7 @@
                 description: 'Custom engraved black acrylic plexiglass sheet. Perfect for signs, displays, and decorative pieces.',
                 icon: '🖼️',
                 size: '12" x 12"',
+                material: 'Acrylic',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/black-acrylic-plexiglass-sheet/acrylic1.jpeg'],
                 tieredPricing: {
                     1: 54.99,
@@ -178,6 +183,7 @@
                 description: 'Natural unfinished rustic wood rounds. Perfect for custom engraving, centerpieces, and rustic decor.',
                 icon: '🪵',
                 size: '9-10" diameter',
+                material: 'Wood',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds1_v2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds2_v2.jpeg'],
                 tieredPricing: {
                     1: 54.99,
@@ -194,6 +200,7 @@
                 description: 'Custom engraved round basswood plywood coaster. Perfect for personalized gifts and home decor.',
                 icon: '🪵',
                 size: '4" diameter',
+                material: 'Wood',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters2.jpeg'],
                 tieredPricing: {
                     1: 5.99,
@@ -210,6 +217,7 @@
                 description: 'Custom engraved keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
                 icon: '🔑',
                 size: 'Various sizes',
+                material: 'Various',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg']
             }
         ];
@@ -2120,12 +2128,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         <div class="product-detail-cta">
                             <div style="margin-bottom: 1rem;">
                                 <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Material</label>
-                                <select id="detailEngravingMaterial" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
-                                    <option value="Wood">Wood (Popular)</option>
-                                    <option value="Metal - Anodized Aluminum">Metal - Anodized Aluminum (Popular)</option>
-                                    <option value="Leather">Leather</option>
-                                    <option value="Acrylic">Acrylic</option>
-                                </select>
+                                <div style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; background-color: #f9fafb; color: #374151;">
+                                    ${product.material || 'Wood'}
+                                </div>
+                                <input type="hidden" id="detailEngravingMaterial" value="${product.material || 'Wood'}">
                             </div>
                             <div style="margin-bottom: 1rem;">
                                 <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Special Instructions</label>
