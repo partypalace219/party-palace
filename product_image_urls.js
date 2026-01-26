@@ -244,6 +244,9 @@ const productGalleryImages = {
     'Masjid Relief Sculpture': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-relief-sculpture/decor1.jpeg',
     ],
+    'Heart with a Date': [
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-a-date/heart1.jpeg',
+    ],
     'Customizable Keychains': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg',
     ],

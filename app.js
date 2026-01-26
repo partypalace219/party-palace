@@ -547,6 +547,15 @@
                 description: '3D printed masjid relief sculpture (5×5 inches).',
                 icon: '🕌',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-relief-sculpture/decor1.jpeg']
+            },
+            {
+                name: 'Heart with a Date',
+                slug: 'heart-with-a-date',
+                category: 'prints3d',
+                price: 33.99,
+                description: '3D printed heart with custom date (10 inches). Perfect for anniversaries, weddings, and special occasions.',
+                icon: '❤️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-a-date/heart1.jpeg']
             }
         ];
 
