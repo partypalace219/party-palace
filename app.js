@@ -3331,6 +3331,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         window.closeLightbox = closeLightbox;
         window.changeLightboxImage = changeLightboxImage;
 
+        // Make coupon functions global
+        window.applyCoupon = applyCoupon;
+        window.removeCoupon = removeCoupon;
+
         // ============================================
         // INITIALIZATION
         // ============================================
