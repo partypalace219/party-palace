@@ -2192,13 +2192,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 ? products.filter(p => partyDecorCategories.includes(p.category))
                 : products.filter(p => p.category === currentFilter);
 
-            // Sort popular items first when viewing all products
+            // Sort popular items first (by price high to low) when viewing all products
             if (currentFilter === 'all') {
-                filtered = filtered.sort((a, b) => {
-                    if (a.popular && !b.popular) return -1;
-                    if (!a.popular && b.popular) return 1;
-                    return 0;
-                });
+                const popularItems = filtered.filter(p => p.popular).sort((a, b) => b.price - a.price);
+                const otherItems = filtered.filter(p => !p.popular);
+                filtered = [...popularItems, ...otherItems];
             }
 
             document.getElementById('productsGrid').innerHTML = filtered.map(p => createProductCard(p)).join('');
