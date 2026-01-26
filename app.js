@@ -1959,6 +1959,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             <span class="product-price-label">Starting at</span>
                             <span class="product-price-amount">$${product.price}</span>
                         </div>
+                        ${['arches', 'columns', 'walls', 'centerpieces'].includes(product.category) ? `
+                        <button onclick="event.stopPropagation(); bookConsultation('${product.name}', ${product.price})" class="btn btn-primary" style="width: 100%">
+                            Book Free Consultation
+                        </button>
+                        ` : `
                         <button onclick="event.stopPropagation(); addToCart('${product.name}')" class="btn btn-primary" style="width: 100%">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
                                 <circle cx="9" cy="21" r="1"></circle>
@@ -1967,6 +1972,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             </svg>
                             Add to Cart
                         </button>
+                        `}
                         <button onclick="event.stopPropagation(); navigateToProduct('${productSlug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
                     </div>
                 </div>
@@ -2132,6 +2138,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             <button onclick="addEngravingToCartFromDetail('${product.name}', ${product.price}, '${product.slug}')" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                 Add to Cart
+                            </button>
+                        </div>
+                        ` : ['arches', 'columns', 'walls', 'centerpieces'].includes(product.category) ? `
+                        <div class="product-detail-cta">
+                            <button onclick="bookConsultation('${product.name}', ${product.price})" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
+                                Book Free Consultation
                             </button>
                         </div>
                         ` : `
