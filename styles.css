@@ -1199,15 +1199,17 @@
             flex: 1;
         }
 
-        /* Processing time for 3D Prints and Engraving products */
-        .prints3d-product .product-description::after,
-        .engraving-product .product-description::after {
-            content: "Processing: 3-10 days";
+        /* Processing time for 3D Prints and Engraving products - shown only in product detail view */
+        .product-detail-processing {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.875rem;
             color: #667eea;
             font-style: italic;
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            background: #f0f4ff;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
         }
 
         @media (min-width: 768px) {

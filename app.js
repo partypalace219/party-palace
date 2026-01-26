@@ -2095,7 +2095,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             <span class="amount">$${product.price}</span>
                         </div>
                         <p class="product-detail-description">${product.description}</p>
-                        
+                        ${(product.category === 'prints3d' || product.category === 'engraving') ? '<span class="product-detail-processing">🕐 Processing: 3-10 business days</span>' : ''}
+
                         ${features}
 
                         ${product.category === 'engraving' ? `
@@ -2187,10 +2188,19 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         // Render Catalog
         function renderCatalog() {
             const partyDecorCategories = ['arches', 'columns', 'walls', 'centerpieces'];
-            const filtered = currentFilter === 'all'
+            let filtered = currentFilter === 'all'
                 ? products.filter(p => partyDecorCategories.includes(p.category))
                 : products.filter(p => p.category === currentFilter);
-            
+
+            // Sort popular items first when viewing all products
+            if (currentFilter === 'all') {
+                filtered = filtered.sort((a, b) => {
+                    if (a.popular && !b.popular) return -1;
+                    if (!a.popular && b.popular) return 1;
+                    return 0;
+                });
+            }
+
             document.getElementById('productsGrid').innerHTML = filtered.map(p => createProductCard(p)).join('');
         }
         // Render Services
