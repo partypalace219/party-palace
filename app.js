@@ -2007,12 +2007,23 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             setTimeout(() => {
                 selectContactService('partyDecor');
 
+                // Show the selected product banner
+                const banner = document.getElementById('selectedProductBanner');
+                const nameEl = document.getElementById('selectedProductName');
+                const priceEl = document.getElementById('selectedProductPrice');
+
+                if (banner && nameEl && priceEl) {
+                    nameEl.textContent = productName;
+                    priceEl.textContent = `$${productPrice}`;
+                    banner.style.display = 'block';
+                }
+
                 // Pre-fill the message with product info
                 const messageEl = document.getElementById('contactMessage');
                 if (messageEl) {
                     messageEl.value = `I'm interested in booking a consultation for: ${productName} (Starting at $${productPrice})\n\nPlease contact me to discuss my event details.`;
                 }
-            }, 100);
+            }, 150);
         }
 
         // Get product by slug
