@@ -209,17 +209,6 @@
                     11: 'contact'
                 }
             },
-            {
-                name: 'Customizable Keychains',
-                slug: 'customizable-keychains',
-                category: 'engraving',
-                price: 4.99,
-                description: 'Custom engraved keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
-                icon: '🔑',
-                size: 'Various sizes',
-                material: 'Various',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg']
-            }
         ];
 
         // 3D Prints products data
@@ -556,6 +545,15 @@
                 description: '3D printed heart with custom date (10 inches). Perfect for anniversaries, weddings, and special occasions.',
                 icon: '❤️',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-a-date/heart1.jpeg']
+            },
+            {
+                name: 'Customizable Keychains',
+                slug: 'customizable-keychains',
+                category: 'prints3d',
+                price: 4.99,
+                description: '3D printed keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
+                icon: '🔑',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg']
             }
         ];
 
