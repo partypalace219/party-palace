@@ -1267,6 +1267,121 @@
             return cart.reduce((sum, item) => sum + item.price, 0);
         }
 
+        // Coupon codes system
+        const validCoupons = {
+            'PARTY10': { discount: 10, description: '10% off' },
+            'FRIENDS30': { discount: 30, description: '30% off' },
+            'FAMILY50': { discount: 50, description: '50% off' }
+        };
+
+        let appliedCouponCode = null;
+
+        function applyCoupon() {
+            const input = document.getElementById('couponCodeInput');
+            const message = document.getElementById('couponMessage');
+            const appliedDiv = document.getElementById('appliedCoupon');
+            const appliedText = document.getElementById('appliedCouponText');
+
+            if (!input) return;
+
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                showCouponMessage('Please enter a coupon code', 'error');
+                return;
+            }
+
+            if (validCoupons[code]) {
+                appliedCouponCode = code;
+                const coupon = validCoupons[code];
+
+                // Show applied coupon
+                appliedText.textContent = `${code} - ${coupon.description} applied!`;
+                appliedDiv.style.display = 'block';
+                message.style.display = 'none';
+                input.value = '';
+                input.disabled = true;
+
+                // Update totals
+                updateCheckoutWithDiscount();
+                showNotification(`Coupon applied: ${coupon.description}`, 'success');
+            } else {
+                showCouponMessage('Invalid coupon code', 'error');
+                appliedCouponCode = null;
+            }
+        }
+
+        function removeCoupon() {
+            appliedCouponCode = null;
+            const input = document.getElementById('couponCodeInput');
+            const appliedDiv = document.getElementById('appliedCoupon');
+            const discountRow = document.getElementById('discountRow');
+
+            if (input) input.disabled = false;
+            if (appliedDiv) appliedDiv.style.display = 'none';
+            if (discountRow) discountRow.style.display = 'none';
+
+            updateCheckoutWithDiscount();
+            showNotification('Coupon removed', 'info');
+        }
+
+        function showCouponMessage(text, type) {
+            const message = document.getElementById('couponMessage');
+            if (!message) return;
+
+            message.textContent = text;
+            message.style.display = 'block';
+            message.style.color = type === 'error' ? '#dc2626' : '#166534';
+
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        function getDiscountedTotal() {
+            const subtotal = getCartTotal();
+            if (appliedCouponCode && validCoupons[appliedCouponCode]) {
+                const discountPercent = validCoupons[appliedCouponCode].discount;
+                const discountAmount = subtotal * (discountPercent / 100);
+                return {
+                    subtotal: subtotal,
+                    discountPercent: discountPercent,
+                    discountAmount: discountAmount,
+                    total: subtotal - discountAmount
+                };
+            }
+            return {
+                subtotal: subtotal,
+                discountPercent: 0,
+                discountAmount: 0,
+                total: subtotal
+            };
+        }
+
+        function updateCheckoutWithDiscount() {
+            const totalEl = document.getElementById('checkoutTotal');
+            const discountRow = document.getElementById('discountRow');
+            const discountPercent = document.getElementById('discountPercent');
+            const discountAmount = document.getElementById('discountAmount');
+
+            const pricing = getDiscountedTotal();
+
+            if (totalEl) {
+                totalEl.textContent = '$' + pricing.total.toFixed(2);
+            }
+
+            if (discountRow && pricing.discountPercent > 0) {
+                discountRow.style.display = 'block';
+                if (discountPercent) discountPercent.textContent = pricing.discountPercent;
+                if (discountAmount) discountAmount.textContent = '-$' + pricing.discountAmount.toFixed(2);
+            } else if (discountRow) {
+                discountRow.style.display = 'none';
+            }
+
+            // Update payment options with discounted total
+            initPaymentOptions();
+        }
+
         function toggleCart() {
             const sidebar = document.getElementById('cartSidebar');
             const overlay = document.getElementById('cartOverlay');
@@ -1335,13 +1450,27 @@
                 </div>
             `).join('');
 
-            const total = getCartTotal();
+            // Use discounted total if coupon is applied
+            const pricing = getDiscountedTotal();
 
             if (totalEl) {
-                totalEl.textContent = '$' + total;
+                totalEl.textContent = '$' + pricing.total.toFixed(2);
             }
             if (cartTotalDisplay) {
-                cartTotalDisplay.textContent = '$' + total;
+                cartTotalDisplay.textContent = '$' + pricing.subtotal.toFixed(2);
+            }
+
+            // Update discount display
+            const discountRow = document.getElementById('discountRow');
+            const discountPercentEl = document.getElementById('discountPercent');
+            const discountAmountEl = document.getElementById('discountAmount');
+
+            if (discountRow && pricing.discountPercent > 0) {
+                discountRow.style.display = 'block';
+                if (discountPercentEl) discountPercentEl.textContent = pricing.discountPercent;
+                if (discountAmountEl) discountAmountEl.textContent = '-$' + pricing.discountAmount.toFixed(2);
+            } else if (discountRow) {
+                discountRow.style.display = 'none';
             }
 
             // Initialize payment options
@@ -1403,8 +1532,8 @@
                 const amount = depositAmountInput ? parseInt(depositAmountInput.value) || MIN_DEPOSIT_AMOUNT : MIN_DEPOSIT_AMOUNT;
                 btnText.textContent = `Pay $${amount} Deposit to Book`;
             } else {
-                const total = getCartTotal();
-                btnText.textContent = `Pay $${total} in Full`;
+                const pricing = getDiscountedTotal();
+                btnText.textContent = `Pay $${pricing.total.toFixed(2)} in Full`;
             }
         }
 
@@ -1416,7 +1545,8 @@
                 const amount = depositAmountInput ? parseInt(depositAmountInput.value) || MIN_DEPOSIT_AMOUNT : MIN_DEPOSIT_AMOUNT;
                 return Math.max(amount, MIN_DEPOSIT_AMOUNT); // Ensure minimum
             } else {
-                return getCartTotal();
+                const pricing = getDiscountedTotal();
+                return pricing.total;
             }
         }
 
