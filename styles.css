@@ -1198,13 +1198,24 @@
             margin-bottom: 1rem;
             flex: 1;
         }
-        
+
+        /* Processing time for 3D Prints and Engraving products */
+        .prints3d-product .product-description::after,
+        .engraving-product .product-description::after {
+            content: "Processing: 3-10 days";
+            display: block;
+            font-size: 0.75rem;
+            color: #667eea;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
         @media (min-width: 768px) {
             .product-description {
                 font-size: 0.9375rem;
             }
         }
-        
+
         .product-price {
             display: flex;
             flex-direction: column;
