@@ -591,25 +591,42 @@
             }
         }
 
-        function addToCart(productName) {
-            const product = products.find(p => p.name === productName);
-            if (!product) return;
+        function addToCart(productNameOrObj) {
+            let itemToAdd;
+
+            // Handle both string (product name) and object (direct item) inputs
+            if (typeof productNameOrObj === 'string') {
+                const product = products.find(p => p.name === productNameOrObj);
+                if (!product) return;
+
+                itemToAdd = {
+                    name: product.name,
+                    price: product.price,
+                    category: product.category,
+                    image: product.images ? product.images[0] : null
+                };
+            } else if (typeof productNameOrObj === 'object' && productNameOrObj !== null) {
+                // Direct item object passed (e.g., from 3D print products with color)
+                itemToAdd = {
+                    name: productNameOrObj.name,
+                    price: productNameOrObj.price,
+                    category: productNameOrObj.category || 'prints3d',
+                    image: productNameOrObj.image || null
+                };
+            } else {
+                return;
+            }
 
             // Check if already in cart
-            if (cart.find(item => item.name === productName)) {
+            if (cart.find(item => item.name === itemToAdd.name)) {
                 showNotification('Item already in cart!', 'info');
                 return;
             }
 
-            cart.push({
-                name: product.name,
-                price: product.price,
-                category: product.category,
-                image: product.images ? product.images[0] : null
-            });
+            cart.push(itemToAdd);
 
             saveCart();
-            showNotification(`${product.name} added to cart!`, 'success');
+            showNotification(`${itemToAdd.name} added to cart!`, 'success');
         }
 
         // Get selected engraving material from filter buttons
