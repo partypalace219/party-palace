@@ -2209,7 +2209,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 walls: ['Custom sizes available', 'Photo-ready backdrop', 'Delivery and setup included', 'Perfect for events of any size'],
                 centerpieces: ['Table-ready arrangements', 'Color matching available', 'Bulk discounts for large orders', 'Custom themes welcome'],
                 services: ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed'],
-                engraving: ['Multiple material options', 'Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events']
+                engraving: ['Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events']
             };
             
             const categoryFeatures = featuresByCategory[product.category] || featuresByCategory.services;
