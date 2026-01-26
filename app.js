@@ -968,23 +968,30 @@
         }
 
         function addCustomizableKeychainToCart() {
-            const instructionsInput = document.getElementById('custom-keychain-instructions');
-            const instructions = instructionsInput ? instructionsInput.value.trim() : '';
+            const customTextInput = document.getElementById('keychainCustomText');
+            const customText = customTextInput ? customTextInput.value.trim() : '';
+
+            if (!customText) {
+                showNotification('Please enter customization text for your keychain', 'error');
+                return;
+            }
+
+            const itemName = `Customizable Keychain: "${customText}"`;
 
             const item = {
-                name: 'Customizable Keychains',
+                name: itemName,
                 price: 4.99,
                 image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg',
-                category: 'engraving',
-                instructions: instructions
+                category: 'prints3d',
+                customText: customText
             };
 
             cart.push(item);
             saveCart();
-            showNotification('Customizable Keychains added to cart!', 'success');
+            showNotification(`${itemName} added to cart!`, 'success');
 
-            // Clear the instructions field
-            if (instructionsInput) instructionsInput.value = '';
+            // Clear the text field
+            if (customTextInput) customTextInput.value = '';
         }
 
         function addTieredAcrylicToCart(productName, productId) {
