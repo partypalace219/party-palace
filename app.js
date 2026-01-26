@@ -3342,24 +3342,40 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         // ============================================
 
         function renderGallery() {
-            const galleryGrid = document.querySelector('.gallery-grid');
-            if (!galleryGrid || typeof productGalleryImages === 'undefined') return;
+            const galleryMasonry = document.getElementById('galleryMasonry');
+            if (!galleryMasonry || typeof productGalleryImages === 'undefined') return;
 
-            // Collect all images from all products
+            // Collect all images from all products with category data
             const allImages = [];
             for (const [productName, images] of Object.entries(productGalleryImages)) {
+                const product = products.find(p => p.name === productName);
+                const productCategory = product ? product.category : 'gallery';
+
+                // Map product category to filter category
+                let filterCategory = 'party-decor';
+                if (productCategory === 'prints3d') filterCategory = '3d-prints';
+                else if (productCategory === 'engraving') filterCategory = 'engraving';
+                else if (['arches', 'columns', 'walls', 'centerpieces'].includes(productCategory)) filterCategory = 'party-decor';
+
                 images.forEach(imageUrl => {
                     allImages.push({
                         url: imageUrl,
                         title: productName,
-                        category: getCategoryForProduct(productName)
+                        category: getCategoryForProduct(productName),
+                        filterCategory: filterCategory
                     });
                 });
             }
 
-            // Render gallery items
-            galleryGrid.innerHTML = allImages.map((item, index) => `
-                <div class="gallery-item" onclick="openLightbox(${index})">
+            // Shuffle images for variety
+            const shuffledImages = allImages.sort(() => Math.random() - 0.5);
+
+            // Render gallery items with staggered animation delays
+            galleryMasonry.innerHTML = shuffledImages.map((item, index) => `
+                <div class="gallery-item"
+                     data-category="${item.filterCategory}"
+                     onclick="openLightbox(${index})"
+                     style="animation-delay: ${(index % 20) * 0.05}s">
                     <img src="${item.url}" alt="${item.title}" loading="lazy">
                     <div class="gallery-item-overlay">
                         <p class="gallery-item-title">${item.title}</p>
@@ -3369,7 +3385,61 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             `).join('');
 
             // Store images globally for lightbox
-            window.galleryImages = allImages;
+            window.galleryImages = shuffledImages;
+
+            // Update image count
+            const countEl = document.getElementById('galleryImageCount');
+            if (countEl) countEl.textContent = shuffledImages.length;
+
+            // Initialize filter buttons
+            initGalleryFilters();
+        }
+
+        function initGalleryFilters() {
+            const filterBtns = document.querySelectorAll('.gallery-filter-btn');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+                    filterGallery(filter);
+                });
+            });
+        }
+
+        function filterGallery(filter) {
+            const items = document.querySelectorAll('.gallery-item');
+            let visibleCount = 0;
+
+            items.forEach((item, index) => {
+                const category = item.dataset.category;
+                const shouldShow = filter === 'all' || category === filter;
+
+                if (shouldShow) {
+                    item.classList.remove('hidden');
+                    item.style.animationDelay = `${(visibleCount % 20) * 0.05}s`;
+                    item.style.animation = 'none';
+                    // Trigger reflow
+                    item.offsetHeight;
+                    item.style.animation = 'galleryFadeIn 0.6s forwards';
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            // Update count
+            const countEl = document.getElementById('galleryImageCount');
+            if (countEl) countEl.textContent = visibleCount;
+
+            // Update lightbox images to only include visible items
+            const allImages = window.galleryImages || [];
+            window.filteredGalleryImages = allImages.filter(img =>
+                filter === 'all' || img.filterCategory === filter
+            );
         }
 
         function getCategoryForProduct(productName) {
