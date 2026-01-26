@@ -1475,6 +1475,18 @@
 
             // Initialize payment options
             initPaymentOptions();
+
+            // Set up coupon input Enter key listener
+            const couponInput = document.getElementById('couponCodeInput');
+            if (couponInput && !couponInput.dataset.listenerAdded) {
+                couponInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyCoupon();
+                    }
+                });
+                couponInput.dataset.listenerAdded = 'true';
+            }
         }
 
         // Payment option handling
@@ -3357,4 +3369,15 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             initPageFromHash();
             updateCartCount();
             renderCartItems();
+
+            // Set up coupon input Enter key listener
+            const couponInput = document.getElementById('couponCodeInput');
+            if (couponInput) {
+                couponInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyCoupon();
+                    }
+                });
+            }
         }
