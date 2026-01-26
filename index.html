@@ -1724,7 +1724,7 @@
             <div class="container">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
                     <!-- Party Decor Card -->
-                    <div class="contact-service-card" id="partyDecorCard" onclick="selectContactService('partyDecor')" style="cursor: pointer; border: 3px solid var(--primary); background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s ease;">
+                    <div class="contact-service-card" id="partyDecorCard" onclick="selectContactService('partyDecor')" style="cursor: pointer; border: 3px solid var(--primary); background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25)); border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s ease;">
                         <div style="font-size: 3rem; margin-bottom: 1rem;">🎈</div>
                         <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Party Decor</h3>
                         <p style="color: var(--gray-600); font-size: 0.9rem;">Balloon arches, walls, centerpieces, and event decorations</p>
@@ -1774,8 +1774,8 @@
                                     <option value="birthday">Birthday</option>
                                     <option value="corporate">Corporate</option>
                                     <option value="graduation">Graduation</option>
-                                    <option value="other">Other</option>
                                     <option value="wedding">Wedding</option>
+                                    <option value="other">Other</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -2228,6 +2228,54 @@
         </div>
     </div>
 
+    <!-- 3D Prints & Engraving No Refund Policy Modal -->
+    <div id="noRefundModal" class="waiver-modal" role="dialog" aria-modal="true" aria-labelledby="noRefundModalTitle" aria-hidden="true">
+        <div class="waiver-modal-content" tabindex="-1">
+            <div class="waiver-modal-header" style="background: linear-gradient(135deg, #DC2626, #B91C1C);">
+                <h2 id="noRefundModalTitle">🚫 3D Prints & Engraving - No Refund Policy</h2>
+                <button type="button" id="closeNoRefundModal" class="waiver-modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="waiver-modal-body">
+                <div class="waiver-text-container">
+                    <h3 style="color: #DC2626;">NO REFUND POLICY FOR CUSTOM ITEMS</h3>
+                    <p style="text-align: center; font-weight: 600; color: #DC2626;">PLEASE READ CAREFULLY BEFORE ORDERING</p>
+
+                    <p>All 3D printed items and laser engraved products are <strong>custom-made to order</strong> based on the Client's specifications. Due to the personalized nature of these products:</p>
+
+                    <h4 style="color: #DC2626;">ALL SALES ARE FINAL</h4>
+                    <ul>
+                        <li><strong>No refunds, returns, or exchanges</strong> will be issued for any 3D printed or engraved items.</li>
+                        <li>The Client is responsible for <strong>reviewing and approving all design specifications</strong>, text, and details before production begins.</li>
+                        <li>Minor variations in color, texture, or finish are <strong>inherent to the 3D printing and engraving processes</strong> and do not qualify for refunds.</li>
+                        <li><strong>Orders cannot be canceled</strong> once production has begun.</li>
+                    </ul>
+
+                    <h4 style="color: #DC2626;">CLIENT RESPONSIBILITY</h4>
+                    <p>The Company is <strong>not responsible</strong> for errors resulting from incorrect information provided by the Client, including but not limited to:</p>
+                    <ul>
+                        <li>Misspelled names or text</li>
+                        <li>Wrong dates or numbers</li>
+                        <li>Incorrect sizing specifications</li>
+                        <li>Color mismatches due to screen display differences</li>
+                    </ul>
+
+                    <h4 style="color: #DC2626;">DEFECTIVE ITEMS</h4>
+                    <p>If your item arrives damaged or is significantly different from what was ordered (not due to client error), please contact us within <strong>48 hours of delivery</strong> with photos of the issue. We will review each case individually and may offer a replacement at our discretion.</p>
+
+                    <h4 style="color: #DC2626;">PRODUCTION TIMELINE</h4>
+                    <p>Custom 3D prints and engravings typically take <strong>3-10 business days</strong> to produce. Rush orders may be available for an additional fee - please contact us to inquire.</p>
+
+                    <p style="margin-top: 1.5rem; padding: 1rem; background: #FEE2E2; border: 2px solid #DC2626; border-radius: 8px; font-weight: 600; color: #DC2626; text-align: center;">
+                        ⚠️ By placing an order for 3D printed or engraved items, you acknowledge and accept this No Refund Policy.
+                    </p>
+                </div>
+            </div>
+            <div class="waiver-modal-footer">
+                <button type="button" onclick="NoRefundModal.close()" class="btn btn-primary">I Understand</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ============================================
          PRODUCT DETAIL PAGE
          Individual product view with gallery and details
@@ -2283,11 +2331,11 @@
                                 <label>Event Type *</label>
                                 <select id="checkoutEventType" required>
                                     <option value="">Select type</option>
-                                    <option value="wedding">Wedding</option>
+                                    <option value="baby-shower">Baby Shower</option>
                                     <option value="birthday">Birthday</option>
                                     <option value="corporate">Corporate</option>
-                                    <option value="baby-shower">Baby Shower</option>
                                     <option value="graduation">Graduation</option>
+                                    <option value="wedding">Wedding</option>
                                     <option value="other">Other</option>
                                 </select>
                             </div>
@@ -2357,10 +2405,16 @@
 
                             <!-- Agreement Confirmation Checkbox -->
                             <div style="background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
-                                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+                                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; margin-bottom: 0.75rem;">
                                     <input type="checkbox" id="agreementCheckbox" required style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
                                     <span style="font-size: 0.875rem; color: var(--gray-800); line-height: 1.5;">
-                                        I confirm that I have read and agree to the <strong>Party Palace Agreement</strong>, <strong>Liability Waiver</strong>, and understand that <strong>all deposits are non-refundable</strong> and <strong>custom items (3D prints & engravings) are final sale with no returns or refunds</strong>.
+                                        I confirm that I have read and agree to the <strong>Party Palace Agreement</strong>, <strong>Liability Waiver</strong>, and understand that <strong>all deposits are non-refundable</strong>.
+                                    </span>
+                                </label>
+                                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
+                                    <input type="checkbox" id="noRefundCheckbox" required style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
+                                    <span style="font-size: 0.875rem; color: var(--gray-800); line-height: 1.5;">
+                                        I acknowledge that <strong>custom 3D prints and engravings are final sale</strong> with <a href="#" onclick="event.preventDefault(); NoRefundModal.open();" style="color: #DC2626; font-weight: 600; text-decoration: underline;">no returns or refunds</a>.
                                     </span>
                                 </label>
                             </div>

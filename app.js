@@ -2315,7 +2315,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (service === 'partyDecor') {
                 // Style party decor card as selected
                 partyDecorCard.style.border = '3px solid var(--primary)';
-                partyDecorCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))';
+                partyDecorCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25))';
                 partyDecorCard.querySelector('h3').style.color = 'var(--primary)';
                 partyDecorCard.querySelector('span').style.display = 'inline-block';
 
@@ -2331,7 +2331,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } else {
                 // Style custom order card as selected
                 customOrderCard.style.border = '3px solid var(--primary)';
-                customOrderCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))';
+                customOrderCard.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25))';
                 customOrderCard.querySelector('h3').style.color = 'var(--primary)';
                 customOrderCard.querySelector('span').style.display = 'inline-block';
 
@@ -3052,6 +3052,73 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         };
 
         // ============================================
+        // NO REFUND POLICY MODAL (3D Prints & Engraving)
+        // ============================================
+
+        const NoRefundModal = {
+            // Initialize the modal
+            init: function() {
+                this.bindEvents();
+            },
+
+            // Open the modal
+            open: function() {
+                const modal = document.getElementById('noRefundModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    modal.querySelector('.waiver-modal-content').focus();
+                }
+            },
+
+            // Close the modal
+            close: function() {
+                const modal = document.getElementById('noRefundModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+            },
+
+            // Bind event listeners
+            bindEvents: function() {
+                // Open modal button
+                const openBtn = document.getElementById('openNoRefundBtn');
+                if (openBtn) {
+                    openBtn.addEventListener('click', () => this.open());
+                }
+
+                // Close modal button
+                const closeBtn = document.getElementById('closeNoRefundModal');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => this.close());
+                }
+
+                // Close on backdrop click
+                const modal = document.getElementById('noRefundModal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            this.close();
+                        }
+                    });
+                }
+
+                // Close on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        const modal = document.getElementById('noRefundModal');
+                        if (modal && modal.style.display === 'flex') {
+                            this.close();
+                        }
+                    }
+                });
+            }
+        };
+
+        // ============================================
         // BOOKING GATE - REQUIRES BOTH DOCUMENTS SIGNED
         // ============================================
         
@@ -3078,10 +3145,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 // Target the checkout form submit button
                 const checkoutSubmitBtn = document.getElementById('checkoutSubmitBtn');
                 const agreementCheckbox = document.getElementById('agreementCheckbox');
+                const noRefundCheckbox = document.getElementById('noRefundCheckbox');
 
                 const bothSigned = this.areBothSigned();
                 const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
-                const allComplete = bothSigned && agreementChecked;
+                const noRefundChecked = noRefundCheckbox ? noRefundCheckbox.checked : false;
+                const allComplete = bothSigned && agreementChecked && noRefundChecked;
 
                 if (checkoutSubmitBtn) {
                     checkoutSubmitBtn.disabled = !allComplete;
@@ -3091,6 +3160,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         if (!this.isContractSigned()) missing.push('Party Palace Agreement');
                         if (!this.isWaiverSigned()) missing.push('Liability Waiver');
                         if (!agreementChecked) missing.push('confirmation checkbox');
+                        if (!noRefundChecked) missing.push('no refund policy checkbox');
                         checkoutSubmitBtn.title = 'Please complete: ' + missing.join(', ');
                     } else {
                         checkoutSubmitBtn.classList.remove('btn-disabled');
@@ -3104,9 +3174,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const contractSigned = BookingGate.isContractSigned();
                 const waiverSigned = BookingGate.isWaiverSigned();
                 const agreementCheckbox = document.getElementById('agreementCheckbox');
+                const noRefundCheckbox = document.getElementById('noRefundCheckbox');
                 const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
+                const noRefundChecked = noRefundCheckbox ? noRefundCheckbox.checked : false;
 
-                if (!contractSigned || !waiverSigned || !agreementChecked) {
+                if (!contractSigned || !waiverSigned || !agreementChecked || !noRefundChecked) {
                     e.preventDefault();
 
                     // Show inline error on checkout form
@@ -3115,17 +3187,20 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         let errors = [];
                         if (!contractSigned) errors.push('Sign the Party Palace Agreement');
                         if (!waiverSigned) errors.push('Sign the Liability Waiver');
-                        if (!agreementChecked) errors.push('Check the confirmation box agreeing to terms and return policy');
+                        if (!agreementChecked) errors.push('Check the confirmation box agreeing to terms');
+                        if (!noRefundChecked) errors.push('Acknowledge the no refund policy for 3D prints & engravings');
                         statusEl.className = 'form-status error';
                         statusEl.innerHTML = '✗ Please complete the following:<br>• ' + errors.join('<br>• ');
                         statusEl.style.display = 'block';
                     }
 
-                    // Open the first missing document's modal (contract first, then waiver)
+                    // Open the first missing document's modal (contract first, then waiver, then no refund)
                     if (!contractSigned) {
                         ContractModal.open();
                     } else if (!waiverSigned) {
                         WaiverModal.open();
+                    } else if (!noRefundChecked) {
+                        NoRefundModal.open();
                     }
 
                     return false;
@@ -3186,6 +3261,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const agreementCheckbox = document.getElementById('agreementCheckbox');
                 if (agreementCheckbox) {
                     agreementCheckbox.addEventListener('change', () => this.updateSubmitButton());
+                }
+
+                // Bind no refund checkbox to update submit button
+                const noRefundCheckbox = document.getElementById('noRefundCheckbox');
+                if (noRefundCheckbox) {
+                    noRefundCheckbox.addEventListener('change', () => this.updateSubmitButton());
                 }
             }
         };
@@ -3401,6 +3482,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
             WaiverModal.init();
             ContractModal.init();
+            NoRefundModal.init();
             BookingGate.init();
             ColorPalette.init();
             initPageFromHash();
