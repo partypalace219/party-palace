@@ -3542,6 +3542,49 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         window.applyCoupon = applyCoupon;
         window.removeCoupon = removeCoupon;
 
+        // Make cart functions global
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.clearCart = clearCart;
+
+        // Make 3D print product add-to-cart functions global
+        window.addStarFidgetToCart = addStarFidgetToCart;
+        window.addSpinnerToCart = addSpinnerToCart;
+        window.addFlexiFishToCart = addFlexiFishToCart;
+        window.addOctagonFidgetToCart = addOctagonFidgetToCart;
+        window.addInfinityCubeToCart = addInfinityCubeToCart;
+        window.addFlexiDinoToCart = addFlexiDinoToCart;
+        window.addSnailToCart = addSnailToCart;
+        window.addTwistyLizardToCart = addTwistyLizardToCart;
+        window.addCustomizableKeychainToCart = addCustomizableKeychainToCart;
+        window.updateStarFidgetPrice = updateStarFidgetPrice;
+
+        // Make engraving product functions global
+        window.addTieredEngravingToCart = addTieredEngravingToCart;
+        window.addTieredKeychainToCart = addTieredKeychainToCart;
+        window.addTieredAcrylicToCart = addTieredAcrylicToCart;
+        window.addTieredWoodRoundsToCart = addTieredWoodRoundsToCart;
+        window.addTieredCoasterToCart = addTieredCoasterToCart;
+
+        // Make filter functions global
+        window.filterProducts = filterProducts;
+        window.filterEngravingProducts = filterEngravingProducts;
+        window.filter3DProducts = filter3DProducts;
+
+        // Make navigation functions global
+        window.navigate = navigate;
+        window.navigateToProduct = navigateToProduct;
+
+        // Make UI toggle functions global
+        window.toggleCart = toggleCart;
+        window.toggleMobileMenu = toggleMobileMenu;
+
+        // Make product detail and booking functions global
+        window.bookConsultation = bookConsultation;
+        window.changeProductImage = changeProductImage;
+        window.addEngravingToCartFromDetail = addEngravingToCartFromDetail;
+        window.submitViaEmail = submitViaEmail;
+
         // ============================================
         // INITIALIZATION
         // ============================================
