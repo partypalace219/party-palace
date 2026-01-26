@@ -421,7 +421,7 @@
                 price: 31.99,
                 description: '3D printed Eid Mubarak sign. 8x12 inches.',
                 icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg']
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/decor1.jpeg']
             },
             {
                 name: 'Eid Mubarak Ornaments',

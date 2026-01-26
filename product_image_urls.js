@@ -203,7 +203,7 @@ const productGalleryImages = {
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak/sign1.jpeg',
     ],
     'Eid Mubarak Rectangle': [
-        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/sign1.jpeg',
+        'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/decor1.jpeg',
     ],
     'Eid Mubarak Ornaments': [
         'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-ornaments/decor1.jpeg',
