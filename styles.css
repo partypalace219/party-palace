@@ -341,6 +341,9 @@
         .social-icon[title="Snapchat"] svg {
             width: 18px;
             height: 18px;
+            fill: #FFFFFF;
+            stroke: #000000;
+            stroke-width: 0.8;
         }
 
         @media (min-width: 1024px) {
@@ -1756,9 +1759,9 @@
         }
 
         .footer-social .social-icon[title="Snapchat"] svg {
-            fill: none;
+            fill: #FFFFFF;
             stroke: #000000;
-            stroke-width: 1.5;
+            stroke-width: 1;
         }
 
         /* ============================================
