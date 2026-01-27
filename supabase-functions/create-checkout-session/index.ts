@@ -52,8 +52,8 @@ serve(async (req) => {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: 'https://partypalace219.github.io/party-palace/#checkout-success',
-      cancel_url: 'https://partypalace219.github.io/party-palace/#checkout',
+      success_url: 'https://thepartypalace.in/#checkout-success',
+      cancel_url: 'https://thepartypalace.in/#checkout',
       customer_email: customerInfo.email,
       metadata: {
         customer_name: customerInfo.name,
