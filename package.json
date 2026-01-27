@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Party Palace - Event Decoration & Rental Services",
   "scripts": {
-    "start": "serve -s . -l ${PORT:-3000}"
+    "start": "node server.js"
   },
   "keywords": ["party", "decorations", "events", "balloons"],
   "author": "Party Palace",
