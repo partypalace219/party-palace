@@ -68,6 +68,29 @@
             loadProducts();
         }
 
+        // Hero Slideshow
+        function initHeroSlideshow() {
+            const slideshow = document.getElementById('heroSlideshow');
+            if (!slideshow) return;
+
+            const images = slideshow.querySelectorAll('.slideshow-img');
+            if (images.length <= 1) return;
+
+            let currentIndex = 0;
+
+            setInterval(() => {
+                images[currentIndex].style.opacity = '0';
+                currentIndex = (currentIndex + 1) % images.length;
+                images[currentIndex].style.opacity = '1';
+            }, 5000); // Change image every 5 seconds
+        }
+
+        // Initialize slideshow when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHeroSlideshow);
+        } else {
+            initHeroSlideshow();
+        }
 
         const gradients = {
             arches: 'linear-gradient(135deg, #667eea, #764ba2)',
