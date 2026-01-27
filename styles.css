@@ -1032,7 +1032,44 @@
                 min-height: 40vh;
             }
         }
-        
+
+        /* Unique hero colors for each page */
+        .hero-gallery {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 50%, #a8edea 100%);
+        }
+
+        .hero-decor {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .hero-rentals {
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 50%, #ffecd2 100%);
+        }
+
+        .hero-prints {
+            background: linear-gradient(135deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
+        }
+
+        .hero-engraving {
+            background: linear-gradient(135deg, #8B4513 0%, #D4A574 50%, #F5DEB3 100%);
+        }
+
+        .hero-contact {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .hero-jewelry {
+            background: linear-gradient(135deg, #B8860B 0%, #DAA520 50%, #FFD700 100%);
+        }
+
+        .hero-checkout {
+            background: linear-gradient(135deg, #2C3E50 0%, #3498db 100%);
+        }
+
+        .hero-success {
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
+        }
+
         .hero-content {
             max-width: 780px;
             margin: 0 auto;
