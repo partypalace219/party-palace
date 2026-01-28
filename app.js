@@ -2511,7 +2511,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 walls: ['Custom sizes available', 'Photo-ready backdrop', 'Delivery and setup included', 'Perfect for events of any size'],
                 centerpieces: ['Table-ready arrangements', 'Color matching available', 'Bulk discounts for large orders', 'Custom themes welcome'],
                 services: ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed'],
-                engraving: ['Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events']
+                engraving: ['Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events'],
+                prints3d: ['High-quality 3D printed', 'Custom colors available', 'Ships within 3-10 business days', 'Perfect for home decor and gifts']
             };
             
             const categoryFeatures = featuresByCategory[product.category] || featuresByCategory.services;
