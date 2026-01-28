@@ -339,7 +339,7 @@
                 name: 'Ramadan Kareem',
                 slug: 'ramadan-kareem',
                 category: 'prints3d',
-                price: 13.99,
+                price: 19.99,
                 description: '3D printed Ramadan Kareem sign. 7 inch round.',
                 icon: '🌙',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-kareem/sign1.jpeg']
