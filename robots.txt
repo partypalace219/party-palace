@@ -1,0 +1,12 @@
+# robots.txt for Party Palace
+# https://thepartypalace.in
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://thepartypalace.in/sitemap.xml
+
+# Disallow sensitive directories
+Disallow: /supabase-functions/
+Disallow: /.claude/
