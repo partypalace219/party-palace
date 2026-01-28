@@ -9,6 +9,6 @@
   "author": "Party Palace",
   "license": "MIT",
   "dependencies": {
-    "serve": "^14.2.1"
+    "serve-handler": "^6.1.5"
   }
 }
