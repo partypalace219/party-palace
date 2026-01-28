@@ -488,8 +488,24 @@
                         <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                             <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('3-foot-snake')">3 Foot Snake</div>
                             <div class="product-description">Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors.</div>
+                            <div style="margin: 0.5rem 0;">
+                                <label style="font-size: 0.9rem; color: var(--gray-600); font-weight: 600;">Color:</label>
+                                <select id="snakeColor" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; margin-top: 0.25rem;">
+                                    <option value="Yellow">Yellow</option>
+                                    <option value="Orange">Orange</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Pink">Pink</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Black">Black</option>
+                                    <option value="White">White</option>
+                                    <option value="Purple">Purple</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Gray">Gray</option>
+                                </select>
+                            </div>
                             <div class="product-price" style="margin-top: auto;">$24.99</div>
-                            <button class="btn btn-primary add-to-cart-btn" onclick="addToCart({name: '3 Foot Snake', price: 24.99, image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg'})">Add to Cart</button>
+                            <button class="btn btn-primary add-to-cart-btn" onclick="addSnakeToCart()">Add to Cart</button>
                         </div>
                     </div>
                     <div class="product-card prints3d-product" data-category="Toys" style="display: flex; flex-direction: column;">

@@ -241,7 +241,7 @@
                 slug: '3-foot-snake',
                 category: 'prints3d',
                 price: 24.99,
-                description: 'Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors.',
+                description: 'Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors. Available in 11 colors.',
                 icon: '🐍',
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake2.jpeg']
             },
@@ -1389,6 +1389,17 @@
                 name: `Flexi Fish (${color})`,
                 price: 5.99,
                 image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg'
+            });
+        }
+
+        function addSnakeToCart() {
+            const select = document.getElementById('snakeColor');
+            const color = select ? select.value : 'Yellow';
+
+            addToCart({
+                name: `3 Foot Snake (${color})`,
+                price: 24.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg'
             });
         }
 
@@ -3904,6 +3915,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         window.addStarFidgetToCart = addStarFidgetToCart;
         window.addSpinnerToCart = addSpinnerToCart;
         window.addFlexiFishToCart = addFlexiFishToCart;
+        window.addSnakeToCart = addSnakeToCart;
         window.addOctagonFidgetToCart = addOctagonFidgetToCart;
         window.addInfinityCubeToCart = addInfinityCubeToCart;
         window.addFlexiDinoToCart = addFlexiDinoToCart;
