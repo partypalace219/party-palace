@@ -621,26 +621,39 @@
                 .reduce((sum, item) => sum + item.price, 0);
         }
 
-        // Calculate shipping cost (free over $49, otherwise $5.99)
+        // Get discount amount (applied to products only)
+        function getProductDiscount() {
+            if (!appliedCouponCode || !validCoupons[appliedCouponCode]) return 0;
+            const productSubtotal = getProductSubtotal();
+            const discountPercent = validCoupons[appliedCouponCode].discount;
+            return productSubtotal * (discountPercent / 100);
+        }
+
+        // Get discounted product subtotal
+        function getDiscountedProductSubtotal() {
+            return getProductSubtotal() - getProductDiscount();
+        }
+
+        // Calculate shipping cost (free over $49, otherwise $5.99) - based on original product subtotal
         function getShippingCost() {
             if (!cartHasProducts()) return 0;
             const productSubtotal = getProductSubtotal();
             return productSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_RATE;
         }
 
-        // Calculate tax (7% on products only)
+        // Calculate tax (7% on discounted products only)
         function getTaxAmount() {
             if (!cartHasProducts()) return 0;
-            return getProductSubtotal() * TAX_RATE;
+            return getDiscountedProductSubtotal() * TAX_RATE;
         }
 
-        // Get grand total including shipping and tax
+        // Get grand total including shipping and tax (with discount applied to products)
         function getGrandTotal() {
-            const productSubtotal = getProductSubtotal();
+            const discountedProductSubtotal = getDiscountedProductSubtotal();
             const serviceSubtotal = getServiceSubtotal();
             const shipping = getShippingCost();
             const tax = getTaxAmount();
-            return productSubtotal + serviceSubtotal + shipping + tax;
+            return discountedProductSubtotal + serviceSubtotal + shipping + tax;
         }
 
         // Show/hide shipping address section based on cart contents
@@ -1521,9 +1534,13 @@
 
         function getDiscountedTotal() {
             const subtotal = getCartTotal();
+            const productSubtotal = getProductSubtotal();
+            const serviceSubtotal = getServiceSubtotal();
+
             if (appliedCouponCode && validCoupons[appliedCouponCode]) {
                 const discountPercent = validCoupons[appliedCouponCode].discount;
-                const discountAmount = subtotal * (discountPercent / 100);
+                // Discount applies only to products, not services
+                const discountAmount = productSubtotal * (discountPercent / 100);
                 return {
                     subtotal: subtotal,
                     discountPercent: discountPercent,
