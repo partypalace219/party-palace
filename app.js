@@ -1984,9 +1984,10 @@
             btnLoading.style.display = 'inline';
             statusEl.innerHTML = '';
 
-            // Calculate shipping and tax for products
+            // Calculate shipping, tax, and discount for products
             const shipping = getShippingCost();
             const tax = getTaxAmount();
+            const discount = getProductDiscount();
 
             try {
                 // Store order info in localStorage for retrieval after payment
@@ -2007,6 +2008,7 @@
                         hasProducts: hasProducts,
                         shipping: shipping,
                         tax: tax,
+                        discount: discount,
                         shippingAddress: shippingAddress
                     })
                 });

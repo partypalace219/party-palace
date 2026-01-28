@@ -20,26 +20,30 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     })
 
-    const { items, customerInfo, paymentType, paymentAmount, hasProducts, shipping, tax, shippingAddress } = await req.json()
+    const { items, customerInfo, paymentType, paymentAmount, hasProducts, shipping, tax, discount, shippingAddress } = await req.json()
 
     // Get item names for the description
     const itemNames = items.map((item: any) => item.name).join(', ')
     const itemsSubtotal = items.reduce((sum: number, item: any) => sum + item.price, 0)
 
+    // Apply discount to product subtotal (discount only applies to products)
+    const discountAmount = discount || 0
+    const discountedSubtotal = itemsSubtotal - discountAmount
+
     // Build line items
     const lineItems: any[] = []
 
     if (hasProducts) {
-      // For products: charge full amount with shipping and tax
-      // Add items subtotal
+      // For products: charge discounted amount with shipping and tax
+      // Add items subtotal (with discount applied)
       lineItems.push({
         price_data: {
           currency: 'usd',
           product_data: {
             name: 'Products',
-            description: itemNames,
+            description: discountAmount > 0 ? `${itemNames} (Discount applied: -$${discountAmount.toFixed(2)})` : itemNames,
           },
-          unit_amount: Math.round(itemsSubtotal * 100),
+          unit_amount: Math.round(discountedSubtotal * 100),
         },
         quantity: 1,
       })
@@ -95,9 +99,9 @@ serve(async (req) => {
       })
     }
 
-    // Calculate total for metadata
+    // Calculate total for metadata (with discount applied)
     const totalAmount = hasProducts
-      ? itemsSubtotal + (shipping || 0) + (tax || 0)
+      ? discountedSubtotal + (shipping || 0) + (tax || 0)
       : (paymentType === 'full' ? itemsSubtotal : paymentAmount)
 
     // Build shipping address for Stripe if available
@@ -125,6 +129,7 @@ serve(async (req) => {
         notes: customerInfo.notes || '',
         order_items: itemNames,
         items_subtotal: itemsSubtotal.toString(),
+        discount: discountAmount.toString(),
         shipping: (shipping || 0).toString(),
         tax: (tax || 0).toString(),
         total_amount: totalAmount.toString(),
