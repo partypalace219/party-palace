@@ -1559,22 +1559,48 @@
         function updateCheckoutWithDiscount() {
             const totalEl = document.getElementById('checkoutTotal');
             const discountRow = document.getElementById('discountRow');
-            const discountPercent = document.getElementById('discountPercent');
-            const discountAmount = document.getElementById('discountAmount');
+            const discountPercentEl = document.getElementById('discountPercent');
+            const discountAmountEl = document.getElementById('discountAmount');
+            const taxEl = document.getElementById('checkoutTax');
+            const subtotalEl = document.getElementById('checkoutSubtotal');
 
             const pricing = getDiscountedTotal();
+            const hasProducts = cartHasProducts();
+            const shipping = getShippingCost();
+            const tax = getTaxAmount();
 
-            if (totalEl) {
-                totalEl.textContent = '$' + pricing.total.toFixed(2);
+            // Calculate final total including shipping and tax for products
+            let finalTotal = pricing.total;
+            if (hasProducts) {
+                finalTotal = pricing.total + shipping + tax;
             }
 
+            // Update subtotal display (discounted cart total before shipping/tax)
+            if (subtotalEl) {
+                subtotalEl.textContent = '$' + pricing.total.toFixed(2);
+            }
+
+            // Update tax display (tax is calculated on discounted product amount)
+            if (taxEl) {
+                taxEl.textContent = '$' + tax.toFixed(2);
+            }
+
+            // Update final total
+            if (totalEl) {
+                totalEl.textContent = '$' + finalTotal.toFixed(2);
+            }
+
+            // Update discount row display
             if (discountRow && pricing.discountPercent > 0) {
                 discountRow.style.display = 'block';
-                if (discountPercent) discountPercent.textContent = pricing.discountPercent;
-                if (discountAmount) discountAmount.textContent = '-$' + pricing.discountAmount.toFixed(2);
+                if (discountPercentEl) discountPercentEl.textContent = pricing.discountPercent;
+                if (discountAmountEl) discountAmountEl.textContent = '-$' + pricing.discountAmount.toFixed(2);
             } else if (discountRow) {
                 discountRow.style.display = 'none';
             }
+
+            // Update payment button text
+            updatePaymentButtonText();
 
             // Update payment options with discounted total
             initPaymentOptions();
