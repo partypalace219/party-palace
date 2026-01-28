@@ -680,9 +680,33 @@
                 paymentOptionsSection.style.display = productsOnly ? 'none' : 'block';
             }
 
-            // Hide agreement/terms section for product-only orders (no contract/waiver needed)
-            if (agreementSection) {
-                agreementSection.style.display = productsOnly ? 'none' : 'block';
+            // Agreement section handling:
+            // - For products: only show noRefundCheckbox (about final sale)
+            // - For services: show both checkboxes
+            const agreementCheckboxLabel = document.getElementById('agreementCheckboxLabel');
+            const noRefundCheckboxLabel = document.getElementById('noRefundCheckboxLabel');
+
+            if (agreementCheckboxLabel) {
+                // Hide the agreement/waiver checkbox for product-only orders
+                agreementCheckboxLabel.style.display = productsOnly ? 'none' : 'flex';
+            }
+            if (noRefundCheckboxLabel) {
+                // Show no-refund checkbox only if cart has products
+                noRefundCheckboxLabel.style.display = hasProducts ? 'flex' : 'none';
+            }
+
+            // Update checkout button text based on cart contents
+            const checkoutBtnText = document.getElementById('checkoutBtnText');
+            if (checkoutBtnText) {
+                if (productsOnly) {
+                    const total = getGrandTotal();
+                    checkoutBtnText.textContent = `Pay $${total.toFixed(2)} Now`;
+                } else {
+                    // For services, show deposit amount
+                    const depositInput = document.getElementById('depositAmount');
+                    const depositAmount = depositInput ? parseFloat(depositInput.value) || 50 : 50;
+                    checkoutBtnText.textContent = `Pay $${depositAmount} Deposit to Book`;
+                }
             }
         }
 
@@ -1738,7 +1762,15 @@
 
             if (!btnText) return;
 
-            if (depositRadio && depositRadio.checked) {
+            // For product-only orders, show full amount (no deposit option)
+            const hasProducts = cartHasProducts();
+            const hasServices = getServiceSubtotal() > 0;
+            const productsOnly = hasProducts && !hasServices;
+
+            if (productsOnly) {
+                const total = getGrandTotal();
+                btnText.textContent = `Pay $${total.toFixed(2)} Now`;
+            } else if (depositRadio && depositRadio.checked) {
                 const amount = depositAmountInput ? parseInt(depositAmountInput.value) || MIN_DEPOSIT_AMOUNT : MIN_DEPOSIT_AMOUNT;
                 btnText.textContent = `Pay $${amount} Deposit to Book`;
             } else {
@@ -1748,6 +1780,15 @@
         }
 
         function getSelectedPaymentAmount() {
+            // For product-only orders, always return full amount
+            const hasProducts = cartHasProducts();
+            const hasServices = getServiceSubtotal() > 0;
+            const productsOnly = hasProducts && !hasServices;
+
+            if (productsOnly) {
+                return getGrandTotal();
+            }
+
             const depositRadio = document.getElementById('paymentDeposit');
             const depositAmountInput = document.getElementById('depositAmountInput');
 
@@ -1761,6 +1802,15 @@
         }
 
         function getPaymentType() {
+            // For product-only orders, always return 'full'
+            const hasProducts = cartHasProducts();
+            const hasServices = getServiceSubtotal() > 0;
+            const productsOnly = hasProducts && !hasServices;
+
+            if (productsOnly) {
+                return 'full';
+            }
+
             const depositRadio = document.getElementById('paymentDeposit');
             return depositRadio && depositRadio.checked ? 'deposit' : 'full';
         }
@@ -3367,20 +3417,35 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const agreementCheckbox = document.getElementById('agreementCheckbox');
                 const noRefundCheckbox = document.getElementById('noRefundCheckbox');
 
-                const bothSigned = this.areBothSigned();
-                const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
+                // Check if cart has products vs services
+                const hasProducts = cartHasProducts();
+                const hasServices = getServiceSubtotal() > 0;
+                const productsOnly = hasProducts && !hasServices;
+
                 const noRefundChecked = noRefundCheckbox ? noRefundCheckbox.checked : false;
-                const allComplete = bothSigned && agreementChecked && noRefundChecked;
+
+                let allComplete;
+                let missing = [];
+
+                if (productsOnly) {
+                    // For product-only orders, only require noRefundCheckbox
+                    allComplete = noRefundChecked;
+                    if (!noRefundChecked) missing.push('no refund policy checkbox');
+                } else {
+                    // For services (or mixed orders), require all documents and checkboxes
+                    const bothSigned = this.areBothSigned();
+                    const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
+                    allComplete = bothSigned && agreementChecked && (hasProducts ? noRefundChecked : true);
+                    if (!this.isContractSigned()) missing.push('Party Palace Agreement');
+                    if (!this.isWaiverSigned()) missing.push('Liability Waiver');
+                    if (!agreementChecked) missing.push('confirmation checkbox');
+                    if (hasProducts && !noRefundChecked) missing.push('no refund policy checkbox');
+                }
 
                 if (checkoutSubmitBtn) {
                     checkoutSubmitBtn.disabled = !allComplete;
                     if (!allComplete) {
                         checkoutSubmitBtn.classList.add('btn-disabled');
-                        let missing = [];
-                        if (!this.isContractSigned()) missing.push('Party Palace Agreement');
-                        if (!this.isWaiverSigned()) missing.push('Liability Waiver');
-                        if (!agreementChecked) missing.push('confirmation checkbox');
-                        if (!noRefundChecked) missing.push('no refund policy checkbox');
                         checkoutSubmitBtn.title = 'Please complete: ' + missing.join(', ');
                     } else {
                         checkoutSubmitBtn.classList.remove('btn-disabled');
@@ -3395,17 +3460,30 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const hasServices = getServiceSubtotal() > 0;
                 const productsOnly = cartHasProducts() && !hasServices;
 
-                // For product-only orders, skip document requirements
+                const noRefundCheckbox = document.getElementById('noRefundCheckbox');
+                const noRefundChecked = noRefundCheckbox ? noRefundCheckbox.checked : false;
+
+                // For product-only orders, only require the no refund acknowledgment
                 if (productsOnly) {
+                    if (!noRefundChecked) {
+                        e.preventDefault();
+                        const statusEl = document.getElementById('checkoutFormStatus');
+                        if (statusEl) {
+                            statusEl.className = 'form-status error';
+                            statusEl.innerHTML = '✗ Please acknowledge that custom 3D prints and engravings are final sale with no returns or refunds.';
+                            statusEl.style.display = 'block';
+                        }
+                        NoRefundModal.open();
+                        return false;
+                    }
                     return true;
                 }
 
+                // For services, require all documents and checkboxes
                 const contractSigned = BookingGate.isContractSigned();
                 const waiverSigned = BookingGate.isWaiverSigned();
                 const agreementCheckbox = document.getElementById('agreementCheckbox');
-                const noRefundCheckbox = document.getElementById('noRefundCheckbox');
                 const agreementChecked = agreementCheckbox ? agreementCheckbox.checked : false;
-                const noRefundChecked = noRefundCheckbox ? noRefundCheckbox.checked : false;
 
                 if (!contractSigned || !waiverSigned || !agreementChecked || !noRefundChecked) {
                     e.preventDefault();
