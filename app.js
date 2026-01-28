@@ -2409,6 +2409,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const phone = document.getElementById('contactPhone').value.trim();
             const eventType = document.getElementById('contactEventType').value;
             const message = document.getElementById('contactMessage').value.trim();
+            const honeypot = document.getElementById('contactWebsite')?.value || '';
             const statusDiv = document.getElementById('formStatus');
             const submitBtn = e.target.querySelector('button[type="submit"]');
 
@@ -2439,7 +2440,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     },
                     body: JSON.stringify({
                         formType: 'contact',
-                        formData: { name, email, phone, eventType, message }
+                        formData: { name, email, phone, eventType, message },
+                        honeypot
                     })
                 });
 
@@ -2505,6 +2507,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const orderType = document.getElementById('customOrderType').value;
             const product = document.getElementById('customOrderProduct').value;
             const description = document.getElementById('customOrderDescription').value.trim();
+            const honeypot = document.getElementById('customOrderWebsite')?.value || '';
             const statusDiv = document.getElementById('customOrderFormStatus');
             const submitBtn = e.target.querySelector('button[type="submit"]');
 
@@ -2535,7 +2538,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     },
                     body: JSON.stringify({
                         formType: 'customOrder',
-                        formData: { name, email, phone, orderType, product, description }
+                        formData: { name, email, phone, orderType, product, description },
+                        honeypot
                     })
                 });
 
