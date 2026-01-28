@@ -589,6 +589,95 @@
             localStorage.setItem('partyPalaceCart', JSON.stringify(cart));
             updateCartCount();
             renderCartItems();
+            updateShippingVisibility();
+        }
+
+        // Constants for shipping and tax
+        const SHIPPING_RATE = 5.99;
+        const FREE_SHIPPING_THRESHOLD = 49;
+        const TAX_RATE = 0.07; // 7% Indiana sales tax
+
+        // Check if cart has shippable products (3D prints or engraving)
+        function cartHasProducts() {
+            return cart.some(item => item.category === 'prints3d' || item.category === 'engraving');
+        }
+
+        // Check if cart has services only (party decor)
+        function cartHasServicesOnly() {
+            return cart.length > 0 && !cartHasProducts();
+        }
+
+        // Get subtotal of products only (3D prints, engraving)
+        function getProductSubtotal() {
+            return cart
+                .filter(item => item.category === 'prints3d' || item.category === 'engraving')
+                .reduce((sum, item) => sum + item.price, 0);
+        }
+
+        // Get subtotal of services only (party decor)
+        function getServiceSubtotal() {
+            return cart
+                .filter(item => item.category !== 'prints3d' && item.category !== 'engraving')
+                .reduce((sum, item) => sum + item.price, 0);
+        }
+
+        // Calculate shipping cost (free over $49, otherwise $5.99)
+        function getShippingCost() {
+            if (!cartHasProducts()) return 0;
+            const productSubtotal = getProductSubtotal();
+            return productSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_RATE;
+        }
+
+        // Calculate tax (7% on products only)
+        function getTaxAmount() {
+            if (!cartHasProducts()) return 0;
+            return getProductSubtotal() * TAX_RATE;
+        }
+
+        // Get grand total including shipping and tax
+        function getGrandTotal() {
+            const productSubtotal = getProductSubtotal();
+            const serviceSubtotal = getServiceSubtotal();
+            const shipping = getShippingCost();
+            const tax = getTaxAmount();
+            return productSubtotal + serviceSubtotal + shipping + tax;
+        }
+
+        // Show/hide shipping address section based on cart contents
+        function updateShippingVisibility() {
+            const shippingSection = document.getElementById('shippingAddressSection');
+            const eventDetailsSection = document.getElementById('eventDetailsSection');
+            const documentsSection = document.querySelector('.checkout-documents-box');
+            const depositInfoBox = document.querySelector('.deposit-info-box');
+            const paymentOptionsSection = document.getElementById('paymentOptionsSection');
+
+            const hasProducts = cartHasProducts();
+            const hasServices = getServiceSubtotal() > 0;
+            const productsOnly = hasProducts && !hasServices;
+
+            if (shippingSection) {
+                shippingSection.style.display = hasProducts ? 'block' : 'none';
+            }
+
+            // Hide event details for product-only orders
+            if (eventDetailsSection) {
+                eventDetailsSection.style.display = productsOnly ? 'none' : 'block';
+            }
+
+            // Only show documents section if cart has services
+            if (documentsSection) {
+                documentsSection.style.display = hasServices ? 'block' : 'none';
+            }
+
+            // Hide deposit info box for product-only orders (products pay full amount)
+            if (depositInfoBox) {
+                depositInfoBox.style.display = productsOnly ? 'none' : 'block';
+            }
+
+            // Hide payment options (deposit/full) for product-only orders
+            if (paymentOptionsSection) {
+                paymentOptionsSection.style.display = productsOnly ? 'none' : 'block';
+            }
         }
 
         function updateCartCount() {
@@ -1514,9 +1603,47 @@
 
             // Use discounted total if coupon is applied
             const pricing = getDiscountedTotal();
+            const hasProducts = cartHasProducts();
+            const shipping = getShippingCost();
+            const tax = getTaxAmount();
+
+            // Calculate final total including shipping and tax for products
+            let finalTotal = pricing.total;
+            if (hasProducts) {
+                finalTotal = pricing.total + shipping + tax;
+            }
+
+            // Update subtotal, shipping, tax rows
+            const subtotalRow = document.getElementById('subtotalRow');
+            const shippingRow = document.getElementById('shippingRow');
+            const taxRow = document.getElementById('taxRow');
+            const subtotalEl = document.getElementById('checkoutSubtotal');
+            const shippingEl = document.getElementById('checkoutShipping');
+            const taxEl = document.getElementById('checkoutTax');
+            const serviceNote = document.getElementById('serviceNote');
+            const productNote = document.getElementById('productNote');
+
+            if (hasProducts) {
+                // Show shipping and tax rows for products
+                if (subtotalRow) subtotalRow.style.display = 'block';
+                if (shippingRow) shippingRow.style.display = 'block';
+                if (taxRow) taxRow.style.display = 'block';
+                if (subtotalEl) subtotalEl.textContent = '$' + pricing.total.toFixed(2);
+                if (shippingEl) shippingEl.textContent = shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2);
+                if (taxEl) taxEl.textContent = '$' + tax.toFixed(2);
+                if (serviceNote) serviceNote.style.display = getServiceSubtotal() > 0 ? 'block' : 'none';
+                if (productNote) productNote.style.display = 'block';
+            } else {
+                // Hide shipping and tax rows for services only
+                if (subtotalRow) subtotalRow.style.display = 'none';
+                if (shippingRow) shippingRow.style.display = 'none';
+                if (taxRow) taxRow.style.display = 'none';
+                if (serviceNote) serviceNote.style.display = 'block';
+                if (productNote) productNote.style.display = 'none';
+            }
 
             if (totalEl) {
-                totalEl.textContent = '$' + pricing.total.toFixed(2);
+                totalEl.textContent = '$' + finalTotal.toFixed(2);
             }
             if (cartTotalDisplay) {
                 cartTotalDisplay.textContent = '$' + pricing.subtotal.toFixed(2);
@@ -1534,6 +1661,9 @@
             } else if (discountRow) {
                 discountRow.style.display = 'none';
             }
+
+            // Update shipping visibility
+            updateShippingVisibility();
 
             // Initialize payment options
             initPaymentOptions();
@@ -1705,19 +1835,29 @@
 
             const paymentType = getPaymentType();
             const paymentAmount = getSelectedPaymentAmount();
+            const hasProducts = cartHasProducts();
+
+            // Get shipping address if cart has products
+            const shippingAddress = hasProducts ? {
+                address: document.getElementById('checkoutAddress')?.value || '',
+                city: document.getElementById('checkoutCity')?.value || '',
+                state: document.getElementById('checkoutState')?.value || 'IN',
+                zip: document.getElementById('checkoutZip')?.value || ''
+            } : null;
 
             const formData = {
                 name: document.getElementById('checkoutName').value,
                 email: document.getElementById('checkoutEmail').value,
                 phone: document.getElementById('checkoutPhone').value,
-                eventDate: document.getElementById('checkoutEventDate').value,
-                eventType: document.getElementById('checkoutEventType').value,
-                venue: document.getElementById('checkoutVenue').value,
+                eventDate: document.getElementById('checkoutEventDate')?.value || '',
+                eventType: document.getElementById('checkoutEventType')?.value || '',
+                venue: document.getElementById('checkoutVenue')?.value || '',
                 notes: document.getElementById('checkoutNotes').value,
                 items: cart.map(item => `${item.name} ($${item.price})`).join(', '),
                 estimatedTotal: getCartTotal(),
                 paymentType: paymentType,
-                amountPaid: paymentAmount
+                amountPaid: paymentAmount,
+                shippingAddress: shippingAddress
             };
 
             // Validate cart is not empty
@@ -1726,8 +1866,16 @@
                 return;
             }
 
-            // Validate deposit amount
-            if (paymentType === 'deposit' && paymentAmount < MIN_DEPOSIT_AMOUNT) {
+            // Validate shipping address for products
+            if (hasProducts && shippingAddress) {
+                if (!shippingAddress.address || !shippingAddress.city || !shippingAddress.zip) {
+                    statusEl.innerHTML = '<div class="form-error">Please fill in your complete shipping address.</div>';
+                    return;
+                }
+            }
+
+            // Validate deposit amount (only for services)
+            if (!hasProducts && paymentType === 'deposit' && paymentAmount < MIN_DEPOSIT_AMOUNT) {
                 statusEl.innerHTML = `<div class="form-error">Minimum deposit amount is $${MIN_DEPOSIT_AMOUNT}.</div>`;
                 return;
             }
@@ -1736,6 +1884,10 @@
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline';
             statusEl.innerHTML = '';
+
+            // Calculate shipping and tax for products
+            const shipping = getShippingCost();
+            const tax = getTaxAmount();
 
             try {
                 // Store order info in localStorage for retrieval after payment
@@ -1752,7 +1904,11 @@
                         items: cart,
                         customerInfo: formData,
                         paymentType: paymentType,
-                        paymentAmount: paymentAmount
+                        paymentAmount: paymentAmount,
+                        hasProducts: hasProducts,
+                        shipping: shipping,
+                        tax: tax,
+                        shippingAddress: shippingAddress
                     })
                 });
 

@@ -4,6 +4,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,6 +17,10 @@ const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
 const SMTP_USER = Deno.env.get('SMTP_USER') // partypalace.in@gmail.com
 const SMTP_PASS = Deno.env.get('SMTP_PASS') // Gmail App Password
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
+const RATE_LIMIT_MAX_REQUESTS = 5 // Max 5 submissions per hour per IP
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -23,7 +28,22 @@ serve(async (req) => {
   }
 
   try {
-    const { formType, formData } = await req.json()
+    // Get client IP for rate limiting
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                     req.headers.get('x-real-ip') ||
+                     'unknown'
+
+    const { formType, formData, honeypot } = await req.json()
+
+    // Honeypot check - if this field has a value, it's likely a bot
+    if (honeypot) {
+      console.log('Honeypot triggered - likely bot submission')
+      // Return success to not alert the bot, but don't actually send
+      return new Response(
+        JSON.stringify({ success: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      )
+    }
 
     // Validate input
     if (!formType || !formData) {
@@ -41,6 +61,40 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    // Rate limiting check using Supabase
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseKey = Deno.env.get('SB_SERVICE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Check recent submissions from this IP
+    const oneHourAgo = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString()
+
+    const { count, error: countError } = await supabase
+      .from('form_submissions')
+      .select('*', { count: 'exact', head: true })
+      .eq('ip_address', clientIP)
+      .gte('created_at', oneHourAgo)
+
+    if (countError) {
+      console.error('Rate limit check error:', countError)
+      // Continue anyway if rate limit check fails
+    } else if (count !== null && count >= RATE_LIMIT_MAX_REQUESTS) {
+      console.log(`Rate limit exceeded for IP: ${clientIP}`)
+      return new Response(
+        JSON.stringify({ error: 'Too many submissions. Please try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Log this submission for rate limiting
+    await supabase
+      .from('form_submissions')
+      .insert({
+        ip_address: clientIP,
+        form_type: formType,
+        created_at: new Date().toISOString()
+      })
 
     // Send email based on form type
     if (formType === 'contact') {

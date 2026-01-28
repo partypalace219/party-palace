@@ -1994,29 +1994,63 @@
                                 <label>Phone *</label>
                                 <input type="tel" id="checkoutPhone" required oninput="formatPhone(this)">
                             </div>
-                            <div class="form-group">
-                                <label>Event Date *</label>
-                                <input type="date" id="checkoutEventDate" required>
+
+                            <!-- Shipping Address Section (shown only for products) -->
+                            <div id="shippingAddressSection" style="display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: #166534;">📦 Shipping Address</h4>
+                                <div class="form-group">
+                                    <label>Street Address *</label>
+                                    <input type="text" id="checkoutAddress" placeholder="123 Main St, Apt 4">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label>City *</label>
+                                        <input type="text" id="checkoutCity" placeholder="Gary">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State *</label>
+                                        <select id="checkoutState">
+                                            <option value="IN" selected>Indiana</option>
+                                            <option value="IL">Illinois</option>
+                                            <option value="MI">Michigan</option>
+                                            <option value="OH">Ohio</option>
+                                            <option value="WI">Wisconsin</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="max-width: 150px;">
+                                    <label>ZIP Code *</label>
+                                    <input type="text" id="checkoutZip" placeholder="46402" maxlength="10">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Event Type *</label>
-                                <select id="checkoutEventType" required>
-                                    <option value="">Select type</option>
-                                    <option value="baby-shower">Baby Shower</option>
-                                    <option value="birthday">Birthday</option>
-                                    <option value="corporate">Corporate</option>
-                                    <option value="graduation">Graduation</option>
-                                    <option value="wedding">Wedding</option>
-                                    <option value="other">Other</option>
-                                </select>
+
+                            <!-- Event Details Section (shown for services) -->
+                            <div id="eventDetailsSection">
+                                <div class="form-group">
+                                    <label>Event Date *</label>
+                                    <input type="date" id="checkoutEventDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Event Type *</label>
+                                    <select id="checkoutEventType">
+                                        <option value="">Select type</option>
+                                        <option value="baby-shower">Baby Shower</option>
+                                        <option value="birthday">Birthday</option>
+                                        <option value="corporate">Corporate</option>
+                                        <option value="graduation">Graduation</option>
+                                        <option value="wedding">Wedding</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Event Location/Venue</label>
+                                    <input type="text" id="checkoutVenue" placeholder="Venue name and address">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Event Location/Venue</label>
-                                <input type="text" id="checkoutVenue" placeholder="Venue name and address">
-                            </div>
+
                             <div class="form-group">
                                 <label>Additional Notes</label>
-                                <textarea id="checkoutNotes" rows="4" placeholder="Color preferences, theme details, special requests..."></textarea>
+                                <textarea id="checkoutNotes" rows="4" placeholder="Color preferences, special requests..."></textarea>
                             </div>
 
                             <!-- Deposit Info Box -->
@@ -2044,8 +2078,8 @@
                                 </div>
                             </div>
 
-                            <!-- Payment Option Selection -->
-                            <div style="background: var(--gray-50); border: 1px solid var(--gray-300); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <!-- Payment Option Selection (for services with deposit option) -->
+                            <div id="paymentOptionsSection" style="background: var(--gray-50); border: 1px solid var(--gray-300); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                                 <h4 style="margin: 0 0 0.75rem 0; font-size: 1rem; color: var(--gray-900);">💳 Payment Option</h4>
                                 <div style="display: flex; flex-direction: column; gap: 0.75rem;">
                                     <label style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: white; border: 2px solid var(--gray-300); border-radius: 8px; cursor: pointer; transition: all 0.2s;" id="depositOptionLabel">
@@ -2120,11 +2154,35 @@
                                     <span id="discountAmount">-$0</span>
                                 </div>
                             </div>
+                            <!-- Subtotal -->
+                            <div id="subtotalRow" style="display: none; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+                                <div style="display: flex; justify-content: space-between; color: var(--gray-700);">
+                                    <span>Subtotal:</span>
+                                    <span id="checkoutSubtotal">$0</span>
+                                </div>
+                            </div>
+                            <!-- Shipping Row (shown only for products) -->
+                            <div id="shippingRow" style="display: none; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+                                <div style="display: flex; justify-content: space-between; color: var(--gray-700);">
+                                    <span>Shipping:</span>
+                                    <span id="checkoutShipping">$0</span>
+                                </div>
+                            </div>
+                            <!-- Tax Row (shown only for products) -->
+                            <div id="taxRow" style="display: none; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+                                <div style="display: flex; justify-content: space-between; color: var(--gray-700);">
+                                    <span>Tax (7%):</span>
+                                    <span id="checkoutTax">$0</span>
+                                </div>
+                            </div>
                             <div class="checkout-total">
-                                <span>Estimated Total:</span>
+                                <span>Total:</span>
                                 <span id="checkoutTotal">$0</span>
                             </div>
-                            <p class="checkout-note">This is an estimate. Final pricing will be confirmed after consultation based on your specific requirements, color choices, and event details.</p>
+                            <!-- Note for services -->
+                            <p class="checkout-note" id="serviceNote">This is an estimate for party decor services. Final pricing will be confirmed after consultation based on your specific requirements, color choices, and event details.</p>
+                            <!-- Note for products -->
+                            <p class="checkout-note" id="productNote" style="display: none; color: #166534;">Free shipping on orders $49+! Products ship within 3-10 business days.</p>
                         </div>
                         <div class="checkout-info-box">
                             <h4>How It Works</h4>
