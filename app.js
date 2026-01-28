@@ -2688,6 +2688,9 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             statusDiv.textContent = 'Sending...';
             if (submitBtn) submitBtn.disabled = true;
 
+            // Include selected product if they came from a product page
+            const selectedProduct = window.consultationProduct || null;
+
             try {
                 const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/send-contact-email', {
                     method: 'POST',
@@ -2697,7 +2700,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     },
                     body: JSON.stringify({
                         formType: 'contact',
-                        formData: { name, email, phone, eventType, message },
+                        formData: { name, email, phone, eventType, message, selectedProduct },
                         honeypot
                     })
                 });
@@ -2706,6 +2709,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     statusDiv.className = 'form-status success';
                     statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
                     document.getElementById('contactForm').reset();
+                    // Clear selected product after successful submission
+                    window.consultationProduct = null;
+                    const banner = document.getElementById('selectedProductBanner');
+                    if (banner) banner.style.display = 'none';
                 } else {
                     throw new Error('Failed to send');
                 }

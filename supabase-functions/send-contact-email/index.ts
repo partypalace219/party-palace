@@ -141,7 +141,10 @@ async function sendContactEmail(data: {
   phone: string
   eventType: string
   message: string
+  selectedProduct?: { name: string; price: number } | null
 }) {
+  const hasProduct = data.selectedProduct && data.selectedProduct.name
+
   const emailHtml = `
 <!DOCTYPE html>
 <html>
@@ -153,6 +156,10 @@ async function sendContactEmail(data: {
     .section { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .label { font-weight: bold; color: #666; }
     .message-box { background: #fafafa; border-left: 4px solid #667eea; padding: 15px; margin-top: 10px; }
+    .product-highlight { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .product-highlight h2 { margin: 0 0 10px 0; color: white; }
+    .product-name { font-size: 1.3em; font-weight: bold; }
+    .product-price { opacity: 0.9; margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -162,6 +169,14 @@ async function sendContactEmail(data: {
   </div>
 
   <div class="content">
+    ${hasProduct ? `
+    <div class="product-highlight">
+      <h2>Interested Product</h2>
+      <p class="product-name">${data.selectedProduct!.name}</p>
+      <p class="product-price">Starting at $${data.selectedProduct!.price}</p>
+    </div>
+    ` : ''}
+
     <div class="section">
       <h2 style="margin-top: 0; color: #667eea;">Customer Information</h2>
       <p><span class="label">Name:</span> ${data.name}</p>
@@ -187,13 +202,22 @@ async function sendContactEmail(data: {
 
   const client = await getSmtpClient()
 
+  // Include product in subject if available
+  const subject = hasProduct
+    ? `New Inquiry: ${data.name} - ${data.selectedProduct!.name}`
+    : `New Inquiry: ${data.name} - ${data.eventType}`
+
+  const plainText = hasProduct
+    ? `New contact inquiry from ${data.name}\n\nInterested Product: ${data.selectedProduct!.name} (Starting at $${data.selectedProduct!.price})\n\nEmail: ${data.email}\nPhone: ${data.phone}\nEvent Type: ${data.eventType}\n\nMessage:\n${data.message}`
+    : `New contact inquiry from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone}\nEvent Type: ${data.eventType}\n\nMessage:\n${data.message}`
+
   try {
     await client.send({
       from: `Party Palace Website <${SMTP_USER}>`,
       to: SMTP_USER!, // Send to yourself
       replyTo: data.email, // So you can reply directly to customer
-      subject: `New Inquiry: ${data.name} - ${data.eventType}`,
-      content: `New contact inquiry from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone}\nEvent Type: ${data.eventType}\n\nMessage:\n${data.message}`,
+      subject,
+      content: plainText,
       html: emailHtml,
     })
     console.log('Contact email sent for:', data.name)

@@ -1,8 +1,7 @@
 // Supabase Edge Function: create-checkout-session
-// Deploy this via Supabase Dashboard > Edge Functions > Create Function
+// Uses Stripe API directly via fetch (no SDK)
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import Stripe from 'https://esm.sh/stripe@13.6.0?target=deno'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -16,9 +15,7 @@ serve(async (req) => {
   }
 
   try {
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
-      apiVersion: '2023-10-16',
-    })
+    const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY') as string
 
     const { items, customerInfo, paymentType, paymentAmount, hasProducts, shipping, tax, discount, shippingAddress } = await req.json()
 
@@ -35,7 +32,6 @@ serve(async (req) => {
 
     if (hasProducts) {
       // For products: charge discounted amount with shipping and tax
-      // Add items subtotal (with discount applied)
       lineItems.push({
         price_data: {
           currency: 'usd',
@@ -104,40 +100,61 @@ serve(async (req) => {
       ? discountedSubtotal + (shipping || 0) + (tax || 0)
       : (paymentType === 'full' ? itemsSubtotal : paymentAmount)
 
-    // Build shipping address for Stripe if available
-    const shippingAddressCollection = hasProducts ? {
-      shipping_address_collection: {
-        allowed_countries: ['US'],
-      },
-    } : {}
+    // Build request body for Stripe API
+    const params = new URLSearchParams()
+    params.append('payment_method_types[]', 'card')
+    params.append('mode', 'payment')
+    params.append('success_url', 'https://thepartypalace.in/#checkout-success')
+    params.append('cancel_url', 'https://thepartypalace.in/#checkout')
+    params.append('customer_email', customerInfo.email)
 
-    // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: 'https://thepartypalace.in/#checkout-success',
-      cancel_url: 'https://thepartypalace.in/#checkout',
-      customer_email: customerInfo.email,
-      ...shippingAddressCollection,
-      metadata: {
-        customer_name: customerInfo.name,
-        customer_phone: customerInfo.phone,
-        event_date: customerInfo.eventDate || '',
-        event_type: customerInfo.eventType || '',
-        venue: customerInfo.venue || '',
-        notes: customerInfo.notes || '',
-        order_items: itemNames,
-        items_subtotal: itemsSubtotal.toString(),
-        discount: discountAmount.toString(),
-        shipping: (shipping || 0).toString(),
-        tax: (tax || 0).toString(),
-        total_amount: totalAmount.toString(),
-        payment_type: hasProducts ? 'full' : paymentType,
-        has_products: hasProducts ? 'true' : 'false',
-        shipping_address: shippingAddress ? JSON.stringify(shippingAddress) : '',
-      },
+    // Add line items
+    lineItems.forEach((item, index) => {
+      params.append(`line_items[${index}][price_data][currency]`, item.price_data.currency)
+      params.append(`line_items[${index}][price_data][product_data][name]`, item.price_data.product_data.name)
+      params.append(`line_items[${index}][price_data][product_data][description]`, item.price_data.product_data.description)
+      params.append(`line_items[${index}][price_data][unit_amount]`, item.price_data.unit_amount.toString())
+      params.append(`line_items[${index}][quantity]`, item.quantity.toString())
     })
+
+    // Add shipping address collection for products
+    if (hasProducts) {
+      params.append('shipping_address_collection[allowed_countries][]', 'US')
+    }
+
+    // Add metadata
+    params.append('metadata[customer_name]', customerInfo.name)
+    params.append('metadata[customer_phone]', customerInfo.phone)
+    params.append('metadata[event_date]', customerInfo.eventDate || '')
+    params.append('metadata[event_type]', customerInfo.eventType || '')
+    params.append('metadata[venue]', customerInfo.venue || '')
+    params.append('metadata[notes]', customerInfo.notes || '')
+    params.append('metadata[order_items]', itemNames)
+    params.append('metadata[items_subtotal]', itemsSubtotal.toString())
+    params.append('metadata[discount]', discountAmount.toString())
+    params.append('metadata[shipping]', (shipping || 0).toString())
+    params.append('metadata[tax]', (tax || 0).toString())
+    params.append('metadata[total_amount]', totalAmount.toString())
+    params.append('metadata[payment_type]', hasProducts ? 'full' : paymentType)
+    params.append('metadata[has_products]', hasProducts ? 'true' : 'false')
+    params.append('metadata[shipping_address]', shippingAddress ? JSON.stringify(shippingAddress) : '')
+
+    // Call Stripe API directly
+    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    })
+
+    const session = await response.json()
+
+    if (!response.ok) {
+      console.error('Stripe API error:', session)
+      throw new Error(session.error?.message || 'Failed to create checkout session')
+    }
 
     return new Response(
       JSON.stringify({ url: session.url }),
@@ -147,7 +164,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Stripe error:', error)
+    console.error('Checkout error:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       {
