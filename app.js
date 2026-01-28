@@ -650,6 +650,7 @@
             const documentsSection = document.querySelector('.checkout-documents-box');
             const depositInfoBox = document.querySelector('.deposit-info-box');
             const paymentOptionsSection = document.getElementById('paymentOptionsSection');
+            const agreementSection = document.getElementById('agreementSection');
 
             const hasProducts = cartHasProducts();
             const hasServices = getServiceSubtotal() > 0;
@@ -677,6 +678,11 @@
             // Hide payment options (deposit/full) for product-only orders
             if (paymentOptionsSection) {
                 paymentOptionsSection.style.display = productsOnly ? 'none' : 'block';
+            }
+
+            // Hide agreement/terms section for product-only orders (no contract/waiver needed)
+            if (agreementSection) {
+                agreementSection.style.display = productsOnly ? 'none' : 'block';
             }
         }
 
@@ -3385,6 +3391,15 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             
             // Check before checkout form submission - opens missing modal
             checkBeforeSubmit: function(e) {
+                // Check if cart has services (party decor) - only require documents for services
+                const hasServices = getServiceSubtotal() > 0;
+                const productsOnly = cartHasProducts() && !hasServices;
+
+                // For product-only orders, skip document requirements
+                if (productsOnly) {
+                    return true;
+                }
+
                 const contractSigned = BookingGate.isContractSigned();
                 const waiverSigned = BookingGate.isWaiverSigned();
                 const agreementCheckbox = document.getElementById('agreementCheckbox');

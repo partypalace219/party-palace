@@ -2108,16 +2108,16 @@
                                 </div>
                             </div>
 
-                            <!-- Agreement Confirmation Checkbox -->
-                            <div style="background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <!-- Agreement Confirmation Checkbox (for services) -->
+                            <div id="agreementSection" style="background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
                                 <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; margin-bottom: 0.75rem;">
-                                    <input type="checkbox" id="agreementCheckbox" required style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
+                                    <input type="checkbox" id="agreementCheckbox" style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
                                     <span style="font-size: 0.875rem; color: var(--gray-800); line-height: 1.5;">
                                         I confirm that I have read and agree to the <strong>Party Palace Agreement</strong>, <strong>Liability Waiver</strong>, and understand that <strong>all deposits are non-refundable</strong>.
                                     </span>
                                 </label>
                                 <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
-                                    <input type="checkbox" id="noRefundCheckbox" required style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
+                                    <input type="checkbox" id="noRefundCheckbox" style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;">
                                     <span style="font-size: 0.875rem; color: var(--gray-800); line-height: 1.5;">
                                         I acknowledge that <strong>custom 3D prints and engravings are final sale</strong> with <a href="#" onclick="event.preventDefault(); NoRefundModal.open();" style="color: #DC2626; font-weight: 600; text-decoration: underline;">no returns or refunds</a>.
                                     </span>
