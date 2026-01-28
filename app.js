@@ -1475,7 +1475,7 @@
         // Coupon codes system
         const validCoupons = {
             'PARTY10': { discount: 10, description: '10% off' },
-            'FRIENDS30': { discount: 30, description: '30% off' },
+            'FUN30': { discount: 30, description: '30% off' },
             'FAMILY50': { discount: 50, description: '50% off' }
         };
 
