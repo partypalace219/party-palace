@@ -31,3 +31,4 @@ attach_images_to_products.js
 
 # Claude local settings
 .claude/settings.local.json
+stripe_backup_code.txt
