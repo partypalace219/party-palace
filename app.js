@@ -444,6 +444,161 @@
                 images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/decor1.jpeg']
             },
             {
+                name: 'Bloom',
+                slug: 'bloom',
+                category: 'prints3d',
+                price: 36.99,
+                description: '3D printed Bloom sign. 11x11 inches.',
+                icon: '🌸',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bloom/sign1.jpeg']
+            },
+            {
+                name: 'Be Kind',
+                slug: 'be-kind',
+                category: 'prints3d',
+                price: 24.99,
+                description: '3D printed Be Kind sign. 10 inch round.',
+                icon: '💖',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/be-kind/sign1.jpeg']
+            },
+            {
+                name: 'Best Life',
+                slug: 'best-life',
+                category: 'prints3d',
+                price: 37.99,
+                description: '3D printed Best Life sign. 11x11 inches.',
+                icon: '✨',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/best-life/sign1.jpeg']
+            },
+            {
+                name: 'Amazing',
+                slug: 'amazing',
+                category: 'prints3d',
+                price: 25.99,
+                description: '3D printed Amazing sign. 13x6 inches.',
+                icon: '🌟',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/amazing/sign1.jpeg']
+            },
+            {
+                name: 'Live Laugh Love',
+                slug: 'live-laugh-love',
+                category: 'prints3d',
+                price: 22.99,
+                description: '3D printed Live Laugh Love sign. 12x6 inches.',
+                icon: '💕',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/live-laugh-love/sign1.jpeg']
+            },
+            {
+                name: 'Love',
+                slug: 'love',
+                category: 'prints3d',
+                price: 18.99,
+                description: '3D printed Love decor. 6x8 inches.',
+                icon: '❤️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/love/decor1.jpeg']
+            },
+            {
+                name: 'Welcome',
+                slug: 'welcome',
+                category: 'prints3d',
+                price: 39.99,
+                description: '3D printed Welcome decor. 14x4 inches.',
+                icon: '🏠',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/welcome/decor1.jpeg']
+            },
+            {
+                name: 'Mr. & Mrs.',
+                slug: 'mr-and-mrs',
+                category: 'prints3d',
+                price: 48.99,
+                description: '3D printed Mr. & Mrs. decor. 13.5x4 inches.',
+                icon: '💒',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/mr-and-mrs/decor1.jpeg']
+            },
+            {
+                name: 'Custom Letters Decor',
+                slug: 'custom-letters-decor',
+                category: 'prints3d',
+                price: 10.00,
+                priceLabel: 'Starting at',
+                description: '3D printed custom letters decor. Personalize with any letters you want.',
+                icon: '🔤',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-letters-decor/decor1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-letters-decor/decor2.jpeg']
+            },
+            {
+                name: 'Heart Gift Box',
+                slug: 'heart-gift-box',
+                category: 'prints3d',
+                price: 19.99,
+                description: '3D printed heart-shaped gift box. Perfect for jewelry, small gifts, or keepsakes. Available in multiple colors.',
+                icon: '💝',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-gift-box/decor1.jpeg']
+            },
+            {
+                name: '3 Piece Candle Holder',
+                slug: '3-piece-candle-holder',
+                category: 'prints3d',
+                price: 26.99,
+                description: '3D printed 3 piece candle holder set. Elegant home decor for any room.',
+                icon: '🕯️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-piece-candle-holder/decor1.jpeg']
+            },
+            {
+                name: 'Custom Lithophane',
+                slug: 'custom-lithophane',
+                category: 'prints3d',
+                price: 44.99,
+                popular: true,
+                description: '3D printed custom lithophane. Upload your photo and we create a stunning backlit display. 5x6 inches.',
+                icon: '🖼️',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor1.jpeg']
+            },
+            {
+                name: 'Moon and Back',
+                slug: 'moon-and-back',
+                category: 'prints3d',
+                price: 12.99,
+                description: '3D printed "I love you to the moon and back" decor. Available in multiple colors.',
+                icon: '🌙',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-and-back/decor1.jpeg']
+            },
+            {
+                name: 'Heart Shaped Coaster Set',
+                slug: 'heart-shaped-coaster-set',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed heart shaped coaster set of 4. Available in multiple colors.',
+                icon: '💕',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-shaped-coaster-set/decor1.jpeg']
+            },
+            {
+                name: 'Round Star Coaster Set',
+                slug: 'round-star-coaster-set',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed round star design coaster set of 4. Available in multiple colors.',
+                icon: '⭐',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-star-coaster-set/decor1.jpeg']
+            },
+            {
+                name: 'Square Coffee Bean Coaster',
+                slug: 'square-coffee-bean-coaster',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed square coffee bean coaster. Available in multiple colors.',
+                icon: '☕',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/square-coffee-bean-coaster/decor1.jpeg']
+            },
+            {
+                name: 'Hexagon Shaped Coaster',
+                slug: 'hexagon-shaped-coaster',
+                category: 'prints3d',
+                price: 14.99,
+                description: '3D printed hexagon shaped coaster. Available in multiple colors.',
+                icon: '⬡',
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/hexagon-shaped-coaster/decor1.jpeg']
+            },
+            {
                 name: 'Eid Mubarak Ornaments',
                 slug: 'eid-mubarak-ornaments',
                 category: 'prints3d',
@@ -576,7 +731,7 @@
                 price: 4.99,
                 description: '3D printed keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
                 icon: '🔑',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg']
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain3.jpeg']
             }
         ];
 
@@ -1400,6 +1555,72 @@
                 name: `3 Foot Snake (${color})`,
                 price: 24.99,
                 image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg'
+            });
+        }
+
+        function addHeartGiftBoxToCart() {
+            const select = document.getElementById('heartGiftBoxColor');
+            const color = select ? select.value : 'Red';
+
+            addToCart({
+                name: `Heart Gift Box (${color})`,
+                price: 19.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-gift-box/decor1.jpeg'
+            });
+        }
+
+        function addMoonAndBackToCart() {
+            const select = document.getElementById('moonAndBackColor');
+            const color = select ? select.value : 'White';
+
+            addToCart({
+                name: `Moon and Back (${color})`,
+                price: 12.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-and-back/decor1.jpeg'
+            });
+        }
+
+        function addHeartCoasterSetToCart() {
+            const select = document.getElementById('heartCoasterSetColor');
+            const color = select ? select.value : 'Red';
+
+            addToCart({
+                name: `Heart Shaped Coaster Set (${color})`,
+                price: 14.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-shaped-coaster-set/decor1.jpeg'
+            });
+        }
+
+        function addRoundStarCoasterSetToCart() {
+            const select = document.getElementById('roundStarCoasterSetColor');
+            const color = select ? select.value : 'White';
+
+            addToCart({
+                name: `Round Star Coaster Set (${color})`,
+                price: 14.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-star-coaster-set/decor1.jpeg'
+            });
+        }
+
+        function addSquareCoffeeBeanCoasterToCart() {
+            const select = document.getElementById('squareCoffeeBeanCoasterColor');
+            const color = select ? select.value : 'Brown';
+
+            addToCart({
+                name: `Square Coffee Bean Coaster (${color})`,
+                price: 14.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/square-coffee-bean-coaster/decor1.jpeg'
+            });
+        }
+
+        function addHexagonShapedCoasterToCart() {
+            const select = document.getElementById('hexagonShapedCoasterColor');
+            const color = select ? select.value : 'Black';
+
+            addToCart({
+                name: `Hexagon Shaped Coaster (${color})`,
+                price: 14.99,
+                image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/hexagon-shaped-coaster/decor1.jpeg'
             });
         }
 
@@ -3916,6 +4137,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         window.addSpinnerToCart = addSpinnerToCart;
         window.addFlexiFishToCart = addFlexiFishToCart;
         window.addSnakeToCart = addSnakeToCart;
+        window.addHeartGiftBoxToCart = addHeartGiftBoxToCart;
+        window.addMoonAndBackToCart = addMoonAndBackToCart;
+        window.addHeartCoasterSetToCart = addHeartCoasterSetToCart;
+        window.addRoundStarCoasterSetToCart = addRoundStarCoasterSetToCart;
+        window.addSquareCoffeeBeanCoasterToCart = addSquareCoffeeBeanCoasterToCart;
+        window.addHexagonShapedCoasterToCart = addHexagonShapedCoasterToCart;
         window.addOctagonFidgetToCart = addOctagonFidgetToCart;
         window.addInfinityCubeToCart = addInfinityCubeToCart;
         window.addFlexiDinoToCart = addFlexiDinoToCart;
