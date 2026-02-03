@@ -551,7 +551,7 @@
                 popular: true,
                 description: '3D printed custom lithophane. Upload your photo and we create a stunning backlit display. 5x6 inches.',
                 icon: '🖼️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor1.jpeg']
+                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor1.jpeg']
             },
             {
                 name: 'Moon and Back',
