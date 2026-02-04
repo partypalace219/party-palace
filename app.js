@@ -1,4 +1,4 @@
-        // Product Data
+﻿        // Product Data
         // Products will be loaded from Supabase
         let products = [];
         
@@ -18,6 +18,7 @@
                 products = dbProducts.map(p => ({
                     id: p.id,
                     name: p.name,
+                    slug: p.slug,
                     category: p.category,
                     price: p.price,
                     priceLabel: p.price_label,
@@ -25,6 +26,9 @@
                     icon: p.emoji,
                     popular: p.featured,
                     image_url: p.image_url,
+                    size: p.size,
+                    material: p.material,
+                    tieredPricing: p.tiered_pricing,
                     hasGallery: true
                 }));
 
@@ -45,18 +49,12 @@
                 });
 
                 // Set popular products (override database values)
-                const popularProducts = ['Specialty Arch', 'Chiara Arch', 'Spiral Columns', 'Flower Walls', 'Balloon Centerpieces', 'Vases'];
+                const popularProducts = ['Specialty Arch', 'Chiara Arch', 'Spiral Columns', 'Flower Walls', 'Balloon Centerpieces', 'Vases', 'Custom Lithophane'];
                 products.forEach(product => {
                     product.popular = popularProducts.includes(product.name);
                 });
 
-                // Add engraving products to the products array
-                products = products.concat(engravingProducts);
-
-                // Add 3D prints products to the products array
-                products = products.concat(prints3dProducts);
-
-                console.log('Loaded', products.length, 'products (including engraving and 3D prints)');
+                console.log('Loaded', products.length, 'products from Supabase');
 
                 // Initialize the app after products are loaded (skip when refreshing from staff portal)
                 if (!skipInit) {
@@ -129,629 +127,6 @@
             prints3d: '3D Prints'
         };
 
-        // Engraving products data
-        const engravingProducts = [
-            {
-                name: 'Edge Glued Square Panel',
-                slug: 'edge-glued-square-panel',
-                category: 'engraving',
-                price: 39.99,
-                description: 'High-quality edge glued wood panel, perfect for custom engraving projects.',
-                icon: '🪵',
-                size: '10" x 10"',
-                material: 'Wood',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-square-panel/square3.jpeg'],
-                tieredPricing: {
-                    1: 39.99,
-                    2: 36.99,
-                    6: 30.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Edge Glued Round Panel',
-                slug: 'edge-glued-round-panel',
-                category: 'engraving',
-                price: 39.99,
-                description: 'High-quality edge glued round wood panel, perfect for custom engraving projects.',
-                icon: '🪵',
-                size: '10" x 10"',
-                material: 'Wood',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/edge-glued-round-panel/round3.jpeg'],
-                tieredPricing: {
-                    1: 39.99,
-                    2: 36.99,
-                    6: 30.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Rectangle Wood Keychain',
-                slug: 'rectangle-wood-keychain',
-                category: 'engraving',
-                price: 5.99,
-                description: 'Custom engraved rectangle wood keychain with key ring. Perfect for personalized gifts.',
-                icon: '🔑',
-                size: '2" x 1"',
-                material: 'Wood',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/rectangle-wood-keychain/keychain2.jpeg'],
-                tieredPricing: {
-                    1: 5.99,
-                    2: 4.99,
-                    6: 2.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Round Stainless Steel Keychain',
-                slug: 'round-stainless-steel-keychain',
-                category: 'engraving',
-                price: 5.99,
-                description: 'Custom engraved round stainless steel keychain with key ring. Durable and stylish.',
-                icon: '🔑',
-                size: '1" diameter',
-                material: 'Metal',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-stainless-steel-keychain/keychain1.jpeg'],
-                tieredPricing: {
-                    1: 5.99,
-                    2: 4.99,
-                    6: 2.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Black Acrylic Plexiglass Sheet',
-                slug: 'black-acrylic-plexiglass-sheet',
-                category: 'engraving',
-                price: 54.99,
-                description: 'Custom engraved black acrylic plexiglass sheet. Perfect for signs, displays, and decorative pieces.',
-                icon: '🖼️',
-                size: '12" x 12"',
-                material: 'Acrylic',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/black-acrylic-plexiglass-sheet/acrylic1.jpeg'],
-                tieredPricing: {
-                    1: 54.99,
-                    2: 51.99,
-                    6: 45.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Unfinished Rustic Wood Rounds',
-                slug: 'unfinished-rustic-wood-rounds',
-                category: 'engraving',
-                price: 54.99,
-                description: 'Natural unfinished rustic wood rounds. Perfect for custom engraving, centerpieces, and rustic decor.',
-                icon: '🪵',
-                size: '9-10" diameter',
-                material: 'Wood',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds1_v2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/unfinished-rustic-wood-rounds/rounds2_v2.jpeg'],
-                tieredPricing: {
-                    1: 54.99,
-                    2: 51.99,
-                    6: 45.99,
-                    11: 'contact'
-                }
-            },
-            {
-                name: 'Round Basswood Plywood Coaster',
-                slug: 'round-basswood-plywood-coaster',
-                category: 'engraving',
-                price: 5.99,
-                description: 'Custom engraved round basswood plywood coaster. Perfect for personalized gifts and home decor.',
-                icon: '🪵',
-                size: '4" diameter',
-                material: 'Wood',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-basswood-plywood-coaster/coasters2.jpeg'],
-                tieredPricing: {
-                    1: 5.99,
-                    2: 4.49,
-                    6: 2.49,
-                    11: 'contact'
-                }
-            },
-        ];
-
-        // 3D Prints products data
-        const prints3dProducts = [
-            {
-                name: '3 Foot Snake',
-                slug: '3-foot-snake',
-                category: 'prints3d',
-                price: 24.99,
-                description: 'Fun 3D printed articulated snake toy. Flexible and poseable, perfect for kids and collectors. Available in 11 colors.',
-                icon: '🐍',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-foot-snake/snake2.jpeg']
-            },
-            {
-                name: 'Star Fidget',
-                slug: 'star-fidget',
-                category: 'prints3d',
-                price: 6.99,
-                description: '3D printed star-shaped fidget toy. Satisfying to spin and play with. Available in Small ($6.99) and Medium ($11.99).',
-                icon: '⭐',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-fidget/fidget2.jpeg']
-            },
-            {
-                name: 'Finger Fidget Spinner',
-                slug: 'finger-fidget-spinner',
-                category: 'prints3d',
-                price: 8.99,
-                description: '3D printed finger fidget spinner. Fun stress relief toy for all ages. Available in 11 colors.',
-                icon: '🌀',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/finger-fidget-spinner/spinner1.jpeg']
-            },
-            {
-                name: 'Flexi Fish',
-                slug: 'flexi-fish',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed flexible fish toy. Articulated and fun to wiggle. Available in 11 colors.',
-                icon: '🐟',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-fish/fish1.jpeg']
-            },
-            {
-                name: 'Octagon Fidget',
-                slug: 'octagon-fidget',
-                category: 'prints3d',
-                price: 4.99,
-                description: '3D printed octagon-shaped fidget toy. Satisfying tactile experience. Available in 11 colors.',
-                icon: '🔷',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/octagon-fidget/fidget1.jpeg']
-            },
-            {
-                name: 'Infinity Cube',
-                slug: 'infinity-cube',
-                category: 'prints3d',
-                price: 8.99,
-                description: '3D printed infinity cube fidget toy. Endlessly foldable for stress relief. Available in 11 colors.',
-                icon: '🎲',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/infinity-cube/cube1.jpeg']
-            },
-            {
-                name: 'Flexi Dinosaur',
-                slug: 'flexi-dinosaur',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed flexible dinosaur toy. Articulated and fun to play with. Available in 11 colors.',
-                icon: '🦕',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/flexi-dinosaur/dino1.jpeg']
-            },
-            {
-                name: 'Snail',
-                slug: 'snail',
-                category: 'prints3d',
-                price: 3.99,
-                description: '3D printed snail toy. Cute and collectible fidget toy. Available in 11 colors.',
-                icon: '🐌',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/snail/snail1.jpeg']
-            },
-            {
-                name: 'Twisty Lizard',
-                slug: 'twisty-lizard',
-                category: 'prints3d',
-                price: 15.99,
-                description: '3D printed twisty lizard toy. Flexible and articulated reptile fidget. Available in 11 colors.',
-                icon: '🦎',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/twisty-lizard/lizard1.jpeg']
-            },
-            {
-                name: 'Palestine Map',
-                slug: 'palestine-map',
-                category: 'prints3d',
-                price: 9.99,
-                description: '3D printed Palestine map. 12 inches long.',
-                icon: '🗺️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map/map1.jpeg']
-            },
-            {
-                name: 'Ramadan Mubarak',
-                slug: 'ramadan-mubarak',
-                category: 'prints3d',
-                price: 16.99,
-                description: '3D printed Ramadan Mubarak sign. 8x8 inches.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-mubarak/sign1.jpeg']
-            },
-            {
-                name: 'Ramadan Kareem',
-                slug: 'ramadan-kareem',
-                category: 'prints3d',
-                price: 19.99,
-                description: '3D printed Ramadan Kareem sign. 7 inch round.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-kareem/sign1.jpeg']
-            },
-            {
-                name: 'Bismillah',
-                slug: 'bismillah',
-                category: 'prints3d',
-                price: 35.99,
-                description: '3D printed Bismillah sign. 12x9.5 inches.',
-                icon: '☪️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah/sign1.jpeg']
-            },
-            {
-                name: 'Morning Dua',
-                slug: 'morning-dua',
-                category: 'prints3d',
-                price: 34.99,
-                description: '3D printed Morning Dua sign. 13x9 inches.',
-                icon: '🌅',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/morning-dua/sign1.jpeg']
-            },
-            {
-                name: 'La ilaha ila Allah',
-                slug: 'la-ilaha-ila-allah',
-                category: 'prints3d',
-                price: 28.99,
-                description: '3D printed La ilaha ila Allah sign. 12x8 inches.',
-                icon: '☪️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/la-ilaha-ila-allah/sign1.jpeg']
-            },
-            {
-                name: 'Mohammed',
-                slug: 'mohammed',
-                category: 'prints3d',
-                price: 24.99,
-                description: '3D printed Mohammed sign. 9.5 inch round.',
-                icon: '☪️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/mohammed/sign1.jpeg']
-            },
-            {
-                name: 'Evening Dua',
-                slug: 'evening-dua',
-                category: 'prints3d',
-                price: 35.99,
-                description: '3D printed Evening Dua sign. 13x10 inches.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/evening-dua/sign1.jpeg']
-            },
-            {
-                name: 'Heart with Names',
-                slug: 'heart-with-names',
-                category: 'prints3d',
-                price: 33.99,
-                description: '3D printed heart sign with custom names. 10 inches.',
-                icon: '❤️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-names/sign1.jpeg']
-            },
-            {
-                name: 'Bismillah with Arch',
-                slug: 'bismillah-with-arch',
-                category: 'prints3d',
-                price: 21.99,
-                description: '3D printed Bismillah with arch sign. 8 inches.',
-                icon: '🕌',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bismillah-with-arch/sign1.jpeg']
-            },
-            {
-                name: 'Allah',
-                slug: 'allah',
-                category: 'prints3d',
-                price: 33.99,
-                description: '3D printed Allah sign. 12.5 inch round.',
-                icon: '☪️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/allah/sign1.jpeg']
-            },
-            {
-                name: 'Muhammad with Background',
-                slug: 'muhammad-with-background',
-                category: 'prints3d',
-                price: 49.99,
-                description: '3D printed Muhammad sign with background. 13x9.5 inches.',
-                icon: '☪️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/muhammad-with-background/sign1.jpeg']
-            },
-            {
-                name: 'Eid Mubarak',
-                slug: 'eid-mubarak',
-                category: 'prints3d',
-                price: 47.99,
-                description: '3D printed Eid Mubarak sign. 12 inch round.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak/sign1.jpeg']
-            },
-            {
-                name: 'Eid Mubarak Rectangle',
-                slug: 'eid-mubarak-rectangle',
-                category: 'prints3d',
-                price: 31.99,
-                description: '3D printed Eid Mubarak sign. 8x12 inches.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-rectangle/decor1.jpeg']
-            },
-            {
-                name: 'Bloom',
-                slug: 'bloom',
-                category: 'prints3d',
-                price: 36.99,
-                description: '3D printed Bloom sign. 11x11 inches.',
-                icon: '🌸',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/bloom/sign1.jpeg']
-            },
-            {
-                name: 'Be Kind',
-                slug: 'be-kind',
-                category: 'prints3d',
-                price: 24.99,
-                description: '3D printed Be Kind sign. 10 inch round.',
-                icon: '💖',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/be-kind/sign1.jpeg']
-            },
-            {
-                name: 'Best Life',
-                slug: 'best-life',
-                category: 'prints3d',
-                price: 37.99,
-                description: '3D printed Best Life sign. 11x11 inches.',
-                icon: '✨',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/best-life/sign1.jpeg']
-            },
-            {
-                name: 'Amazing',
-                slug: 'amazing',
-                category: 'prints3d',
-                price: 25.99,
-                description: '3D printed Amazing sign. 13x6 inches.',
-                icon: '🌟',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/amazing/sign1.jpeg']
-            },
-            {
-                name: 'Live Laugh Love',
-                slug: 'live-laugh-love',
-                category: 'prints3d',
-                price: 22.99,
-                description: '3D printed Live Laugh Love sign. 12x6 inches.',
-                icon: '💕',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/live-laugh-love/sign1.jpeg']
-            },
-            {
-                name: 'Love',
-                slug: 'love',
-                category: 'prints3d',
-                price: 18.99,
-                description: '3D printed Love decor. 6x8 inches.',
-                icon: '❤️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/love/decor1.jpeg']
-            },
-            {
-                name: 'Welcome',
-                slug: 'welcome',
-                category: 'prints3d',
-                price: 39.99,
-                description: '3D printed Welcome decor. 14x4 inches.',
-                icon: '🏠',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/welcome/decor1.jpeg']
-            },
-            {
-                name: 'Mr. & Mrs.',
-                slug: 'mr-and-mrs',
-                category: 'prints3d',
-                price: 48.99,
-                description: '3D printed Mr. & Mrs. decor. 13.5x4 inches.',
-                icon: '💒',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/mr-and-mrs/decor1.jpeg']
-            },
-            {
-                name: 'Custom Letters Decor',
-                slug: 'custom-letters-decor',
-                category: 'prints3d',
-                price: 10.00,
-                priceLabel: 'Starting at',
-                description: '3D printed custom letters decor. Personalize with any letters you want.',
-                icon: '🔤',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-letters-decor/decor1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-letters-decor/decor2.jpeg']
-            },
-            {
-                name: 'Heart Gift Box',
-                slug: 'heart-gift-box',
-                category: 'prints3d',
-                price: 19.99,
-                description: '3D printed heart-shaped gift box. Perfect for jewelry, small gifts, or keepsakes. Available in multiple colors.',
-                icon: '💝',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-gift-box/decor1.jpeg']
-            },
-            {
-                name: '3 Piece Candle Holder',
-                slug: '3-piece-candle-holder',
-                category: 'prints3d',
-                price: 26.99,
-                description: '3D printed 3 piece candle holder set. Elegant home decor for any room.',
-                icon: '🕯️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/3-piece-candle-holder/decor1.jpeg']
-            },
-            {
-                name: 'Custom Lithophane',
-                slug: 'custom-lithophane',
-                category: 'prints3d',
-                price: 44.99,
-                popular: true,
-                description: '3D printed custom lithophane. Upload your photo and we create a stunning backlit display. 5x6 inches.',
-                icon: '🖼️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/custom-lithophane/decor1.jpeg']
-            },
-            {
-                name: 'Moon and Back',
-                slug: 'moon-and-back',
-                category: 'prints3d',
-                price: 12.99,
-                description: '3D printed "I love you to the moon and back" decor. Available in multiple colors.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-and-back/decor1.jpeg']
-            },
-            {
-                name: 'Heart Shaped Coaster Set',
-                slug: 'heart-shaped-coaster-set',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed heart shaped coaster set of 4. Available in multiple colors.',
-                icon: '💕',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-shaped-coaster-set/decor1.jpeg']
-            },
-            {
-                name: 'Round Star Coaster Set',
-                slug: 'round-star-coaster-set',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed round star design coaster set of 4. Available in multiple colors.',
-                icon: '⭐',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/round-star-coaster-set/decor1.jpeg']
-            },
-            {
-                name: 'Square Coffee Bean Coaster',
-                slug: 'square-coffee-bean-coaster',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed square coffee bean coaster. Available in multiple colors.',
-                icon: '☕',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/square-coffee-bean-coaster/decor1.jpeg']
-            },
-            {
-                name: 'Hexagon Shaped Coaster',
-                slug: 'hexagon-shaped-coaster',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed hexagon shaped coaster. Available in multiple colors.',
-                icon: '⬡',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/hexagon-shaped-coaster/decor1.jpeg']
-            },
-            {
-                name: 'Eid Mubarak Ornaments',
-                slug: 'eid-mubarak-ornaments',
-                category: 'prints3d',
-                price: 6.99,
-                description: '3D printed Eid Mubarak double sided ornaments.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/eid-mubarak-ornaments/decor1.jpeg']
-            },
-            {
-                name: 'Palestine Map Ornament',
-                slug: 'palestine-map-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed Palestine map ornament.',
-                icon: '🇵🇸',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/palestine-map-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Kaaba Ornaments',
-                slug: 'kaaba-ornaments',
-                category: 'prints3d',
-                price: 7.49,
-                description: '3D printed Kaaba double sided ornaments.',
-                icon: '🕋',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-ornaments/decor1.jpeg']
-            },
-            {
-                name: 'Moon Ornament',
-                slug: 'moon-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed moon ornament.',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/moon-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Masjid Ornament',
-                slug: 'masjid-ornament',
-                category: 'prints3d',
-                price: 7.49,
-                description: '3D printed Masjid double sided ornament.',
-                icon: '🕌',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Star Ornament',
-                slug: 'star-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed star ornament.',
-                icon: '⭐',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/star-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Lantern Style 1 Ornament',
-                slug: 'lantern-style-1-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed lantern style 1 ornament.',
-                icon: '🏮',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-1-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Lantern Style 2 Ornament',
-                slug: 'lantern-style-2-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed lantern style 2 ornament.',
-                icon: '🏮',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-2-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Lantern Style 3 Ornament',
-                slug: 'lantern-style-3-ornament',
-                category: 'prints3d',
-                price: 5.99,
-                description: '3D printed lantern style 3 ornament.',
-                icon: '🏮',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/lantern-style-3-ornament/decor1.jpeg']
-            },
-            {
-                name: 'Ramadan Relief Sculpture',
-                slug: 'ramadan-relief-sculpture',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed Ramadan relief sculpture (5×5 inches).',
-                icon: '🌙',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/ramadan-relief-sculpture/decor1.jpeg']
-            },
-            {
-                name: 'Kaaba Relief Sculpture',
-                slug: 'kaaba-relief-sculpture',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed Kaaba relief sculpture (5W×3.5H inches).',
-                icon: '🕋',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/kaaba-relief-sculpture/decor1.jpeg']
-            },
-            {
-                name: 'Camel Relief Sculpture',
-                slug: 'camel-relief-sculpture',
-                category: 'prints3d',
-                price: 16.99,
-                description: '3D printed camel relief sculpture (5W×6H inches).',
-                icon: '🐪',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/camel-relief-sculpture/decor1.jpeg']
-            },
-            {
-                name: 'Masjid Relief Sculpture',
-                slug: 'masjid-relief-sculpture',
-                category: 'prints3d',
-                price: 14.99,
-                description: '3D printed masjid relief sculpture (5×5 inches).',
-                icon: '🕌',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/masjid-relief-sculpture/decor1.jpeg']
-            },
-            {
-                name: 'Heart with a Date',
-                slug: 'heart-with-a-date',
-                category: 'prints3d',
-                price: 33.99,
-                description: '3D printed heart with custom date (10 inches). Perfect for anniversaries, weddings, and special occasions.',
-                icon: '❤️',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/heart-with-a-date/heart1.jpeg']
-            },
-            {
-                name: 'Customizable Keychains',
-                slug: 'customizable-keychains',
-                category: 'prints3d',
-                price: 4.99,
-                description: '3D printed keychains in various styles and materials. Perfect for personalized gifts, party favors, and promotional items.',
-                icon: '🔑',
-                images: ['https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain2.jpeg', 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain3.jpeg']
-            }
-        ];
 
         let currentFilter = 'all';
 
@@ -2673,7 +2048,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             container.innerHTML = `
                 <div class="product-detail-header">
                     <button class="product-detail-back" onclick="navigate('${backPage}')">
-                        ← Back to ${backLabel}
+                        â† Back to ${backLabel}
                     </button>
                 </div>
                 
@@ -2693,7 +2068,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                             <span class="amount">$${product.price}</span>
                         </div>
                         <p class="product-detail-description">${product.description}</p>
-                        ${(product.category === 'prints3d' || product.category === 'engraving') ? '<span class="product-detail-processing">🕐 Processing: 3-10 business days</span>' : ''}
+                        ${(product.category === 'prints3d' || product.category === 'engraving') ? '<span class="product-detail-processing">ðŸ• Processing: 3-10 business days</span>' : ''}
 
                         ${features}
 
@@ -2935,14 +2310,14 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
             if (!name || !email || !phone || !eventType || !message) {
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Please fill in all required fields.';
+                statusDiv.textContent = 'âœ— Please fill in all required fields.';
                 return;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Please enter a valid email address.';
+                statusDiv.textContent = 'âœ— Please enter a valid email address.';
                 return;
             }
 
@@ -2970,7 +2345,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
                 if (response.ok) {
                     statusDiv.className = 'form-status success';
-                    statusDiv.textContent = "✓ Thank you! Your message has been sent. We'll contact you within 24 hours.";
+                    statusDiv.textContent = "âœ“ Thank you! Your message has been sent. We'll contact you within 24 hours.";
                     document.getElementById('contactForm').reset();
                     // Clear selected product after successful submission
                     window.consultationProduct = null;
@@ -2982,7 +2357,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } catch (error) {
                 console.error('Error sending contact form:', error);
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Sorry, there was an error sending your message. Please try calling us at 219-344-2416.';
+                statusDiv.textContent = 'âœ— Sorry, there was an error sending your message. Please try calling us at 219-344-2416.';
             } finally {
                 if (submitBtn) submitBtn.disabled = false;
             }
@@ -3040,14 +2415,14 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
             if (!name || !email || !phone || !orderType || !product || !description) {
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Please fill in all required fields.';
+                statusDiv.textContent = 'âœ— Please fill in all required fields.';
                 return;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Please enter a valid email address.';
+                statusDiv.textContent = 'âœ— Please enter a valid email address.';
                 return;
             }
 
@@ -3072,7 +2447,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
                 if (response.ok) {
                     statusDiv.className = 'form-status success';
-                    statusDiv.textContent = "✓ Thank you! Your custom order request has been received. We'll contact you within 24-48 hours with a quote.";
+                    statusDiv.textContent = "âœ“ Thank you! Your custom order request has been received. We'll contact you within 24-48 hours with a quote.";
                     document.getElementById('customOrderContactForm').reset();
                 } else {
                     throw new Error('Failed to send');
@@ -3080,7 +2455,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } catch (error) {
                 console.error('Error sending custom order form:', error);
                 statusDiv.className = 'form-status error';
-                statusDiv.textContent = '✗ Sorry, there was an error sending your request. Please try calling us at 219-344-2416.';
+                statusDiv.textContent = 'âœ— Sorry, there was an error sending your request. Please try calling us at 219-344-2416.';
             } finally {
                 if (submitBtn) submitBtn.disabled = false;
             }
@@ -3160,7 +2535,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 
                 // Show errors or proceed
                 if (errors.length > 0) {
-                    errorDiv.innerHTML = '✗ ' + errors.join('<br>✗ ');
+                    errorDiv.innerHTML = 'âœ— ' + errors.join('<br>âœ— ');
                     errorDiv.style.display = 'block';
                     return false;
                 }
@@ -3264,10 +2639,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const statusIndicator = document.getElementById('waiverStatus');
                 if (statusIndicator) {
                     if (isSigned) {
-                        statusIndicator.innerHTML = '<span style="color: #059669;">✓ Waiver Signed</span>';
+                        statusIndicator.innerHTML = '<span style="color: #059669;">âœ“ Waiver Signed</span>';
                         statusIndicator.className = 'waiver-status signed';
                     } else {
-                        statusIndicator.innerHTML = '<span style="color: #DC2626;">⚠ Waiver Required</span>';
+                        statusIndicator.innerHTML = '<span style="color: #DC2626;">âš  Waiver Required</span>';
                         statusIndicator.className = 'waiver-status unsigned';
                     }
                 }
@@ -3302,7 +2677,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     const errorDiv = document.getElementById('bookingWaiverError');
                     if (errorDiv) {
                         errorDiv.style.display = 'block';
-                        errorDiv.innerHTML = '✗ You must sign the Liability Waiver before completing your booking.';
+                        errorDiv.innerHTML = 'âœ— You must sign the Liability Waiver before completing your booking.';
                     }
                     
                     // Open the modal
@@ -3461,7 +2836,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 
                 // Show errors or proceed
                 if (errors.length > 0) {
-                    errorDiv.innerHTML = '✗ ' + errors.join('<br>✗ ');
+                    errorDiv.innerHTML = 'âœ— ' + errors.join('<br>âœ— ');
                     errorDiv.style.display = 'block';
                     return false;
                 }
@@ -3569,10 +2944,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 const statusIndicator = document.getElementById('contractStatus');
                 if (statusIndicator) {
                     if (isSigned) {
-                        statusIndicator.innerHTML = '<span style="color: #059669;">✓ Contract Signed</span>';
+                        statusIndicator.innerHTML = '<span style="color: #059669;">âœ“ Contract Signed</span>';
                         statusIndicator.className = 'waiver-status signed';
                     } else {
-                        statusIndicator.innerHTML = '<span style="color: #DC2626;">⚠ Contract Required</span>';
+                        statusIndicator.innerHTML = '<span style="color: #DC2626;">âš  Contract Required</span>';
                         statusIndicator.className = 'waiver-status unsigned';
                     }
                 }
@@ -3785,7 +3160,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         const statusEl = document.getElementById('checkoutFormStatus');
                         if (statusEl) {
                             statusEl.className = 'form-status error';
-                            statusEl.innerHTML = '✗ Please acknowledge that custom 3D prints and engravings are final sale with no returns or refunds.';
+                            statusEl.innerHTML = 'âœ— Please acknowledge that custom 3D prints and engravings are final sale with no returns or refunds.';
                             statusEl.style.display = 'block';
                         }
                         NoRefundModal.open();
@@ -3812,7 +3187,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         if (!agreementChecked) errors.push('Check the confirmation box agreeing to terms');
                         if (!noRefundChecked) errors.push('Acknowledge the no refund policy for 3D prints & engravings');
                         statusEl.className = 'form-status error';
-                        statusEl.innerHTML = '✗ Please complete the following:<br>• ' + errors.join('<br>• ');
+                        statusEl.innerHTML = 'âœ— Please complete the following:<br>â€¢ ' + errors.join('<br>â€¢ ');
                         statusEl.style.display = 'block';
                     }
 
@@ -3837,20 +3212,20 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
                 if (contractStatus) {
                     if (this.isContractSigned()) {
-                        contractStatus.innerHTML = '✓ Signed';
+                        contractStatus.innerHTML = 'âœ“ Signed';
                         contractStatus.style.color = '#059669';
                     } else {
-                        contractStatus.innerHTML = '⚠ Required';
+                        contractStatus.innerHTML = 'âš  Required';
                         contractStatus.style.color = '#DC2626';
                     }
                 }
 
                 if (waiverStatus) {
                     if (this.isWaiverSigned()) {
-                        waiverStatus.innerHTML = '✓ Signed';
+                        waiverStatus.innerHTML = 'âœ“ Signed';
                         waiverStatus.style.color = '#059669';
                     } else {
-                        waiverStatus.innerHTML = '⚠ Required';
+                        waiverStatus.innerHTML = 'âš  Required';
                         waiverStatus.style.color = '#DC2626';
                     }
                 }
@@ -4468,48 +3843,9 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         featured: p.featured,
                         sale: p.sale || false,
                         image: image,
-                        image_url: p.image_url || null,
-                        source: 'supabase'
+                        image_url: p.image_url || null
                     };
                 });
-
-                // Also add engraving products (from local data)
-                if (typeof engravingProducts !== 'undefined') {
-                    engravingProducts.forEach((p, idx) => {
-                        staffProducts.push({
-                            id: 'eng-' + idx,
-                            name: p.name,
-                            category: 'engraving',
-                            price: p.price || 0,
-                            cost: 0,
-                            description: p.description,
-                            emoji: '🪵',
-                            featured: p.popular || false,
-                            sale: false,
-                            image: p.images ? p.images[0] : null,
-                            source: 'local'
-                        });
-                    });
-                }
-
-                // Also add 3D prints products (from local data)
-                if (typeof prints3dProducts !== 'undefined') {
-                    prints3dProducts.forEach((p, idx) => {
-                        staffProducts.push({
-                            id: 'print-' + idx,
-                            name: p.name,
-                            category: 'prints3d',
-                            price: p.price || 0,
-                            cost: 0,
-                            description: p.description,
-                            emoji: '🖨️',
-                            featured: p.popular || false,
-                            sale: false,
-                            image: p.images ? p.images[0] : null,
-                            source: 'local'
-                        });
-                    });
-                }
 
             } catch (error) {
                 console.error('Error loading staff products:', error);
@@ -4593,7 +3929,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         <td>
                             ${product.image
                                 ? `<img src="${product.image}" alt="${product.name}" class="staff-table-thumb">`
-                                : `<div class="staff-table-thumb-placeholder">${product.emoji || '📦'}</div>`
+                                : `<div class="staff-table-thumb-placeholder">${product.emoji || 'ðŸ“¦'}</div>`
                             }
                         </td>
                         <td><strong style="cursor: pointer; text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color 0.2s;" onmouseover="this.style.textDecorationColor='currentColor'" onmouseout="this.style.textDecorationColor='transparent'" onclick="editStaffProduct('${String(product.id).replace(/'/g, "\\'")}')">${product.name}</strong></td>
@@ -4666,10 +4002,6 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         function editStaffProduct(id) {
             const product = staffProducts.find(p => String(p.id) === String(id));
             if (product) {
-                if (product.source === 'local') {
-                    showStaffToast('Local products (engraving/3D prints) are managed in the code and cannot be edited here.', 'error');
-                    return;
-                }
                 openStaffProductModal(product);
             } else {
                 showStaffToast('Product not found', 'error');
@@ -4677,11 +4009,6 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         }
 
         function confirmStaffDelete(id, name) {
-            const product = staffProducts.find(p => String(p.id) === String(id));
-            if (product && product.source === 'local') {
-                showStaffToast('Local products (engraving/3D prints) are managed in the code and cannot be deleted here.', 'error');
-                return;
-            }
             document.getElementById('staff-delete-id').value = id;
             document.getElementById('staff-delete-name').textContent = name;
             openStaffModal('staff-delete-modal');
@@ -4720,8 +4047,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     if (error) throw error;
 
                     if (!data || data.length === 0) {
-                        // Update matched no rows — likely an RLS policy issue
-                        showStaffToast('Update blocked — go to Supabase > Authentication > Policies and add an UPDATE policy for the products table', 'error');
+                        // Update matched no rows â€” likely an RLS policy issue
+                        showStaffToast('Update blocked â€” go to Supabase > Authentication > Policies and add an UPDATE policy for the products table', 'error');
                         return;
                     }
                 } else {
@@ -4863,7 +4190,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         }
                     } catch (fallbackError) {
                         console.error('Fallback upload error:', fallbackError);
-                        showStaffToast('Image upload failed — using preview as fallback', 'error');
+                        showStaffToast('Image upload failed â€” using preview as fallback', 'error');
                         document.getElementById('staff-product-image').value = e.target.result;
                     }
                 }
@@ -4978,7 +4305,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     }, 300);
                 } else {
                     // Fallback: no BarcodeDetector support
-                    status.textContent = 'Camera active — BarcodeDetector not supported in this browser. Please enter barcode manually.';
+                    status.textContent = 'Camera active â€” BarcodeDetector not supported in this browser. Please enter barcode manually.';
                 }
 
             } catch (err) {
