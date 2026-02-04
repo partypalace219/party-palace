@@ -2610,6 +2610,417 @@
         </section>
     </div>
 
+    <!-- Staff Portal Page -->
+    <div id="page-staff" class="page">
+        <!-- Staff Login Section -->
+        <section class="staff-auth-section" id="staff-auth-section">
+            <div class="container">
+                <div class="staff-login-grid">
+                    <div class="staff-login-box">
+                        <h2>STAFF LOGIN</h2>
+                        <p class="staff-subtitle">For store owners and managers</p>
+                        <form class="staff-login-form" id="staff-login-form">
+                            <div class="staff-form-group">
+                                <label for="staff-email">Email</label>
+                                <input type="email" id="staff-email" required>
+                            </div>
+                            <div class="staff-form-group">
+                                <label for="staff-password">Password</label>
+                                <input type="password" id="staff-password" required>
+                            </div>
+                            <p class="staff-error" id="staff-login-error" style="display: none;"></p>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">SIGN IN</button>
+                        </form>
+                    </div>
+                    <div class="staff-login-box">
+                        <h2>NEED ACCESS?</h2>
+                        <p class="staff-subtitle">Contact your store administrator to get login credentials for the staff portal.</p>
+                        <div class="staff-features-list">
+                            <p><strong>Staff accounts include:</strong></p>
+                            <ul>
+                                <li>Full inventory management</li>
+                                <li>Product add/edit/delete</li>
+                                <li>Sales and profit tracking</li>
+                                <li>Image uploads</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staff Dashboard Section -->
+        <section class="staff-dashboard-section" id="staff-dashboard-section" style="display: none;">
+            <div class="container">
+                <div class="staff-dashboard">
+                    <!-- Dashboard Header -->
+                    <div class="staff-welcome">
+                        <div class="staff-welcome-left">
+                            <h2>Welcome back, <span id="staff-user-name">Store</span>!</h2>
+                            <p>Manage your inventory and products below</p>
+                        </div>
+                        <div class="staff-welcome-right">
+                            <span class="staff-user-email" id="staff-user-email"></span>
+                            <button class="btn btn-secondary btn-sm" id="staff-logout-btn">LOG OUT</button>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Stats -->
+                    <div class="staff-stats">
+                        <div class="staff-stat-card">
+                            <div class="staff-stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                            </div>
+                            <div class="staff-stat-info">
+                                <span class="staff-stat-value" id="staff-total-products">0</span>
+                                <span class="staff-stat-label">TOTAL PRODUCTS</span>
+                            </div>
+                        </div>
+                        <div class="staff-stat-card">
+                            <div class="staff-stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div class="staff-stat-info">
+                                <span class="staff-stat-value" id="staff-inventory-value">$0</span>
+                                <span class="staff-stat-label">INVENTORY VALUE</span>
+                            </div>
+                        </div>
+                        <div class="staff-stat-card">
+                            <div class="staff-stat-icon sale">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="17 6 23 6 23 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="staff-stat-info">
+                                <span class="staff-stat-value" id="staff-on-sale">0</span>
+                                <span class="staff-stat-label">ON SALE</span>
+                            </div>
+                        </div>
+                        <div class="staff-stat-card">
+                            <div class="staff-stat-icon new">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </div>
+                            <div class="staff-stat-info">
+                                <span class="staff-stat-value" id="staff-new-arrivals">0</span>
+                                <span class="staff-stat-label">NEW ARRIVALS</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profit Overview -->
+                    <div class="staff-section">
+                        <h3 class="staff-section-title">PROFIT OVERVIEW</h3>
+                        <div class="staff-profit-cards">
+                            <div class="staff-profit-card">
+                                <div class="staff-profit-icon revenue">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <div class="staff-profit-info">
+                                    <span class="staff-profit-value" id="staff-total-revenue">$0</span>
+                                    <span class="staff-profit-label">Total Revenue (if all sold)</span>
+                                </div>
+                            </div>
+                            <div class="staff-profit-card">
+                                <div class="staff-profit-icon cost">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <div class="staff-profit-info">
+                                    <span class="staff-profit-value" id="staff-total-cost">$0</span>
+                                    <span class="staff-profit-label">Total Cost (inventory)</span>
+                                </div>
+                            </div>
+                            <div class="staff-profit-card highlight">
+                                <div class="staff-profit-icon profit">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                        <polyline points="17 6 23 6 23 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="staff-profit-info">
+                                    <span class="staff-profit-value" id="staff-total-profit">$0</span>
+                                    <span class="staff-profit-label">Potential Profit</span>
+                                </div>
+                            </div>
+                            <div class="staff-profit-card">
+                                <div class="staff-profit-icon margin">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="staff-profit-info">
+                                    <span class="staff-profit-value" id="staff-profit-margin">0%</span>
+                                    <span class="staff-profit-label">Avg Profit Margin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Inventory -->
+                    <div class="staff-section">
+                        <div class="staff-section-header">
+                            <h3 class="staff-section-title">PRODUCT INVENTORY</h3>
+                            <div class="staff-section-actions">
+                                <button class="btn btn-secondary" id="staff-scan-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+                                        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                        <line x1="7" y1="12" x2="17" y2="12"></line>
+                                    </svg>
+                                    SCAN BARCODE
+                                </button>
+                                <button class="btn btn-primary" id="staff-add-product-btn">+ ADD PRODUCT</button>
+                            </div>
+                        </div>
+                        <div class="staff-filters" id="staff-filters">
+                            <button class="staff-filter-btn active" data-category="all">ALL</button>
+                        </div>
+                        <p class="staff-filter-results" id="staff-filter-results">Showing all products</p>
+                        <div class="staff-table-container">
+                            <table class="staff-table" id="staff-table">
+                                <thead>
+                                    <tr>
+                                        <th>IMAGE</th>
+                                        <th>PRODUCT NAME</th>
+                                        <th>CATEGORY</th>
+                                        <th>COST</th>
+                                        <th>PRICE</th>
+                                        <th>PROFIT</th>
+                                        <th>STATUS</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="staff-table-body">
+                                    <!-- Products loaded dynamically -->
+                                </tbody>
+                            </table>
+                            <p class="staff-empty" id="staff-empty" style="display: none;">
+                                No products in your inventory. Click "+ ADD PRODUCT" to get started.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Staff Add/Edit Product Modal -->
+    <div class="staff-modal" id="staff-product-modal">
+        <div class="staff-modal-overlay" onclick="closeStaffModal('staff-product-modal')"></div>
+        <div class="staff-modal-content">
+            <div class="staff-modal-header">
+                <h3 id="staff-modal-title">Add New Product</h3>
+                <button class="staff-modal-close" onclick="closeStaffModal('staff-product-modal')">&times;</button>
+            </div>
+            <form id="staff-product-form" class="staff-modal-body">
+                <input type="hidden" id="staff-product-id">
+                <div class="staff-form-group">
+                    <label for="staff-product-name">Product Name *</label>
+                    <input type="text" id="staff-product-name" required>
+                </div>
+                <div class="staff-form-row">
+                    <div class="staff-form-group">
+                        <label for="staff-product-category">Category *</label>
+                        <select id="staff-product-category" required>
+                            <option value="">Select category</option>
+                            <option value="arches">Arches</option>
+                            <option value="columns">Columns</option>
+                            <option value="walls">Walls</option>
+                            <option value="centerpieces">Centerpieces</option>
+                            <option value="rentals">Rentals</option>
+                            <option value="services">Services</option>
+                            <option value="engraving">Engraving</option>
+                            <option value="prints3d">3D Prints</option>
+                        </select>
+                    </div>
+                    <div class="staff-form-group">
+                        <label for="staff-product-price">Price ($) *</label>
+                        <input type="number" id="staff-product-price" min="0" step="0.01" required>
+                    </div>
+                </div>
+                <div class="staff-form-row">
+                    <div class="staff-form-group">
+                        <label for="staff-product-cost">Cost ($)</label>
+                        <input type="number" id="staff-product-cost" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="staff-form-group">
+                        <label for="staff-product-emoji">Emoji Icon</label>
+                        <input type="text" id="staff-product-emoji" placeholder="e.g., 🎈">
+                    </div>
+                </div>
+                <div class="staff-form-group">
+                    <label for="staff-product-description">Description</label>
+                    <textarea id="staff-product-description" rows="3"></textarea>
+                </div>
+                <div class="staff-form-group">
+                    <label>Product Image</label>
+                    <div class="staff-image-tabs">
+                        <button type="button" class="staff-image-tab active" data-tab="url" onclick="switchStaffImageTab('url')">URL</button>
+                        <button type="button" class="staff-image-tab" data-tab="upload" onclick="switchStaffImageTab('upload')">Upload File</button>
+                    </div>
+                    <div class="staff-image-panel active" id="staff-url-panel">
+                        <input type="text" id="staff-product-image" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="staff-image-panel" id="staff-upload-panel">
+                        <div class="staff-file-upload" id="staff-file-upload" onclick="document.getElementById('staff-file-input').click()">
+                            <input type="file" id="staff-file-input" accept="image/*" style="display: none;" onchange="handleStaffFileSelect(event)">
+                            <div class="staff-upload-placeholder" id="staff-upload-placeholder">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span>Click or drag image here</span>
+                            </div>
+                            <div class="staff-upload-preview" id="staff-upload-preview" style="display: none;">
+                                <img id="staff-preview-img" src="" alt="Preview">
+                                <button type="button" class="staff-remove-img" onclick="event.stopPropagation(); removeStaffImage()">&times;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="staff-form-group">
+                    <label class="staff-checkbox-label">
+                        <input type="checkbox" id="staff-product-featured">
+                        Featured Product (New Arrival)
+                    </label>
+                </div>
+                <div class="staff-form-group">
+                    <label class="staff-checkbox-label">
+                        <input type="checkbox" id="staff-product-sale">
+                        On Sale
+                    </label>
+                </div>
+                <div class="staff-form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeStaffModal('staff-product-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Staff Delete Modal -->
+    <div class="staff-modal" id="staff-delete-modal">
+        <div class="staff-modal-overlay" onclick="closeStaffModal('staff-delete-modal')"></div>
+        <div class="staff-modal-content staff-modal-sm">
+            <div class="staff-modal-header">
+                <h3>Delete Product</h3>
+                <button class="staff-modal-close" onclick="closeStaffModal('staff-delete-modal')">&times;</button>
+            </div>
+            <div class="staff-modal-body" style="text-align: center;">
+                <p>Are you sure you want to delete "<span id="staff-delete-name"></span>"?</p>
+                <p style="color: var(--red-accent); font-size: 0.875rem; margin-top: 0.5rem;">This action cannot be undone.</p>
+                <input type="hidden" id="staff-delete-id">
+                <div class="staff-form-actions" style="justify-content: center;">
+                    <button class="btn btn-secondary" onclick="closeStaffModal('staff-delete-modal')">Cancel</button>
+                    <button class="btn btn-danger" id="staff-confirm-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Scanner Modal -->
+    <div class="staff-modal" id="staff-scanner-modal">
+        <div class="staff-modal-overlay" onclick="closeStaffScannerModal()"></div>
+        <div class="staff-modal-content" style="max-width: 520px;">
+            <div class="staff-modal-header">
+                <h3>Barcode Scanner</h3>
+                <button class="staff-modal-close" onclick="closeStaffScannerModal()">&times;</button>
+            </div>
+            <div class="staff-modal-body">
+                <!-- Camera Scanner Section -->
+                <div id="staff-camera-section" style="margin-bottom: 1.5rem;">
+                    <div id="staff-camera-container" style="position: relative; width: 100%; aspect-ratio: 4/3; background: var(--gray-900); border-radius: 8px; overflow: hidden; display: none;">
+                        <video id="staff-camera-video" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+                            <div style="width: 70%; height: 40%; border: 2px solid rgba(255,255,255,0.5); border-radius: 8px;"></div>
+                        </div>
+                        <div id="staff-camera-status" style="position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; color: #fff; font-size: 0.8rem; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Scanning...</div>
+                    </div>
+                    <div id="staff-camera-placeholder" style="text-align: center; padding: 1.5rem 0;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="1.5" style="margin-bottom: 0.75rem;">
+                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                            <line x1="7" y1="12" x2="17" y2="12"></line>
+                        </svg>
+                        <p style="color: var(--gray-400); font-size: 0.9rem; margin-bottom: 1rem;">Use your camera to scan a barcode, or enter one manually below.</p>
+                        <button class="btn btn-secondary" id="staff-start-camera" style="gap: 6px; display: inline-flex; align-items: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Start Camera
+                        </button>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="staff-stop-camera" style="width: 100%; display: none; margin-top: 0.5rem;">Stop Camera</button>
+                </div>
+
+                <!-- Manual Entry -->
+                <div style="text-align: left;">
+                    <div class="staff-form-group">
+                        <label for="staff-manual-barcode">Manual Barcode Entry</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="staff-manual-barcode" placeholder="Enter or scan barcode..." style="flex: 1;">
+                            <button class="btn btn-primary" id="staff-lookup-barcode">Look Up</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="staff-scan-loading" style="display: none; text-align: center; padding: 1.5rem 0;">
+                    <div style="width: 32px; height: 32px; border: 3px solid var(--gray-700); border-top-color: var(--blue-primary); border-radius: 50%; animation: staffSpin 0.8s linear infinite; margin: 0 auto 0.75rem;"></div>
+                    <p style="color: var(--gray-400); font-size: 0.9rem;">Looking up barcode...</p>
+                </div>
+
+                <!-- Result: Product Found -->
+                <div id="staff-scan-found" style="display: none; background: var(--gray-800); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                    <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 1rem;">
+                        <img id="staff-scan-found-img" src="" alt="" style="width: 64px; height: 64px; object-fit: cover; border-radius: 6px; background: var(--gray-700); display: none;">
+                        <div style="flex: 1; text-align: left;">
+                            <p style="color: var(--gray-300); font-weight: 600; font-size: 1rem;" id="staff-scan-found-name"></p>
+                            <p style="color: var(--gray-400); font-size: 0.8rem;" id="staff-scan-found-brand"></p>
+                            <p style="color: var(--gray-400); font-size: 0.8rem;" id="staff-scan-found-barcode"></p>
+                        </div>
+                    </div>
+                    <div id="staff-scan-found-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 1rem; font-size: 0.85rem;">
+                    </div>
+                    <button class="btn btn-primary" id="staff-fill-from-scan" style="width: 100%;">Fill Product Form</button>
+                </div>
+
+                <!-- Result: Not Found -->
+                <div id="staff-scan-notfound" style="display: none; background: var(--gray-800); border-radius: 8px; padding: 1rem; margin-top: 1rem; text-align: center;">
+                    <p style="color: var(--gray-300); margin-bottom: 0.25rem;">Barcode: <strong id="staff-scan-result-barcode"></strong></p>
+                    <p style="color: var(--gray-400); font-size: 0.875rem; margin-bottom: 1rem;">No product information found for this barcode.</p>
+                    <button class="btn btn-primary btn-sm" id="staff-add-scanned">+ Add as New Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Toast Container -->
+    <div class="staff-toast-container" id="staff-toast-container"></div>
+
     <!-- Did We Make Your Day Better Section -->
     <section class="love-question-section">
         <div class="question-container container">
@@ -2670,7 +3081,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2022 Party Palace. All rights reserved.</p>
+                <p>&copy; 2022 Party Palace. All rights reserved. <a href="#" onclick="navigate('staff'); return false;" style="color: var(--gray-500); font-size: 0.8rem; margin-left: 1rem; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Staff Portal</a></p>
                 <div class="footer-credit" style="margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; opacity: 0.8;">
                     <span style="font-size: 0.85rem; color: var(--gray-400);">Created by</span>
                     <a href="https://www.onesquads.com" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 0.4rem; text-decoration: none; color: var(--gray-300); transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'">
@@ -2881,7 +3292,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 1;
             transition: opacity 0.2s ease;
         `;
         document.body.appendChild(canvas);
@@ -2899,24 +3310,24 @@
         const tubeColors = ['#f967fb', '#53bc28', '#6958d5'];
         const lightColors = ['#83f36e', '#fe8a2e', '#ff008a', '#60aed5'];
 
-        // Create multiple tubes with different delays
+        // Create multiple tubes with different delays (more subtle settings)
         const tubes = tubeColors.map((color, index) => ({
             color: color,
             lightColor: lightColors[index % lightColors.length],
             trail: [],
-            offset: index * 3,
+            offset: index * 2,
             phase: (index * Math.PI * 2) / tubeColors.length,
-            amplitude: 8 + index * 4
+            amplitude: 4 + index * 2
         }));
 
-        const maxTrailLength = 50;
+        const maxTrailLength = 25;
         let mouseX = -100;
         let mouseY = -100;
         let isHidden = false;
         let time = 0;
 
-        // Hide cursor trail on specific elements
-        const hideSelectors = '.product-card, .product-image, .nav-left button, .nav-right-links button, .logo, .cart-icon-btn, .mobile-menu-toggle, .social-wrapper, .btn, button, a, input, select, textarea';
+        // Hide cursor trail on interactive and text elements (for better text selection)
+        const hideSelectors = '.product-card, .product-image, .nav-left button, .nav-right-links button, .logo, .cart-icon-btn, .mobile-menu-toggle, .social-wrapper, .btn, button, a, input, select, textarea, p, span, h1, h2, h3, h4, h5, h6, li, label, .product-info, .product-name, .product-description, .product-price';
 
         document.addEventListener('mouseover', (e) => {
             if (e.target.closest(hideSelectors)) {
@@ -2957,8 +3368,8 @@
             const rgb = hexToRgb(tube.color);
             const lightRgb = hexToRgb(tube.lightColor);
 
-            // Draw outer glow layers
-            for (let glowLayer = 4; glowLayer >= 0; glowLayer--) {
+            // Draw outer glow layers (reduced for subtlety)
+            for (let glowLayer = 2; glowLayer >= 0; glowLayer--) {
                 ctx.beginPath();
                 const startPoint = trail[0];
                 ctx.moveTo(startPoint.x, startPoint.y);
@@ -2972,10 +3383,10 @@
                 const lastPoint = trail[trail.length - 1];
                 ctx.lineTo(lastPoint.x, lastPoint.y);
 
-                const glowSize = 3 + glowLayer * 5;
-                const glowAlpha = glowLayer === 0 ? 0.6 : (0.15 / (glowLayer + 1));
+                const glowSize = 2 + glowLayer * 3;
+                const glowAlpha = glowLayer === 0 ? 0.4 : (0.1 / (glowLayer + 1));
 
-                const mixFactor = glowLayer / 4;
+                const mixFactor = glowLayer / 2;
                 const glowR = Math.round(rgb.r * (1 - mixFactor) + lightRgb.r * mixFactor);
                 const glowG = Math.round(rgb.g * (1 - mixFactor) + lightRgb.g * mixFactor);
                 const glowB = Math.round(rgb.b * (1 - mixFactor) + lightRgb.b * mixFactor);
@@ -2987,7 +3398,7 @@
                 ctx.stroke();
             }
 
-            // Draw the bright core
+            // Draw the core line (more subtle)
             for (let i = 0; i < trail.length - 1; i++) {
                 const point = trail[i];
                 const nextPoint = trail[i + 1];
@@ -2997,29 +3408,29 @@
                 ctx.moveTo(point.x, point.y);
                 ctx.lineTo(nextPoint.x, nextPoint.y);
 
-                const coreAlpha = 0.3 + progress * 0.7;
-                const coreBrightness = 0.7 + progress * 0.3;
+                const coreAlpha = 0.2 + progress * 0.5;
+                const coreBrightness = 0.8 + progress * 0.2;
 
-                const coreR = Math.min(255, Math.round(rgb.r * coreBrightness + 80 * progress));
-                const coreG = Math.min(255, Math.round(rgb.g * coreBrightness + 80 * progress));
-                const coreB = Math.min(255, Math.round(rgb.b * coreBrightness + 80 * progress));
+                const coreR = Math.min(255, Math.round(rgb.r * coreBrightness + 40 * progress));
+                const coreG = Math.min(255, Math.round(rgb.g * coreBrightness + 40 * progress));
+                const coreB = Math.min(255, Math.round(rgb.b * coreBrightness + 40 * progress));
 
                 ctx.strokeStyle = `rgba(${coreR}, ${coreG}, ${coreB}, ${coreAlpha})`;
-                ctx.lineWidth = 2 + progress * 2;
+                ctx.lineWidth = 1.5 + progress * 1.5;
                 ctx.lineCap = 'round';
                 ctx.stroke();
             }
 
-            // Draw bright tip
+            // Draw subtle tip
             if (trail.length > 0) {
                 const tip = trail[trail.length - 1];
-                const tipGradient = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 15);
-                tipGradient.addColorStop(0, `rgba(255, 255, 255, 0.9)`);
-                tipGradient.addColorStop(0.3, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`);
+                const tipGradient = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 8);
+                tipGradient.addColorStop(0, `rgba(255, 255, 255, 0.6)`);
+                tipGradient.addColorStop(0.4, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`);
                 tipGradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
 
                 ctx.beginPath();
-                ctx.arc(tip.x, tip.y, 15, 0, Math.PI * 2);
+                ctx.arc(tip.x, tip.y, 8, 0, Math.PI * 2);
                 ctx.fillStyle = tipGradient;
                 ctx.fill();
             }
@@ -3048,7 +3459,7 @@
                     }
 
                     const now = Date.now();
-                    while (tube.trail.length > 0 && now - tube.trail[0].time > 400) {
+                    while (tube.trail.length > 0 && now - tube.trail[0].time > 250) {
                         tube.trail.shift();
                     }
 

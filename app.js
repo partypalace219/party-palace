@@ -3,7 +3,7 @@
         let products = [];
         
         // Fetch products from Supabase on page load
-        async function loadProducts() {
+        async function loadProducts(skipInit) {
             try {
                 const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products?select=*', {
                     headers: {
@@ -11,9 +11,9 @@
                         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
                     }
                 });
-                
+
                 const dbProducts = await response.json();
-                
+
                 // Transform database products to match app format
                 products = dbProducts.map(p => ({
                     id: p.id,
@@ -24,18 +24,25 @@
                     description: p.description,
                     icon: p.emoji,
                     popular: p.featured,
+                    image_url: p.image_url,
                     hasGallery: true
                 }));
-                
-                // Attach images from productGalleryImages if available
-                if (typeof productGalleryImages !== 'undefined') {
-                    products.forEach(product => {
+
+                // Attach images from productGalleryImages if available,
+                // fall back to image_url from database
+                products.forEach(product => {
+                    if (typeof productGalleryImages !== 'undefined') {
                         const images = productGalleryImages[product.name];
                         if (images && images.length > 0) {
                             product.images = images;
+                            return;
                         }
-                    });
-                }
+                    }
+                    // Fallback: use the image_url from the database
+                    if (product.image_url) {
+                        product.images = [product.image_url];
+                    }
+                });
 
                 // Set popular products (override database values)
                 const popularProducts = ['Specialty Arch', 'Chiara Arch', 'Spiral Columns', 'Flower Walls', 'Balloon Centerpieces', 'Vases'];
@@ -50,22 +57,33 @@
                 products = products.concat(prints3dProducts);
 
                 console.log('Loaded', products.length, 'products (including engraving and 3D prints)');
-                
-                // Initialize the app after products are loaded
-                initializeApp();
+
+                // Initialize the app after products are loaded (skip when refreshing from staff portal)
+                if (!skipInit) {
+                    initializeApp();
+                }
             } catch (error) {
                 console.error('Error loading products from Supabase:', error);
                 // Fallback to empty array if fetch fails
                 products = [];
+                // Still initialize the app so event listeners are set up
+                if (!skipInit) {
+                    initializeApp();
+                }
             }
         }
 
         // Wait for DOM to be ready, then load products
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadProducts);
+            document.addEventListener('DOMContentLoaded', function() {
+                loadProducts();
+                // Initialize staff portal immediately so login works even if products are loading
+                initStaffPortal();
+            });
         } else {
             // DOM already loaded
             loadProducts();
+            initStaffPortal();
         }
 
         // Hero Slideshow
@@ -2385,7 +2403,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             } else {
                 // Fallback: check URL hash
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success', 'staff'];
 
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
@@ -2413,7 +2431,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (event.persisted) {
                 // Page was restored from bfcache - sync display with URL
                 const hash = window.location.hash.replace('#', '');
-                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
+                const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success', 'staff'];
 
                 // Check if it's a product page
                 if (hash && hash.startsWith('product-')) {
@@ -2437,7 +2455,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         // On page load, check if there's a hash in the URL and navigate to that page
         function initPageFromHash() {
             const hash = window.location.hash.replace('#', '');
-            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success'];
+            const validPages = ['home', 'partydecor', 'services', 'gallery', 'partyrentals', 'prints3d', 'engraving', 'jewelry', 'contact', 'checkout', 'checkout-success', 'staff'];
 
             // Check if it's a product page (hash starts with "product-")
             if (hash && hash.startsWith('product-')) {
@@ -2499,16 +2517,18 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             
             // Check if product has real images
             const hasImages = product.images && product.images.length > 0;
+            const hasSecondImage = product.images && product.images.length > 1;
             const imageContent = hasImages
-                ? `<img src="${product.images[0]}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">`
+                ? `<img src="${product.images[0]}" alt="${product.name}" class="primary-image" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">${hasSecondImage ? `<img src="${product.images[1]}" alt="${product.name} alternate view" class="secondary-image">` : ''}`
                 : `<span>${product.icon}</span>`;
             const imageStyle = hasImages
-                ? 'overflow: hidden; background: var(--gray-50);'
+                ? 'background: var(--gray-50);'
                 : `background: ${gradients[product.category]}`;
+            const imageClass = hasSecondImage ? 'has-secondary' : '';
             
             return `
                 <div class="product-card product-card-clickable" onclick="navigateToProduct('${productSlug}')" data-product-slug="${productSlug}">
-                    <div class="product-image" style="${imageStyle}">
+                    <div class="product-image ${imageClass}" style="${imageStyle}">
                         ${imageContent}
                         ${product.popular ? '<div class="product-badge">Popular</div>' : ''}
                     </div>
@@ -4221,4 +4241,947 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     }
                 });
             }
+
+            // Initialize staff portal
+            initStaffPortal();
+        }
+
+        // ============================================
+        // STAFF PORTAL FUNCTIONS
+        // ============================================
+
+        let staffProducts = [];
+        let staffCurrentFilter = 'all';
+        let staffUser = null;
+        let staffPortalInitialized = false;
+
+        function initStaffPortal() {
+            if (staffPortalInitialized) return;
+            staffPortalInitialized = true;
+
+            // Login form
+            const loginForm = document.getElementById('staff-login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleStaffLogin);
+            }
+
+            // Logout button
+            const logoutBtn = document.getElementById('staff-logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleStaffLogout);
+            }
+
+            // Add product button
+            const addBtn = document.getElementById('staff-add-product-btn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openStaffProductModal();
+                });
+            }
+
+            // Scan barcode button
+            const scanBtn = document.getElementById('staff-scan-btn');
+            if (scanBtn) {
+                scanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openStaffScannerModal();
+                });
+            }
+
+            // Product form
+            const productForm = document.getElementById('staff-product-form');
+            if (productForm) {
+                productForm.addEventListener('submit', handleStaffProductSubmit);
+            }
+
+            // Delete confirmation
+            const deleteBtn = document.getElementById('staff-confirm-delete');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', handleStaffDeleteProduct);
+            }
+
+            // Filter buttons - use delegation
+            const filtersContainer = document.getElementById('staff-filters');
+            if (filtersContainer) {
+                filtersContainer.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.staff-filter-btn');
+                    if (btn) {
+                        document.querySelectorAll('.staff-filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        staffCurrentFilter = btn.dataset.category;
+                        renderStaffProducts();
+                    }
+                });
+            }
+
+            // Scanner: Start camera button
+            const startCamBtn = document.getElementById('staff-start-camera');
+            if (startCamBtn) {
+                startCamBtn.addEventListener('click', startBarcodeCamera);
+            }
+
+            // Scanner: Stop camera button
+            const stopCamBtn = document.getElementById('staff-stop-camera');
+            if (stopCamBtn) {
+                stopCamBtn.addEventListener('click', stopBarcodeCamera);
+            }
+
+            // Scanner: Manual lookup
+            const lookupBtn = document.getElementById('staff-lookup-barcode');
+            if (lookupBtn) {
+                lookupBtn.addEventListener('click', function() {
+                    const barcode = document.getElementById('staff-manual-barcode').value.trim();
+                    if (barcode) {
+                        lookupBarcode(barcode);
+                    }
+                });
+            }
+
+            // Scanner: Enter key on barcode input
+            const barcodeInput = document.getElementById('staff-manual-barcode');
+            if (barcodeInput) {
+                barcodeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const barcode = this.value.trim();
+                        if (barcode) lookupBarcode(barcode);
+                    }
+                });
+            }
+
+            // Scanner: Fill form from scanned product
+            const fillBtn = document.getElementById('staff-fill-from-scan');
+            if (fillBtn) {
+                fillBtn.addEventListener('click', fillFormFromScan);
+            }
+
+            // Scanner: Add as new product (not found case)
+            const addScannedBtn = document.getElementById('staff-add-scanned');
+            if (addScannedBtn) {
+                addScannedBtn.addEventListener('click', function() {
+                    const barcode = document.getElementById('staff-scan-result-barcode').textContent;
+                    closeStaffScannerModal();
+                    openStaffProductModal();
+                    document.getElementById('staff-product-name').value = '';
+                    document.getElementById('staff-product-description').value = 'Barcode: ' + barcode;
+                });
+            }
+
+            // Check if already logged in
+            checkStaffAuth();
+
+            console.log('Staff portal initialized');
+        }
+
+        async function checkStaffAuth() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    staffUser = session.user;
+                    showStaffDashboard();
+                }
+            } catch (error) {
+                console.log('Staff auth check:', error);
+            }
+        }
+
+        async function handleStaffLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('staff-email').value;
+            const password = document.getElementById('staff-password').value;
+            const errorEl = document.getElementById('staff-login-error');
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                staffUser = data.user;
+                errorEl.style.display = 'none';
+                showStaffDashboard();
+                showStaffToast('Welcome back!', 'success');
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.style.display = 'block';
+            }
+        }
+
+        async function handleStaffLogout() {
+            await supabaseClient.auth.signOut();
+            staffUser = null;
+            document.getElementById('staff-auth-section').style.display = 'block';
+            document.getElementById('staff-dashboard-section').style.display = 'none';
+            showStaffToast('Logged out successfully');
+        }
+
+        async function showStaffDashboard() {
+            document.getElementById('staff-auth-section').style.display = 'none';
+            document.getElementById('staff-dashboard-section').style.display = 'block';
+
+            // Reset filter state
+            staffCurrentFilter = 'all';
+
+            // Update user info
+            const email = staffUser?.email || 'Staff';
+            const name = email.split('@')[0];
+            document.getElementById('staff-user-name').textContent = name;
+            document.getElementById('staff-user-email').textContent = email;
+
+            // Load products
+            await loadStaffProducts();
+            updateStaffStats();
+            populateStaffFilters();
+            renderStaffProducts();
+        }
+
+        async function loadStaffProducts() {
+            try {
+                const { data: dbProducts, error } = await supabaseClient
+                    .from('products')
+                    .select('*');
+
+                if (error) throw error;
+
+                console.log('[STAFF LOAD] First product raw:', dbProducts[0]);
+
+                // Load products from Supabase
+                staffProducts = dbProducts.map(p => {
+                    // Get first image from productGalleryImages if available
+                    let image = p.image_url || null;
+                    if (typeof productGalleryImages !== 'undefined' && productGalleryImages[p.name]) {
+                        image = productGalleryImages[p.name][0];
+                    }
+                    return {
+                        id: p.id,
+                        name: p.name,
+                        category: p.category,
+                        price: p.price || 0,
+                        cost: p.cost || 0,
+                        description: p.description,
+                        emoji: p.emoji,
+                        featured: p.featured,
+                        sale: p.sale || false,
+                        image: image,
+                        image_url: p.image_url || null,
+                        source: 'supabase'
+                    };
+                });
+
+                // Also add engraving products (from local data)
+                if (typeof engravingProducts !== 'undefined') {
+                    engravingProducts.forEach((p, idx) => {
+                        staffProducts.push({
+                            id: 'eng-' + idx,
+                            name: p.name,
+                            category: 'engraving',
+                            price: p.price || 0,
+                            cost: 0,
+                            description: p.description,
+                            emoji: '🪵',
+                            featured: p.popular || false,
+                            sale: false,
+                            image: p.images ? p.images[0] : null,
+                            source: 'local'
+                        });
+                    });
+                }
+
+                // Also add 3D prints products (from local data)
+                if (typeof prints3dProducts !== 'undefined') {
+                    prints3dProducts.forEach((p, idx) => {
+                        staffProducts.push({
+                            id: 'print-' + idx,
+                            name: p.name,
+                            category: 'prints3d',
+                            price: p.price || 0,
+                            cost: 0,
+                            description: p.description,
+                            emoji: '🖨️',
+                            featured: p.popular || false,
+                            sale: false,
+                            image: p.images ? p.images[0] : null,
+                            source: 'local'
+                        });
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error loading staff products:', error);
+                showStaffToast('Failed to load products', 'error');
+            }
+        }
+
+        function updateStaffStats() {
+            document.getElementById('staff-total-products').textContent = staffProducts.length;
+
+            const totalValue = staffProducts.reduce((sum, p) => sum + (p.price || 0), 0);
+            document.getElementById('staff-inventory-value').textContent = '$' + totalValue.toLocaleString();
+
+            const saleCount = staffProducts.filter(p => p.sale).length;
+            document.getElementById('staff-on-sale').textContent = saleCount;
+
+            const newCount = staffProducts.filter(p => p.featured).length;
+            document.getElementById('staff-new-arrivals').textContent = newCount;
+
+            // Profit calculations
+            const totalRevenue = staffProducts.reduce((sum, p) => sum + (p.price || 0), 0);
+            const totalCost = staffProducts.reduce((sum, p) => sum + (p.cost || 0), 0);
+            const totalProfit = totalRevenue - totalCost;
+            const profitMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : 0;
+
+            document.getElementById('staff-total-revenue').textContent = '$' + totalRevenue.toFixed(2);
+            document.getElementById('staff-total-cost').textContent = '$' + totalCost.toFixed(2);
+            document.getElementById('staff-total-profit').textContent = '$' + totalProfit.toFixed(2);
+            document.getElementById('staff-profit-margin').textContent = profitMargin + '%';
+        }
+
+        function populateStaffFilters() {
+            const filtersContainer = document.getElementById('staff-filters');
+            const categories = [...new Set(staffProducts.map(p => p.category))].sort();
+
+            filtersContainer.innerHTML = '<button class="staff-filter-btn active" data-category="all">ALL</button>';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'staff-filter-btn';
+                btn.dataset.category = cat;
+                btn.textContent = cat.toUpperCase();
+                filtersContainer.appendChild(btn);
+            });
+        }
+
+        function renderStaffProducts() {
+            const tbody = document.getElementById('staff-table-body');
+            const emptyState = document.getElementById('staff-empty');
+            const table = document.getElementById('staff-table');
+            const resultsText = document.getElementById('staff-filter-results');
+
+            let filteredProducts = staffProducts;
+            if (staffCurrentFilter !== 'all') {
+                filteredProducts = staffProducts.filter(p => p.category === staffCurrentFilter);
+            }
+
+            if (filteredProducts.length === 0) {
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                resultsText.textContent = staffCurrentFilter === 'all'
+                    ? 'No products found'
+                    : `No products in ${staffCurrentFilter}`;
+                return;
+            }
+
+            table.style.display = 'table';
+            emptyState.style.display = 'none';
+            resultsText.textContent = staffCurrentFilter === 'all'
+                ? `Showing all ${filteredProducts.length} products`
+                : `Showing ${filteredProducts.length} products in ${staffCurrentFilter}`;
+
+            tbody.innerHTML = filteredProducts.map(product => {
+                const profit = (product.price || 0) - (product.cost || 0);
+                const profitClass = profit >= 0 ? 'positive' : 'negative';
+                const status = product.featured ? 'new' : (product.sale ? 'sale' : 'regular');
+                const statusText = product.featured ? 'NEW' : (product.sale ? 'SALE' : 'REGULAR');
+
+                return `
+                    <tr>
+                        <td>
+                            ${product.image
+                                ? `<img src="${product.image}" alt="${product.name}" class="staff-table-thumb">`
+                                : `<div class="staff-table-thumb-placeholder">${product.emoji || '📦'}</div>`
+                            }
+                        </td>
+                        <td><strong style="cursor: pointer; text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color 0.2s;" onmouseover="this.style.textDecorationColor='currentColor'" onmouseout="this.style.textDecorationColor='transparent'" onclick="editStaffProduct('${String(product.id).replace(/'/g, "\\'")}')">${product.name}</strong></td>
+                        <td><span class="staff-category-tag">${product.category}</span></td>
+                        <td class="staff-cost-cell">$${(product.cost || 0).toFixed(2)}</td>
+                        <td class="staff-price-cell">$${(product.price || 0).toFixed(2)}</td>
+                        <td class="staff-profit-cell ${profitClass}">$${profit.toFixed(2)}</td>
+                        <td><span class="staff-status-badge ${status}">${statusText}</span></td>
+                        <td>
+                            <div class="staff-actions-cell">
+                                <button class="staff-action-btn" onclick="editStaffProduct('${String(product.id).replace(/'/g, "\\'")}')" title="Edit">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="staff-action-btn delete" onclick="confirmStaffDelete('${String(product.id).replace(/'/g, "\\'")}', '${product.name.replace(/'/g, "\\'")}')" title="Delete">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Staff Modal Functions
+        function openStaffModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStaffModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openStaffProductModal(product = null) {
+            const form = document.getElementById('staff-product-form');
+            const title = document.getElementById('staff-modal-title');
+
+            form.reset();
+            removeStaffImage();
+
+            if (product) {
+                title.textContent = 'Edit Product';
+                staffEditingProductId = product.id;
+                document.getElementById('staff-product-id').value = product.id;
+                document.getElementById('staff-product-name').value = product.name;
+                document.getElementById('staff-product-category').value = product.category;
+                document.getElementById('staff-product-price').value = product.price;
+                document.getElementById('staff-product-cost').value = product.cost > 0 ? product.cost : '';
+                document.getElementById('staff-product-description').value = product.description || '';
+                document.getElementById('staff-product-emoji').value = product.emoji || '';
+                document.getElementById('staff-product-image').value = product.image_url || product.image || '';
+                document.getElementById('staff-product-featured').checked = product.featured;
+                document.getElementById('staff-product-sale').checked = product.sale;
+            } else {
+                title.textContent = 'Add New Product';
+                staffEditingProductId = null;
+                document.getElementById('staff-product-id').value = '';
+            }
+
+            openStaffModal('staff-product-modal');
+        }
+
+        function editStaffProduct(id) {
+            const product = staffProducts.find(p => String(p.id) === String(id));
+            if (product) {
+                if (product.source === 'local') {
+                    showStaffToast('Local products (engraving/3D prints) are managed in the code and cannot be edited here.', 'error');
+                    return;
+                }
+                openStaffProductModal(product);
+            } else {
+                showStaffToast('Product not found', 'error');
+            }
+        }
+
+        function confirmStaffDelete(id, name) {
+            const product = staffProducts.find(p => String(p.id) === String(id));
+            if (product && product.source === 'local') {
+                showStaffToast('Local products (engraving/3D prints) are managed in the code and cannot be deleted here.', 'error');
+                return;
+            }
+            document.getElementById('staff-delete-id').value = id;
+            document.getElementById('staff-delete-name').textContent = name;
+            openStaffModal('staff-delete-modal');
+        }
+
+
+        let staffEditingProductId = null;
+
+        async function handleStaffProductSubmit(e) {
+            e.preventDefault();
+
+            const id = staffEditingProductId;
+            const isEditing = id != null;
+
+            const productData = {
+                name: document.getElementById('staff-product-name').value,
+                category: document.getElementById('staff-product-category').value,
+                price: parseFloat(document.getElementById('staff-product-price').value) || 0,
+                cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
+                sale: document.getElementById('staff-product-sale').checked,
+                description: document.getElementById('staff-product-description').value,
+                emoji: document.getElementById('staff-product-emoji').value,
+                featured: document.getElementById('staff-product-featured').checked,
+                image_url: document.getElementById('staff-product-image').value || null
+            };
+
+            try {
+                if (isEditing) {
+                    // Update existing product
+                    const { data, error } = await supabaseClient
+                        .from('products')
+                        .update(productData)
+                        .eq('id', id)
+                        .select();
+
+                    if (error) throw error;
+
+                    if (!data || data.length === 0) {
+                        // Update matched no rows — likely an RLS policy issue
+                        showStaffToast('Update blocked — go to Supabase > Authentication > Policies and add an UPDATE policy for the products table', 'error');
+                        return;
+                    }
+                } else {
+                    // Insert new product
+                    const { data, error } = await supabaseClient
+                        .from('products')
+                        .insert(productData)
+                        .select();
+
+                    if (error) throw error;
+                }
+
+                staffEditingProductId = null;
+                showStaffToast(isEditing ? 'Product updated!' : 'Product added!', 'success');
+                closeStaffModal('staff-product-modal');
+                await loadStaffProducts();
+                updateStaffStats();
+                populateStaffFilters();
+                renderStaffProducts();
+
+                // Reload main site products without re-initializing the app (stay on staff page)
+                await loadProducts(true);
+                if (typeof renderCatalog === 'function') renderCatalog();
+                if (typeof renderServices === 'function') renderServices();
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showStaffToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function handleStaffDeleteProduct() {
+            const id = document.getElementById('staff-delete-id').value;
+
+            if (!id) {
+                showStaffToast('No product selected for deletion', 'error');
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('products')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                closeStaffModal('staff-delete-modal');
+                showStaffToast('Product deleted', 'success');
+                await loadStaffProducts();
+                updateStaffStats();
+                populateStaffFilters();
+                renderStaffProducts();
+
+                // Reload main site products without re-initializing the app (stay on staff page)
+                await loadProducts(true);
+                if (typeof renderCatalog === 'function') renderCatalog();
+                if (typeof renderServices === 'function') renderServices();
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showStaffToast('Failed to delete product', 'error');
+            }
+        }
+
+        function showStaffToast(message, type = '') {
+            const container = document.getElementById('staff-toast-container');
+            const toast = document.createElement('div');
+            toast.className = `staff-toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Staff Image Upload Functions
+        function switchStaffImageTab(tab) {
+            document.querySelectorAll('.staff-image-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.staff-image-panel').forEach(p => p.classList.remove('active'));
+
+            document.querySelector(`.staff-image-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`staff-${tab}-panel`).classList.add('active');
+        }
+
+        function handleStaffFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showStaffToast('Please select an image file', 'error');
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                document.getElementById('staff-preview-img').src = e.target.result;
+                document.getElementById('staff-upload-preview').style.display = 'block';
+                document.getElementById('staff-upload-placeholder').style.display = 'none';
+
+                // Upload to Supabase Storage
+                showStaffToast('Uploading image...', '');
+                try {
+                    const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+                    const { data, error } = await supabaseClient.storage
+                        .from('product-images')
+                        .upload(fileName, file, {
+                            cacheControl: '3600',
+                            upsert: true
+                        });
+
+                    if (error) throw error;
+
+                    // Get public URL
+                    const { data: urlData } = supabaseClient.storage
+                        .from('product-images')
+                        .getPublicUrl(fileName);
+
+                    // Set the URL in the input
+                    document.getElementById('staff-product-image').value = urlData.publicUrl;
+                    showStaffToast('Image uploaded!', 'success');
+                } catch (uploadError) {
+                    console.error('Upload error:', uploadError);
+                    // Try using a signed URL approach as fallback
+                    try {
+                        const fallbackName = `product-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${file.name.split('.').pop()}`;
+                        const { data: fallbackData, error: fallbackErr } = await supabaseClient.storage
+                            .from('product-images')
+                            .upload(fallbackName, file, { upsert: true });
+
+                        if (!fallbackErr) {
+                            const { data: urlData } = supabaseClient.storage
+                                .from('product-images')
+                                .getPublicUrl(fallbackName);
+                            document.getElementById('staff-product-image').value = urlData.publicUrl;
+                            showStaffToast('Image uploaded!', 'success');
+                        } else {
+                            throw fallbackErr;
+                        }
+                    } catch (fallbackError) {
+                        console.error('Fallback upload error:', fallbackError);
+                        showStaffToast('Image upload failed — using preview as fallback', 'error');
+                        document.getElementById('staff-product-image').value = e.target.result;
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeStaffImage() {
+            document.getElementById('staff-preview-img').src = '';
+            document.getElementById('staff-upload-preview').style.display = 'none';
+            document.getElementById('staff-upload-placeholder').style.display = 'flex';
+            document.getElementById('staff-file-input').value = '';
+            document.getElementById('staff-product-image').value = '';
+        }
+
+        // Setup drag and drop for file upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('staff-file-upload');
+            if (uploadArea) {
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    if (e.dataTransfer.files.length) {
+                        document.getElementById('staff-file-input').files = e.dataTransfer.files;
+                        handleStaffFileSelect({ target: { files: e.dataTransfer.files } });
+                    }
+                });
+            }
+        });
+
+        // ============================================
+        // BARCODE SCANNER FUNCTIONS
+        // ============================================
+
+        let scannerStream = null;
+        let scannerInterval = null;
+        let lastScannedBarcode = null;
+        let lastScannedProductData = null;
+
+        function openStaffScannerModal() {
+            // Reset scanner state
+            resetScannerUI();
+            openStaffModal('staff-scanner-modal');
+            // Auto-focus the barcode input so physical scanners work immediately
+            setTimeout(() => {
+                document.getElementById('staff-manual-barcode').focus();
+            }, 100);
+        }
+
+        function closeStaffScannerModal() {
+            stopBarcodeCamera();
+            closeStaffModal('staff-scanner-modal');
+        }
+
+        function resetScannerUI() {
+            document.getElementById('staff-manual-barcode').value = '';
+            document.getElementById('staff-scan-loading').style.display = 'none';
+            document.getElementById('staff-scan-found').style.display = 'none';
+            document.getElementById('staff-scan-notfound').style.display = 'none';
+            lastScannedBarcode = null;
+            lastScannedProductData = null;
+        }
+
+        async function startBarcodeCamera() {
+            const container = document.getElementById('staff-camera-container');
+            const placeholder = document.getElementById('staff-camera-placeholder');
+            const stopBtn = document.getElementById('staff-stop-camera');
+            const video = document.getElementById('staff-camera-video');
+            const status = document.getElementById('staff-camera-status');
+
+            try {
+                scannerStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+
+                video.srcObject = scannerStream;
+                await video.play();
+
+                container.style.display = 'block';
+                placeholder.style.display = 'none';
+                stopBtn.style.display = 'block';
+                status.textContent = 'Scanning...';
+
+                // Use BarcodeDetector API if available (Chrome/Edge)
+                if ('BarcodeDetector' in window) {
+                    const detector = new BarcodeDetector({
+                        formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'qr_code', 'itf']
+                    });
+
+                    scannerInterval = setInterval(async () => {
+                        try {
+                            const barcodes = await detector.detect(video);
+                            if (barcodes.length > 0) {
+                                const barcode = barcodes[0].rawValue;
+                                status.textContent = 'Found: ' + barcode;
+                                document.getElementById('staff-manual-barcode').value = barcode;
+                                stopBarcodeCamera();
+                                lookupBarcode(barcode);
+                            }
+                        } catch (err) {
+                            // Detection frame error, continue scanning
+                        }
+                    }, 300);
+                } else {
+                    // Fallback: no BarcodeDetector support
+                    status.textContent = 'Camera active — BarcodeDetector not supported in this browser. Please enter barcode manually.';
+                }
+
+            } catch (err) {
+                console.error('Camera error:', err);
+                showStaffToast('Could not access camera: ' + err.message, 'error');
+            }
+        }
+
+        function stopBarcodeCamera() {
+            const container = document.getElementById('staff-camera-container');
+            const placeholder = document.getElementById('staff-camera-placeholder');
+            const stopBtn = document.getElementById('staff-stop-camera');
+            const video = document.getElementById('staff-camera-video');
+
+            if (scannerInterval) {
+                clearInterval(scannerInterval);
+                scannerInterval = null;
+            }
+
+            if (scannerStream) {
+                scannerStream.getTracks().forEach(track => track.stop());
+                scannerStream = null;
+            }
+
+            video.srcObject = null;
+            container.style.display = 'none';
+            placeholder.style.display = 'block';
+            stopBtn.style.display = 'none';
+        }
+
+        async function lookupBarcode(barcode) {
+            lastScannedBarcode = barcode;
+            lastScannedProductData = null;
+
+            // Show loading, hide results
+            document.getElementById('staff-scan-loading').style.display = 'block';
+            document.getElementById('staff-scan-found').style.display = 'none';
+            document.getElementById('staff-scan-notfound').style.display = 'none';
+
+            // 1. Check existing inventory first
+            const localMatch = staffProducts.find(p =>
+                p.name && p.name.toLowerCase().includes(barcode.toLowerCase())
+            );
+
+            if (localMatch) {
+                lastScannedProductData = {
+                    name: localMatch.name,
+                    brand: 'Already in inventory',
+                    category: localMatch.category,
+                    price: localMatch.price,
+                    description: localMatch.description || '',
+                    image: localMatch.image || null,
+                    emoji: localMatch.emoji || '',
+                    barcode: barcode,
+                    source: 'inventory'
+                };
+                showScanResult(lastScannedProductData);
+                return;
+            }
+
+            // 2. Try Open Food Facts API (free, no key needed)
+            try {
+                const offResponse = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(barcode)}.json`);
+                if (offResponse.ok) {
+                    const offData = await offResponse.json();
+                    if (offData.status === 1 && offData.product) {
+                        const p = offData.product;
+                        lastScannedProductData = {
+                            name: p.product_name || p.product_name_en || '',
+                            brand: p.brands || '',
+                            category: guessCategory(p.categories_tags || [], p.product_name || ''),
+                            price: 0,
+                            description: buildDescription(p),
+                            image: p.image_front_url || p.image_url || null,
+                            emoji: '',
+                            barcode: barcode,
+                            source: 'openfoodfacts'
+                        };
+                        showScanResult(lastScannedProductData);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.log('Open Food Facts lookup failed:', err);
+            }
+
+            // 3. Try UPC ItemDB (free tier)
+            try {
+                const upcResponse = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${encodeURIComponent(barcode)}`);
+                if (upcResponse.ok) {
+                    const upcData = await upcResponse.json();
+                    if (upcData.items && upcData.items.length > 0) {
+                        const item = upcData.items[0];
+                        lastScannedProductData = {
+                            name: item.title || '',
+                            brand: item.brand || '',
+                            category: guessCategory([], item.title || ''),
+                            price: item.lowest_recorded_price || item.highest_recorded_price || 0,
+                            description: item.description || '',
+                            image: (item.images && item.images.length > 0) ? item.images[0] : null,
+                            emoji: '',
+                            barcode: barcode,
+                            source: 'upcitemdb'
+                        };
+                        showScanResult(lastScannedProductData);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.log('UPC ItemDB lookup failed:', err);
+            }
+
+            // 4. Nothing found
+            document.getElementById('staff-scan-loading').style.display = 'none';
+            document.getElementById('staff-scan-result-barcode').textContent = barcode;
+            document.getElementById('staff-scan-notfound').style.display = 'block';
+        }
+
+        function guessCategory(tags, name) {
+            const text = (tags.join(' ') + ' ' + name).toLowerCase();
+            if (text.includes('balloon') || text.includes('party') || text.includes('decor')) return 'arches';
+            if (text.includes('centerpiece') || text.includes('vase') || text.includes('flower')) return 'centerpieces';
+            if (text.includes('column') || text.includes('pillar')) return 'columns';
+            if (text.includes('wall') || text.includes('backdrop')) return 'walls';
+            if (text.includes('rental') || text.includes('tent') || text.includes('chair')) return 'rentals';
+            if (text.includes('engrav') || text.includes('wood') || text.includes('laser')) return 'engraving';
+            if (text.includes('3d') || text.includes('print') || text.includes('lithophane')) return 'prints3d';
+            return '';
+        }
+
+        function buildDescription(product) {
+            const parts = [];
+            if (product.brands) parts.push('Brand: ' + product.brands);
+            if (product.quantity) parts.push('Size: ' + product.quantity);
+            if (product.categories) parts.push('Type: ' + product.categories.split(',').slice(0, 2).join(', '));
+            return parts.join(' | ');
+        }
+
+        function showScanResult(data) {
+            document.getElementById('staff-scan-loading').style.display = 'none';
+
+            const foundEl = document.getElementById('staff-scan-found');
+            const imgEl = document.getElementById('staff-scan-found-img');
+            const nameEl = document.getElementById('staff-scan-found-name');
+            const brandEl = document.getElementById('staff-scan-found-brand');
+            const barcodeEl = document.getElementById('staff-scan-found-barcode');
+            const detailsEl = document.getElementById('staff-scan-found-details');
+
+            nameEl.textContent = data.name || 'Unknown Product';
+            brandEl.textContent = data.brand || '';
+            barcodeEl.textContent = 'Barcode: ' + data.barcode;
+
+            if (data.image) {
+                imgEl.src = data.image;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
+
+            // Build detail chips
+            let detailsHtml = '';
+            if (data.category) {
+                detailsHtml += `<div style="background: var(--gray-700); padding: 4px 8px; border-radius: 4px;"><span style="color: var(--gray-400);">Category:</span> <span style="color: var(--gray-200);">${data.category}</span></div>`;
+            }
+            if (data.price) {
+                detailsHtml += `<div style="background: var(--gray-700); padding: 4px 8px; border-radius: 4px;"><span style="color: var(--gray-400);">Price:</span> <span style="color: var(--gray-200);">$${parseFloat(data.price).toFixed(2)}</span></div>`;
+            }
+            if (data.source === 'inventory') {
+                detailsHtml += `<div style="background: rgba(34,197,94,0.13); padding: 4px 8px; border-radius: 4px; color: #22c55e;">Already in inventory</div>`;
+            } else {
+                detailsHtml += `<div style="background: rgba(0,102,255,0.13); padding: 4px 8px; border-radius: 4px; color: #0066FF;">From: ${data.source}</div>`;
+            }
+            detailsEl.innerHTML = detailsHtml;
+
+            foundEl.style.display = 'block';
+        }
+
+        function fillFormFromScan() {
+            if (!lastScannedProductData) return;
+
+            const data = lastScannedProductData;
+            closeStaffScannerModal();
+            openStaffProductModal();
+
+            // Auto-fill all form fields from the scanned data
+            if (data.name) {
+                document.getElementById('staff-product-name').value = data.name;
+            }
+            if (data.category) {
+                document.getElementById('staff-product-category').value = data.category;
+            }
+            if (data.price) {
+                document.getElementById('staff-product-price').value = parseFloat(data.price).toFixed(2);
+            }
+            if (data.description) {
+                document.getElementById('staff-product-description').value = data.description;
+            }
+            if (data.emoji) {
+                document.getElementById('staff-product-emoji').value = data.emoji;
+            }
+            if (data.image) {
+                document.getElementById('staff-product-image').value = data.image;
+            }
+
+            showStaffToast('Form filled from barcode scan', 'success');
         }
