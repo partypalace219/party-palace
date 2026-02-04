@@ -2162,7 +2162,6 @@
             const statusEl = document.getElementById('checkoutFormStatus');
             const submitBtn = document.getElementById('checkoutSubmitBtn');
             const btnText = document.getElementById('checkoutBtnText');
-            const btnLoading = document.getElementById('checkoutBtnLoading');
 
             const paymentType = getPaymentType();
             const paymentAmount = getSelectedPaymentAmount();
@@ -2212,8 +2211,7 @@
             }
 
             submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline';
+            submitBtn.classList.add('animation');
             statusEl.innerHTML = '';
 
             // Calculate shipping, tax, and discount for products
@@ -2251,8 +2249,15 @@
 
                 const { url } = await response.json();
 
-                // Redirect to Stripe Checkout
-                window.location.href = url;
+                // Show truck animation completing then redirect to Stripe
+                setTimeout(() => {
+                    submitBtn.classList.add('done');
+                }, 1800);
+
+                // Redirect to Stripe Checkout after animation
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 2500);
 
             } catch (error) {
                 console.error('Checkout error:', error);
@@ -2269,8 +2274,8 @@
                 `;
 
                 submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
+                submitBtn.classList.remove('animation');
+                submitBtn.classList.remove('done');
             }
         }
 
@@ -2340,6 +2345,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 renderServices();
             } else if (page === 'gallery') {
                 renderGallery();
+            }
+
+            // Reset "Did we make your day better" section when navigating to home
+            if (page === 'home') {
+                resetLoveQuestionSection();
             }
             
             // ============================================

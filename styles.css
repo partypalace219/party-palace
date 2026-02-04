@@ -1318,18 +1318,58 @@
         
         .product-card {
             background: white;
-            border: 1px solid var(--gray-200);
+            border: 2px solid var(--gray-200);
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
-        
+
         .product-card:hover {
-            border-color: var(--blue-primary);
-            box-shadow: 0 8px 30px rgba(0, 102, 255, 0.12);
+            border-color: #dd8448;
             transform: translateY(-4px);
+        }
+
+        /* Electric border SVG container */
+        .electric-border {
+            position: absolute;
+            inset: -4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .product-card:hover .electric-border {
+            opacity: 1;
+        }
+
+        .electric-border svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .electric-border .electric-path {
+            fill: none;
+            stroke: url(#electricGradient);
+            stroke-width: 3;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 3px #dd8448) drop-shadow(0 0 6px #ffb347);
+        }
+
+        .product-card:hover .electric-border .electric-path {
+            animation: electricMove 1.5s linear infinite;
+        }
+
+        @keyframes electricMove {
+            0% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -120;
+            }
         }
         
         .product-image {
@@ -2739,4 +2779,762 @@
     padding: 1rem;
     border-radius: 8px;
     margin-top: 1rem;
+}
+
+/* Social Media Icons with Tooltip */
+.social-wrapper {
+    display: flex;
+    list-style: none;
+    gap: 12px;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.social-wrapper .icon {
+    position: relative;
+    background: var(--white);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.social-wrapper .icon a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: var(--gray-700);
+    transition: color 0.2s ease;
+}
+
+.social-wrapper .icon .tooltip {
+    position: absolute;
+    top: 0;
+    font-size: 13px;
+    background: var(--white);
+    color: var(--white);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    white-space: nowrap;
+}
+
+.social-wrapper .icon .tooltip::before {
+    position: absolute;
+    content: "";
+    height: 8px;
+    width: 8px;
+    background: var(--white);
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.social-wrapper .icon:hover .tooltip {
+    top: -45px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.social-wrapper .icon:hover span,
+.social-wrapper .icon:hover .tooltip {
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.social-wrapper .icon span {
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.social-wrapper .icon:hover a {
+    color: var(--white);
+}
+
+/* Instagram */
+.social-wrapper .icon.instagram:hover,
+.social-wrapper .icon.instagram:hover .tooltip,
+.social-wrapper .icon.instagram:hover .tooltip::before {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: var(--white);
+}
+
+/* Facebook */
+.social-wrapper .icon.facebook:hover,
+.social-wrapper .icon.facebook:hover .tooltip,
+.social-wrapper .icon.facebook:hover .tooltip::before {
+    background: #1877f2;
+    color: var(--white);
+}
+
+/* TikTok */
+.social-wrapper .icon.tiktok:hover,
+.social-wrapper .icon.tiktok:hover .tooltip,
+.social-wrapper .icon.tiktok:hover .tooltip::before {
+    background: #000;
+    color: var(--white);
+}
+
+/* WhatsApp */
+.social-wrapper .icon.whatsapp:hover,
+.social-wrapper .icon.whatsapp:hover .tooltip,
+.social-wrapper .icon.whatsapp:hover .tooltip::before {
+    background: #25d366;
+    color: var(--white);
+}
+
+/* Snapchat */
+.social-wrapper .icon.snapchat:hover,
+.social-wrapper .icon.snapchat:hover .tooltip,
+.social-wrapper .icon.snapchat:hover .tooltip::before {
+    background: #fffc00;
+    color: #000;
+}
+
+.social-wrapper .icon.snapchat:hover a {
+    color: #000;
+}
+
+/* Twitter/X */
+.social-wrapper .icon.twitter:hover,
+.social-wrapper .icon.twitter:hover .tooltip,
+.social-wrapper .icon.twitter:hover .tooltip::before {
+    background: #000;
+    color: var(--white);
+}
+
+/* YouTube */
+.social-wrapper .icon.youtube:hover,
+.social-wrapper .icon.youtube:hover .tooltip,
+.social-wrapper .icon.youtube:hover .tooltip::before {
+    background: #ff0000;
+    color: var(--white);
+}
+
+/* Nav social wrapper adjustments */
+.nav-social.social-wrapper {
+    gap: 8px;
+}
+
+.nav-social.social-wrapper .icon {
+    width: 38px;
+    height: 38px;
+}
+
+.nav-social.social-wrapper .icon span {
+    font-size: 16px;
+}
+
+/* Hide tooltip for nav social icons */
+.nav-social.social-wrapper .icon .tooltip {
+    display: none;
+}
+
+/* Home social section - tooltip at bottom */
+.home-social-section .social-wrapper .icon .tooltip {
+    top: auto;
+    bottom: 0;
+}
+
+.home-social-section .social-wrapper .icon .tooltip::before {
+    bottom: auto;
+    top: -3px;
+}
+
+.home-social-section .social-wrapper .icon:hover .tooltip {
+    top: auto;
+    bottom: -45px;
+}
+
+/* ===================================
+   GLOWING NAVIGATION MENU
+   =================================== */
+.nav-left,
+.nav-right-links {
+    --nav-clr-1: #00ade1;  /* Cyan */
+    --nav-clr-2: #ff6492;  /* Pink */
+    --nav-clr-3: #ffdd1c;  /* Yellow */
+    --nav-clr-4: #00dc82;  /* Green */
+    --nav-clr-5: #dc00d4;  /* Magenta */
+    --nav-clr-6: #ff9500;  /* Orange */
+    --nav-clr-7: #a855f7;  /* Purple */
+}
+
+.nav-left button,
+.nav-right-links button {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Left border indicator */
+.nav-left button::before,
+.nav-right-links button::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    transition: all 0.3s ease;
+}
+
+/* Individual nav item colors - Left nav */
+.nav-left button:nth-child(1) { --glow-color: var(--nav-clr-1); }  /* Home - Cyan */
+.nav-left button:nth-child(2) { --glow-color: var(--nav-clr-2); }  /* Gallery - Pink */
+.nav-left button:nth-child(3) { --glow-color: var(--nav-clr-3); }  /* Party Decor - Yellow */
+.nav-left button:nth-child(4) { --glow-color: var(--nav-clr-4); }  /* Party Rentals - Green */
+
+/* Individual nav item colors - Right nav */
+.nav-right-links button:nth-child(1) { --glow-color: var(--nav-clr-5); }  /* 3D Prints - Magenta */
+.nav-right-links button:nth-child(2) { --glow-color: var(--nav-clr-6); }  /* Engraving - Orange */
+.nav-right-links button:nth-child(3) { --glow-color: var(--nav-clr-7); }  /* Contact - Purple */
+
+/* Active state - subtle underline only, no glow */
+.nav-left button.active::before,
+.nav-right-links button.active::before {
+    width: 100%;
+    background-color: var(--glow-color);
+}
+
+/* Hover effect - show border and glow */
+.nav-left button:hover::before,
+.nav-right-links button:hover::before {
+    width: 100%;
+    background-color: var(--glow-color);
+    box-shadow:
+        0 0 5px var(--glow-color),
+        0 0 10px var(--glow-color),
+        0 0 20px var(--glow-color);
+}
+
+.nav-left button:hover,
+.nav-right-links button:hover {
+    color: var(--glow-color) !important;
+    text-shadow:
+        0 0 5px var(--glow-color),
+        0 0 10px var(--glow-color);
+}
+
+/* ===================================
+   ANIMATED SEARCH BAR
+   =================================== */
+.search-container {
+    --search-bg: rgba(255, 255, 255, 0.1);
+    --search-border: rgba(255, 255, 255, 0.2);
+    --search-text: var(--gray-700);
+    --search-primary: #9333ea;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    margin-right: 8px;
+}
+
+.search-form {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    background: var(--search-bg);
+    border: 2px solid var(--search-border);
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.search-form:focus-within {
+    width: 220px;
+    background: var(--white);
+    border-color: var(--search-primary);
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+.search-input {
+    position: absolute;
+    top: 0;
+    left: 44px;
+    width: calc(100% - 50px);
+    height: 100%;
+    padding: 0 16px 0 8px;
+    border: none;
+    background: transparent;
+    color: var(--search-text);
+    font-size: 0.95rem;
+    outline: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.search-form:focus-within .search-input {
+    opacity: 1;
+}
+
+.search-input::placeholder {
+    color: var(--gray-600);
+}
+
+.search-btn {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-600);
+    transition: all 0.3s ease;
+}
+
+.search-form:focus-within .search-btn {
+    background: var(--search-primary);
+    color: white;
+}
+
+.search-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.search-caret {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    width: 0;
+    height: 2px;
+    background: var(--search-primary);
+    transition: width 0.3s ease;
+}
+
+.search-form:focus-within .search-caret {
+    width: calc(100% - 65px);
+    animation: showCaret 1s ease infinite;
+}
+
+@keyframes showCaret {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Hide search on mobile - can add mobile search separately */
+@media (max-width: 900px) {
+    .search-container {
+        display: none;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .social-wrapper .icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .social-wrapper .icon span {
+        font-size: 16px;
+    }
+
+    .social-wrapper .icon .tooltip {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .social-wrapper .icon:hover .tooltip {
+        top: -40px;
+    }
+}
+
+/* ===================================
+   DID WE MAKE YOUR DAY BETTER SECTION
+   =================================== */
+.love-question-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    text-align: center;
+    overflow: hidden;
+}
+
+.love-question-section .question-container,
+.love-question-section .result-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.love-question-section .local-gif,
+.love-question-section .gif-result {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.love-question-section .question,
+.love-question-section .result-container h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.love-question-section .button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.love-question-section .yes-btn,
+.love-question-section .no-btn {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.love-question-section .yes-btn {
+    background: linear-gradient(135deg, #ff6b9d, #ff8a80);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+}
+
+.love-question-section .yes-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+}
+
+.love-question-section .no-btn {
+    background: transparent;
+    color: #aaa;
+    border: 2px solid #444;
+    position: relative;
+    overflow: hidden;
+}
+
+.love-question-section .no-btn:hover {
+    border-color: #666;
+    color: #fff;
+}
+
+/* Heart Loading Animation */
+.love-question-section .cssload-main {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 2rem auto;
+}
+
+.love-question-section .cssload-heart {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: cssload-heart-pump 0.5s ease-in-out infinite;
+}
+
+.love-question-section .cssload-heartL,
+.love-question-section .cssload-heartR,
+.love-question-section .cssload-square {
+    position: absolute;
+    background: #ff6b9d;
+}
+
+.love-question-section .cssload-heartL,
+.love-question-section .cssload-heartR {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    top: 0;
+}
+
+.love-question-section .cssload-heartL {
+    left: 5px;
+}
+
+.love-question-section .cssload-heartR {
+    right: 5px;
+}
+
+.love-question-section .cssload-square {
+    width: 62px;
+    height: 62px;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.love-question-section .cssload-shadow {
+    position: absolute;
+    width: 60px;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: cssload-shadow 0.5s ease-in-out infinite;
+}
+
+@keyframes cssload-heart-pump {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes cssload-shadow {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.3; }
+    50% { transform: translateX(-50%) scale(0.8); opacity: 0.2; }
+}
+
+/* No Result Container */
+.love-question-section .no-result-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.5s ease;
+}
+
+.love-question-section .no-result-container h2 {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: #aaa;
+    margin-bottom: 1.5rem;
+}
+
+.love-question-section .try-again-btn {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.love-question-section .try-again-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+/* Result container fade in */
+.love-question-section .result-container {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   ANIMATED TRUCK ORDER BUTTON
+   =================================== */
+.truck-button {
+    --progress: 0;
+    --street-fill: #6366f1;
+    --truck-color: #6366f1;
+    --truck-bed: #4f46e5;
+    --wheel-color: #1e1b4b;
+    position: relative;
+    width: 100%;
+    height: 56px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.truck-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.truck-button:active {
+    transform: translateY(0);
+}
+
+.truck-button .default,
+.truck-button .success {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 56px;
+    color: white;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+.truck-button .success {
+    --o: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: var(--o, 0);
+}
+
+.truck-button .truck-wrapper {
+    position: absolute;
+    top: 50%;
+    left: -60px;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.truck-button .truck {
+    position: relative;
+    width: 50px;
+    height: 28px;
+}
+
+.truck-button .truck-bed {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    width: 26px;
+    height: 18px;
+    background: var(--truck-bed);
+    border-radius: 3px 3px 0 0;
+}
+
+.truck-button .truck-cabin {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 22px;
+    background: var(--truck-color);
+    border-radius: 6px 3px 0 0;
+}
+
+.truck-button .truck-window {
+    position: absolute;
+    right: 3px;
+    top: 4px;
+    width: 10px;
+    height: 8px;
+    background: #a5b4fc;
+    border-radius: 2px;
+}
+
+.truck-button .truck-wheels {
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    right: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.truck-button .wheel {
+    width: 10px;
+    height: 10px;
+    background: var(--wheel-color);
+    border-radius: 50%;
+    border: 2px solid #4b5563;
+}
+
+.truck-button .street {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--street-fill) calc(var(--progress) * 100%),
+        rgba(255,255,255,0.2) calc(var(--progress) * 100%),
+        rgba(255,255,255,0.2) 100%
+    );
+    border-radius: 2px;
+}
+
+/* Animation states */
+.truck-button.animation .default {
+    opacity: 0;
+}
+
+.truck-button.animation .truck-wrapper {
+    opacity: 1;
+    animation: truckDrive 2s ease-in-out forwards;
+}
+
+.truck-button.animation .wheel {
+    animation: wheelSpin 0.4s linear infinite;
+}
+
+.truck-button.done .success {
+    opacity: 1;
+}
+
+.truck-button.done .truck-wrapper {
+    opacity: 0;
+}
+
+.truck-button.done {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+@keyframes truckDrive {
+    0% {
+        left: -60px;
+    }
+    50% {
+        left: calc(50% - 25px);
+    }
+    100% {
+        left: calc(100% + 60px);
+    }
+}
+
+@keyframes wheelSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Street progress animation */
+.truck-button.animation {
+    animation: streetProgress 2s ease-in-out forwards;
+}
+
+@keyframes streetProgress {
+    0% { --progress: 0; }
+    100% { --progress: 1; }
 }

@@ -124,8 +124,24 @@
 
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- SVG Definitions for Electric Border Effect -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="electricGradient" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="transparent" />
+                <stop offset="35%" stop-color="#dd8448" />
+                <stop offset="50%" stop-color="#fff" />
+                <stop offset="65%" stop-color="#dd8448" />
+                <stop offset="100%" stop-color="transparent" />
+            </linearGradient>
+        </defs>
+    </svg>
+
     <!-- Header -->
     <header id="header">
         <div class="nav-wrapper">
@@ -149,6 +165,19 @@
                     <button onclick="navigate('engraving')" data-page="engraving">Engraving</button>
                     <button onclick="navigate('contact')" data-page="contact">Contact</button>
                 </nav>
+                <!-- Animated Search Bar -->
+                <div class="search-container">
+                    <form class="search-form" onsubmit="handleSearch(event)">
+                        <input type="text" class="search-input" placeholder="Search..." id="navSearchInput">
+                        <button type="submit" class="search-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="M21 21l-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                        <span class="search-caret"></span>
+                    </form>
+                </div>
                 <!-- Cart Icon -->
                 <button onclick="toggleCart()" class="cart-icon-btn" title="Shopping Cart" style="position: relative; background: none; border: none; cursor: pointer; padding: 8px; margin-right: 8px;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -158,23 +187,38 @@
                     </svg>
                     <span id="cartCountBadge" style="position: absolute; top: 0; right: 0; background: #DC2626; color: white; font-size: 0.7rem; font-weight: 600; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
                 </button>
-                <div class="nav-social">
-                    <a href="https://www.instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-icon" title="Instagram">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                    </a>
-                    <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener" class="social-icon" title="Facebook">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                    </a>
-                    <a href="https://www.tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-icon" title="TikTok">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                    </a>
-                    <a href="https://wa.me/12193442416" target="_blank" rel="noopener" class="social-icon" title="WhatsApp">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                    </a>
-                    <a href="https://www.snapchat.com/@partypalace.in" target="_blank" rel="noopener" class="social-icon" title="Snapchat">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="0.8"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.509 0-.904.074-1.274.134-.239.045-.435.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-.809-.329-1.224-.72-1.227-1.153-.007-.359.282-.69.735-.838.165-.061.344-.09.524-.09.12 0 .285.015.435.104.389.18.748.3 1.048.3.179 0 .315-.045.405-.09-.007-.18-.021-.36-.033-.539l-.004-.061c-.104-1.627-.225-3.654.304-4.847C7.865 1.088 11.217.793 12.206.793z"/></svg>
-                    </a>
-                </div>
+                <ul class="social-wrapper nav-social">
+                    <li class="icon instagram">
+                        <a href="https://www.instagram.com/partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">Instagram</span>
+                            <span><i class="fab fa-instagram"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon facebook">
+                        <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener">
+                            <span class="tooltip">Facebook</span>
+                            <span><i class="fab fa-facebook-f"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon tiktok">
+                        <a href="https://www.tiktok.com/@partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">TikTok</span>
+                            <span><i class="fab fa-tiktok"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon whatsapp">
+                        <a href="https://wa.me/12193442416" target="_blank" rel="noopener">
+                            <span class="tooltip">WhatsApp</span>
+                            <span><i class="fab fa-whatsapp"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon snapchat">
+                        <a href="https://www.snapchat.com/@partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">Snapchat</span>
+                            <span><i class="fab fa-snapchat"></i></span>
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
@@ -293,28 +337,38 @@
         <section class="home-social-section">
             <div class="container">
                 <h3>Follow Us @partypalace.in</h3>
-                <div class="social-links">
-                    <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-link instagram">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        Instagram
-                    </a>
-                    <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener" class="social-link facebook">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        Facebook
-                    </a>
-                    <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-link tiktok">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                        TikTok
-                    </a>
-                    <a href="https://wa.me/12193442416" target="_blank" rel="noopener" class="social-link whatsapp">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                        WhatsApp
-                    </a>
-                    <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener" class="social-link snapchat">
-                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="black" stroke-width="0.8"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.509 0-.904.074-1.274.134-.239.045-.435.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-.809-.329-1.224-.72-1.227-1.153-.007-.359.282-.69.735-.838.165-.061.344-.09.524-.09.12 0 .285.015.435.104.389.18.748.3 1.048.3.179 0 .315-.045.405-.09-.007-.18-.021-.36-.033-.539l-.004-.061c-.104-1.627-.225-3.654.304-4.847C7.865 1.088 11.217.793 12.206.793z"/></svg>
-                        Snapchat
-                    </a>
-                </div>
+                <ul class="social-wrapper">
+                    <li class="icon instagram">
+                        <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">Instagram</span>
+                            <span><i class="fab fa-instagram"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon facebook">
+                        <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener">
+                            <span class="tooltip">Facebook</span>
+                            <span><i class="fab fa-facebook-f"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon tiktok">
+                        <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">TikTok</span>
+                            <span><i class="fab fa-tiktok"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon whatsapp">
+                        <a href="https://wa.me/12193442416" target="_blank" rel="noopener">
+                            <span class="tooltip">WhatsApp</span>
+                            <span><i class="fab fa-whatsapp"></i></span>
+                        </a>
+                    </li>
+                    <li class="icon snapchat">
+                        <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener">
+                            <span class="tooltip">Snapchat</span>
+                            <span><i class="fab fa-snapchat"></i></span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </section>
     </div>
@@ -1831,28 +1885,38 @@
                         <div class="contact-info-box">
                             <h3>Follow Us</h3>
                             <!-- Social Media Links - All links verified for @partypalace.in -->
-                            <div class="social-links">
-                                <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-link instagram">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                                    Instagram
-                                </a>
-                                <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener" class="social-link facebook">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                                    Facebook
-                                </a>
-                                <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-link tiktok">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                                    TikTok
-                                </a>
-                                <a href="https://wa.me/12193442416" target="_blank" rel="noopener" class="social-link whatsapp">
-                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                                    WhatsApp
-                                </a>
-                                <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener" class="social-link snapchat">
-                                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="black" stroke-width="0.8"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.509 0-.904.074-1.274.134-.239.045-.435.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-.809-.329-1.224-.72-1.227-1.153-.007-.359.282-.69.735-.838.165-.061.344-.09.524-.09.12 0 .285.015.435.104.389.18.748.3 1.048.3.179 0 .315-.045.405-.09-.007-.18-.021-.36-.033-.539l-.004-.061c-.104-1.627-.225-3.654.304-4.847C7.865 1.088 11.217.793 12.206.793z"/></svg>
-                                    Snapchat
-                                </a>
-                            </div>
+                            <ul class="social-wrapper">
+                                <li class="icon instagram">
+                                    <a href="https://instagram.com/partypalace.in" target="_blank" rel="noopener">
+                                        <span class="tooltip">Instagram</span>
+                                        <span><i class="fab fa-instagram"></i></span>
+                                    </a>
+                                </li>
+                                <li class="icon facebook">
+                                    <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener">
+                                        <span class="tooltip">Facebook</span>
+                                        <span><i class="fab fa-facebook-f"></i></span>
+                                    </a>
+                                </li>
+                                <li class="icon tiktok">
+                                    <a href="https://tiktok.com/@partypalace.in" target="_blank" rel="noopener">
+                                        <span class="tooltip">TikTok</span>
+                                        <span><i class="fab fa-tiktok"></i></span>
+                                    </a>
+                                </li>
+                                <li class="icon whatsapp">
+                                    <a href="https://wa.me/12193442416" target="_blank" rel="noopener">
+                                        <span class="tooltip">WhatsApp</span>
+                                        <span><i class="fab fa-whatsapp"></i></span>
+                                    </a>
+                                </li>
+                                <li class="icon snapchat">
+                                    <a href="https://snapchat.com/add/partypalace.in" target="_blank" rel="noopener">
+                                        <span class="tooltip">Snapchat</span>
+                                        <span><i class="fab fa-snapchat"></i></span>
+                                    </a>
+                                </li>
+                            </ul>
                             <p style="font-size: 0.875rem; color: var(--gray-600); margin-top: 1rem;">@partypalace.in on all platforms</p>
                         </div>
                         <div class="contact-info-box" style="background: var(--gray-100); border-color: var(--gray-300);">
@@ -2394,9 +2458,22 @@
                                 </label>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%" id="checkoutSubmitBtn">
-                                <span id="checkoutBtnText">Pay $50 Deposit to Book</span>
-                                <span id="checkoutBtnLoading" style="display: none;">Processing...</span>
+                            <button type="submit" class="truck-button" id="checkoutSubmitBtn">
+                                <span class="default" id="checkoutBtnText">Pay $50 Deposit to Book</span>
+                                <span class="success">Order Placed!</span>
+                                <div class="truck-wrapper">
+                                    <div class="truck">
+                                        <div class="truck-bed"></div>
+                                        <div class="truck-cabin">
+                                            <div class="truck-window"></div>
+                                        </div>
+                                        <div class="truck-wheels">
+                                            <div class="wheel"></div>
+                                            <div class="wheel"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="street"></div>
                             </button>
                             <div class="form-status" id="checkoutFormStatus"></div>
                         </form>
@@ -2533,6 +2610,34 @@
         </section>
     </div>
 
+    <!-- Did We Make Your Day Better Section -->
+    <section class="love-question-section">
+        <div class="question-container container">
+            <video class="local-gif" src="https://media.giphy.com/media/KztT2c4u8mYYUiMKdJ/giphy.mp4" loop muted autoplay playsinline></video>
+            <h2 class="question">Did we make your day better?</h2>
+            <div class="button-container">
+                <button class="yes-btn btn js-yes-btn">Yes</button>
+                <button class="no-btn btn js-no-btn">No</button>
+            </div>
+        </div>
+        <div class="result-container container" style="display: none;">
+            <video class="gif-result" src="https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.mp4" autoplay loop muted playsinline></video>
+            <h2>I knew it! 💖</h2>
+        </div>
+        <div class="cssload-main" style="display: none;">
+            <div class="cssload-heart">
+                <span class="cssload-heartL"></span>
+                <span class="cssload-heartR"></span>
+                <span class="cssload-square"></span>
+            </div>
+            <div class="cssload-shadow"></div>
+        </div>
+        <div class="no-result-container container" style="display: none;">
+            <h2>😢 Okay... we'll try harder next time!</h2>
+            <button class="try-again-btn btn" onclick="location.reload()">Give us another chance?</button>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -2562,23 +2667,6 @@
                         <li>Consultations: By Appointment Only</li>
                         <li>Email & Messaging: Available Anytime</li>
                     </ul>
-                    <div class="footer-social" style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                        <a href="https://www.instagram.com/partypalace.in" target="_blank" rel="noopener" class="social-icon" title="Instagram">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        </a>
-                        <a href="https://www.facebook.com/share/1S4SDoZQkF/" target="_blank" rel="noopener" class="social-icon" title="Facebook">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                        </a>
-                        <a href="https://www.tiktok.com/@partypalace.in" target="_blank" rel="noopener" class="social-icon" title="TikTok">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                        </a>
-                        <a href="https://wa.me/12193442416" target="_blank" rel="noopener" class="social-icon" title="WhatsApp">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                        </a>
-                        <a href="https://www.snapchat.com/@partypalace.in" target="_blank" rel="noopener" class="social-icon" title="Snapchat">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="0.8"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.509 0-.904.074-1.274.134-.239.045-.435.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-.809-.329-1.224-.72-1.227-1.153-.007-.359.282-.69.735-.838.165-.061.344-.09.524-.09.12 0 .285.015.435.104.389.18.748.3 1.048.3.179 0 .315-.045.405-.09-.007-.18-.021-.36-.033-.539l-.004-.061c-.104-1.627-.225-3.654.304-4.847C7.865 1.088 11.217.793 12.206.793z"/></svg>
-                        </a>
-                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -2616,5 +2704,406 @@
 
     <script src="product_image_urls.js"></script>
     <script src="app.js"></script>
+
+    <!-- Did We Make Your Day Better Script -->
+    <script>
+    // Global reset function for the love question section
+    function resetLoveQuestionSection() {
+        const questionContainer = document.querySelector('.love-question-section .question-container');
+        const resultContainer = document.querySelector('.love-question-section .result-container');
+        const noResultContainer = document.querySelector('.love-question-section .no-result-container');
+        const loadingHeart = document.querySelector('.love-question-section .cssload-main');
+        const noBtn = document.querySelector('.js-no-btn');
+
+        if (questionContainer) questionContainer.style.display = 'flex';
+        if (resultContainer) resultContainer.style.display = 'none';
+        if (noResultContainer) noResultContainer.style.display = 'none';
+        if (loadingHeart) loadingHeart.style.display = 'none';
+        if (noBtn) noBtn.style.transform = 'translate(0, 0)';
+    }
+
+    // Search function
+    function handleSearch(event) {
+        event.preventDefault();
+        const searchInput = document.getElementById('navSearchInput');
+        const query = searchInput.value.trim().toLowerCase();
+
+        if (!query) return;
+
+        // Define pages with keywords
+        const pages = [
+            { name: 'home', keywords: ['home', 'main', 'start', 'welcome'] },
+            { name: 'gallery', keywords: ['gallery', 'photos', 'pictures', 'images', 'portfolio', 'work'] },
+            { name: 'partydecor', keywords: ['party', 'decor', 'decoration', 'balloon', 'balloons', 'arch', 'garland', 'centerpiece', 'backdrop', 'event'] },
+            { name: 'prints3d', keywords: ['3d', 'print', 'prints', '3d print', '3d prints', 'lithophane', 'figurine', 'custom'] },
+            { name: 'engraving', keywords: ['engrave', 'engraving', 'laser', 'cutting', 'wood', 'acrylic', 'personalized'] },
+            { name: 'contact', keywords: ['contact', 'email', 'phone', 'reach', 'message', 'book', 'booking', 'quote'] }
+        ];
+
+        // Check if query matches a page
+        for (const page of pages) {
+            if (page.keywords.some(keyword => keyword.includes(query) || query.includes(keyword))) {
+                navigate(page.name);
+                searchInput.value = '';
+                searchInput.blur();
+                return;
+            }
+        }
+
+        // Search in products (need to access the products array from app.js)
+        if (typeof products !== 'undefined' && products.length > 0) {
+            const matchingProducts = products.filter(p =>
+                p.name.toLowerCase().includes(query) ||
+                (p.category && p.category.toLowerCase().includes(query)) ||
+                (p.description && p.description.toLowerCase().includes(query))
+            );
+
+            if (matchingProducts.length > 0) {
+                const firstMatch = matchingProducts[0];
+
+                // Determine which page the product belongs to
+                let targetPage = 'partydecor';
+                if (firstMatch.category === 'engraving' || firstMatch.category === 'Engraving') {
+                    targetPage = 'engraving';
+                } else if (firstMatch.category === '3d-prints' || firstMatch.category === '3D Prints' ||
+                           firstMatch.category === 'prints3d' || firstMatch.category === 'Lithophanes' ||
+                           firstMatch.category === 'Figurines' || firstMatch.category === 'Custom 3D Prints') {
+                    targetPage = 'prints3d';
+                }
+
+                navigate(targetPage);
+
+                // Wait for page to render then filter and highlight
+                setTimeout(() => {
+                    // Click "All" filter first
+                    const allFilter = document.querySelector('.filter-btn[data-filter="all"]');
+                    if (allFilter) allFilter.click();
+
+                    // Filter products
+                    const productCards = document.querySelectorAll('.product-card');
+                    let foundCount = 0;
+
+                    productCards.forEach(card => {
+                        const title = card.querySelector('.product-title')?.textContent.toLowerCase() || '';
+                        const category = card.querySelector('.product-category')?.textContent.toLowerCase() || '';
+                        const description = card.querySelector('.product-description')?.textContent.toLowerCase() || '';
+
+                        if (title.includes(query) || category.includes(query) || description.includes(query)) {
+                            card.style.display = '';
+                            foundCount++;
+                            // Highlight the first match
+                            if (foundCount === 1) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                card.style.boxShadow = '0 0 20px rgba(147, 51, 234, 0.6)';
+                                setTimeout(() => {
+                                    card.style.boxShadow = '';
+                                }, 2000);
+                            }
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    if (foundCount === 0) {
+                        productCards.forEach(card => card.style.display = '');
+                    }
+                }, 400);
+
+                searchInput.value = '';
+                searchInput.blur();
+                return;
+            }
+        }
+
+        // No match found - show all products on Party Decor
+        navigate('partydecor');
+        setTimeout(() => {
+            const allFilter = document.querySelector('.filter-btn[data-filter="all"]');
+            if (allFilter) allFilter.click();
+            alert(`No results found for "${query}". Showing all Party Decor products.`);
+        }, 300);
+
+        searchInput.value = '';
+        searchInput.blur();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const yesBtn = document.querySelector('.js-yes-btn');
+        const noBtn = document.querySelector('.js-no-btn');
+        const questionContainer = document.querySelector('.love-question-section .question-container');
+        const resultContainer = document.querySelector('.love-question-section .result-container');
+        const noResultContainer = document.querySelector('.love-question-section .no-result-container');
+        const loadingHeart = document.querySelector('.love-question-section .cssload-main');
+
+        if (yesBtn) {
+            yesBtn.addEventListener('click', function() {
+                questionContainer.style.display = 'none';
+                loadingHeart.style.display = 'block';
+
+                setTimeout(function() {
+                    loadingHeart.style.display = 'none';
+                    resultContainer.style.display = 'flex';
+                }, 1500);
+            });
+        }
+
+        if (noBtn) {
+            // Make the No button run away from cursor
+            noBtn.addEventListener('mouseover', function() {
+                const randomX = Math.random() * 200 - 100;
+                const randomY = Math.random() * 100 - 50;
+                this.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            });
+
+            noBtn.addEventListener('click', function() {
+                // Show sad response
+                questionContainer.style.display = 'none';
+                noResultContainer.style.display = 'flex';
+            });
+        }
+    });
+    </script>
+
+    <!-- Glowing Cursor Effect -->
+    <script>
+    /**
+     * Glowing Tubes Cursor Effect
+     * Multiple colored glowing tubes following cursor
+     * Inspired by TubesCursor Framer Component
+     */
+    function initTubesCursor() {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'cursor-canvas';
+        canvas.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.2s ease;
+        `;
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Tube configuration - customize these colors
+        const tubeColors = ['#f967fb', '#53bc28', '#6958d5'];
+        const lightColors = ['#83f36e', '#fe8a2e', '#ff008a', '#60aed5'];
+
+        // Create multiple tubes with different delays
+        const tubes = tubeColors.map((color, index) => ({
+            color: color,
+            lightColor: lightColors[index % lightColors.length],
+            trail: [],
+            offset: index * 3,
+            phase: (index * Math.PI * 2) / tubeColors.length,
+            amplitude: 8 + index * 4
+        }));
+
+        const maxTrailLength = 50;
+        let mouseX = -100;
+        let mouseY = -100;
+        let isHidden = false;
+        let time = 0;
+
+        // Hide cursor trail on specific elements
+        const hideSelectors = '.product-card, .product-image, .nav-left button, .nav-right-links button, .logo, .cart-icon-btn, .mobile-menu-toggle, .social-wrapper, .btn, button, a, input, select, textarea';
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(hideSelectors)) {
+                isHidden = true;
+                canvas.style.opacity = '0';
+                tubes.forEach(tube => tube.trail.length = 0);
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest(hideSelectors)) {
+                const relatedTarget = e.relatedTarget;
+                if (!relatedTarget || !relatedTarget.closest(hideSelectors)) {
+                    isHidden = false;
+                    canvas.style.opacity = '1';
+                }
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : { r: 255, g: 255, b: 255 };
+        }
+
+        function drawTube(tube, tubeIndex) {
+            const trail = tube.trail;
+            if (trail.length < 3) return;
+
+            const rgb = hexToRgb(tube.color);
+            const lightRgb = hexToRgb(tube.lightColor);
+
+            // Draw outer glow layers
+            for (let glowLayer = 4; glowLayer >= 0; glowLayer--) {
+                ctx.beginPath();
+                const startPoint = trail[0];
+                ctx.moveTo(startPoint.x, startPoint.y);
+
+                for (let i = 1; i < trail.length - 1; i++) {
+                    const xc = (trail[i].x + trail[i + 1].x) / 2;
+                    const yc = (trail[i].y + trail[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(trail[i].x, trail[i].y, xc, yc);
+                }
+
+                const lastPoint = trail[trail.length - 1];
+                ctx.lineTo(lastPoint.x, lastPoint.y);
+
+                const glowSize = 3 + glowLayer * 5;
+                const glowAlpha = glowLayer === 0 ? 0.6 : (0.15 / (glowLayer + 1));
+
+                const mixFactor = glowLayer / 4;
+                const glowR = Math.round(rgb.r * (1 - mixFactor) + lightRgb.r * mixFactor);
+                const glowG = Math.round(rgb.g * (1 - mixFactor) + lightRgb.g * mixFactor);
+                const glowB = Math.round(rgb.b * (1 - mixFactor) + lightRgb.b * mixFactor);
+
+                ctx.strokeStyle = `rgba(${glowR}, ${glowG}, ${glowB}, ${glowAlpha})`;
+                ctx.lineWidth = glowSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+            }
+
+            // Draw the bright core
+            for (let i = 0; i < trail.length - 1; i++) {
+                const point = trail[i];
+                const nextPoint = trail[i + 1];
+                const progress = i / trail.length;
+
+                ctx.beginPath();
+                ctx.moveTo(point.x, point.y);
+                ctx.lineTo(nextPoint.x, nextPoint.y);
+
+                const coreAlpha = 0.3 + progress * 0.7;
+                const coreBrightness = 0.7 + progress * 0.3;
+
+                const coreR = Math.min(255, Math.round(rgb.r * coreBrightness + 80 * progress));
+                const coreG = Math.min(255, Math.round(rgb.g * coreBrightness + 80 * progress));
+                const coreB = Math.min(255, Math.round(rgb.b * coreBrightness + 80 * progress));
+
+                ctx.strokeStyle = `rgba(${coreR}, ${coreG}, ${coreB}, ${coreAlpha})`;
+                ctx.lineWidth = 2 + progress * 2;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+
+            // Draw bright tip
+            if (trail.length > 0) {
+                const tip = trail[trail.length - 1];
+                const tipGradient = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 15);
+                tipGradient.addColorStop(0, `rgba(255, 255, 255, 0.9)`);
+                tipGradient.addColorStop(0.3, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`);
+                tipGradient.addColorStop(1, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0)`);
+
+                ctx.beginPath();
+                ctx.arc(tip.x, tip.y, 15, 0, Math.PI * 2);
+                ctx.fillStyle = tipGradient;
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            time += 0.1;
+
+            if (!isHidden && mouseX > 0 && mouseY > 0) {
+                tubes.forEach((tube, index) => {
+                    const waveX = Math.sin(time + tube.phase) * tube.amplitude;
+                    const waveY = Math.cos(time + tube.phase * 1.3) * tube.amplitude;
+
+                    const offsetX = mouseX + waveX;
+                    const offsetY = mouseY + waveY;
+
+                    if (tube.trail.length === 0 ||
+                        Math.hypot(offsetX - tube.trail[tube.trail.length - 1].x,
+                                  offsetY - tube.trail[tube.trail.length - 1].y) > 2) {
+                        tube.trail.push({
+                            x: offsetX,
+                            y: offsetY,
+                            time: Date.now()
+                        });
+                    }
+
+                    const now = Date.now();
+                    while (tube.trail.length > 0 && now - tube.trail[0].time > 400) {
+                        tube.trail.shift();
+                    }
+
+                    if (tube.trail.length > maxTrailLength) {
+                        tube.trail.shift();
+                    }
+                });
+            }
+
+            for (let i = tubes.length - 1; i >= 0; i--) {
+                if (!isHidden) {
+                    drawTube(tubes[i], i);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Hide on touch devices
+        if ('ontouchstart' in window) {
+            canvas.style.display = 'none';
+        }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', initTubesCursor);
+
+    // Electric Border Effect for Product Cards
+    function initElectricBorders() {
+        document.querySelectorAll('.product-card').forEach(card => {
+            if (card.querySelector('.electric-border')) return;
+
+            const borderDiv = document.createElement('div');
+            borderDiv.className = 'electric-border';
+            borderDiv.innerHTML = `
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <rect class="electric-path" x="2" y="2" width="96" height="96" rx="8" ry="8"
+                        stroke-dasharray="15 25" />
+                </svg>
+            `;
+            card.appendChild(borderDiv);
+        });
+    }
+
+    // Initialize electric borders and re-init when products are rendered
+    document.addEventListener('DOMContentLoaded', initElectricBorders);
+
+    // Re-initialize when navigating (products are dynamically rendered)
+    const originalNavigate = window.navigate;
+    window.navigate = function(page) {
+        originalNavigate(page);
+        setTimeout(initElectricBorders, 100);
+    };
+    </script>
 </body>
 </html><!-- Redeploy trigger -->
