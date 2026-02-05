@@ -1635,6 +1635,7 @@
                     shipping: shipping,
                     tax: tax,
                     total: total,
+                    amount_paid: orderInfo.amountPaid || total,
                     status: 'pending',
                     payment_status: orderInfo.paymentType === 'full' ? 'paid' : 'partial',
                     payment_method: 'stripe',
@@ -1651,6 +1652,7 @@
                     console.log('Order created:', orderNumber);
 
                     // Log activity (customer checkout)
+                    const amountPaid = orderInfo.amountPaid || total;
                     try {
                         await supabaseClient
                             .from('activity_log')
@@ -1659,7 +1661,7 @@
                                 entity_type: 'order',
                                 entity_id: orderNumber,
                                 entity_name: orderNumber,
-                                details: `$${total.toFixed(2)} from ${orderInfo.name}`,
+                                details: `$${amountPaid.toFixed(2)} paid${amountPaid < total ? ` (deposit, total: $${total.toFixed(2)})` : ''} from ${orderInfo.name}`,
                                 user_email: orderInfo.email || 'customer'
                             }]);
                     } catch (logError) {
@@ -4649,8 +4651,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 filteredOrders = staffOrders.filter(o => new Date(o.created_at) >= cutoff);
             }
 
-            // Calculate metrics
-            const totalRevenue = filteredOrders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
+            // Calculate metrics - use amount_paid for actual revenue received
+            const totalRevenue = filteredOrders.reduce((sum, o) => sum + (parseFloat(o.amount_paid) || parseFloat(o.total) || 0), 0);
             const orderCount = filteredOrders.length;
             const avgOrderValue = orderCount > 0 ? totalRevenue / orderCount : 0;
 
