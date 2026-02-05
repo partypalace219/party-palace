@@ -1744,6 +1744,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             if (page === 'home') {
                 resetLoveQuestionSection();
             }
+
+            // Hide cursor effect on staff portal
+            const cursorCanvas = document.getElementById('cursor-canvas');
+            if (cursorCanvas) {
+                cursorCanvas.style.display = page === 'staff' ? 'none' : '';
+            }
             
             // ============================================
             // BROWSER HISTORY SUPPORT (for back/forward)
