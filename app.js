@@ -25,6 +25,7 @@
                     description: p.description,
                     icon: p.emoji,
                     popular: p.featured,
+                    sale: p.sale || false,
                     image_url: p.image_url,
                     size: p.size,
                     material: p.material,
@@ -136,8 +137,10 @@
                 card.dataset.material = material;
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
-                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('${slug}')">
+                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
                         ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
+                        ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
                     <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                         <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
@@ -182,8 +185,10 @@
                 card.dataset.category = subcategory;
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
-                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('${slug}')">
+                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
                         ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
+                        ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
                     <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
                         <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
@@ -2023,7 +2028,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 <div class="product-card product-card-clickable" onclick="navigateToProduct('${productSlug}')" data-product-slug="${productSlug}">
                     <div class="product-image ${imageClass}" style="${imageStyle}">
                         ${imageContent}
-                        ${product.popular ? '<div class="product-badge">Popular</div>' : ''}
+                        ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
+                        ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
                     <div class="product-info">
                         <div class="product-category">${isService ? 'Service' : categoryLabels[product.category]}</div>
@@ -2180,6 +2186,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     
                     <div class="product-detail-info">
                         <span class="product-detail-category">${categoryLabels[product.category] || product.category}</span>
+                        ${product.sale ? '<span style="display: inline-block; background: #059669; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem;">Sale</span>' : ''}
+                        ${product.popular ? '<span style="display: inline-block; background: var(--red-accent); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; margin-left: 0.5rem;">Popular</span>' : ''}
                         <h1 class="product-detail-title">${product.name}</h1>
                         <div class="product-detail-price">
                             <span class="label">${product.category === 'engraving' ? 'Price' : 'Starting at'}</span>
@@ -3974,25 +3982,26 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         function updateStaffStats() {
             document.getElementById('staff-total-products').textContent = staffProducts.length;
 
-            const totalValue = staffProducts.reduce((sum, p) => sum + (p.price || 0), 0);
-            document.getElementById('staff-inventory-value').textContent = '$' + totalValue.toLocaleString();
+            const totalCost = staffProducts.reduce((sum, p) => sum + (p.cost || 0), 0);
+            document.getElementById('staff-inventory-value').textContent = '$' + totalCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             const saleCount = staffProducts.filter(p => p.sale).length;
             document.getElementById('staff-on-sale').textContent = saleCount;
 
-            const newCount = staffProducts.filter(p => p.featured).length;
-            document.getElementById('staff-new-arrivals').textContent = newCount;
+            const popularCount = staffProducts.filter(p => p.featured).length;
+            document.getElementById('staff-popular-count').textContent = popularCount;
 
             // Profit calculations
             const totalRevenue = staffProducts.reduce((sum, p) => sum + (p.price || 0), 0);
-            const totalCost = staffProducts.reduce((sum, p) => sum + (p.cost || 0), 0);
-            const totalProfit = totalRevenue - totalCost;
-            const profitMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : 0;
+            const productsWithCost = staffProducts.filter(p => p.cost > 0);
+            const avgMargin = productsWithCost.length > 0
+                ? (productsWithCost.reduce((sum, p) => sum + (((p.price - p.cost) / p.price) * 100), 0) / productsWithCost.length).toFixed(1)
+                : 0;
 
-            document.getElementById('staff-total-revenue').textContent = '$' + totalRevenue.toFixed(2);
-            document.getElementById('staff-total-cost').textContent = '$' + totalCost.toFixed(2);
-            document.getElementById('staff-total-profit').textContent = '$' + totalProfit.toFixed(2);
-            document.getElementById('staff-profit-margin').textContent = profitMargin + '%';
+            document.getElementById('staff-total-revenue').textContent = '$' + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('staff-total-cost').textContent = '$' + totalCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('staff-products-need-cost').textContent = staffProducts.filter(p => !p.cost || p.cost === 0).length;
+            document.getElementById('staff-profit-margin').textContent = avgMargin + '%';
         }
 
         function populateStaffFilters() {
@@ -4039,8 +4048,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             tbody.innerHTML = filteredProducts.map(product => {
                 const profit = (product.price || 0) - (product.cost || 0);
                 const profitClass = profit >= 0 ? 'positive' : 'negative';
-                const status = product.featured ? 'new' : (product.sale ? 'sale' : 'regular');
-                const statusText = product.featured ? 'NEW' : (product.sale ? 'SALE' : 'REGULAR');
+                const statusTags = [];
+                if (product.featured) statusTags.push('<span class="staff-status-badge new">POPULAR</span>');
+                if (product.sale) statusTags.push('<span class="staff-status-badge sale">SALE</span>');
+                if (statusTags.length === 0) statusTags.push('<span class="staff-status-badge regular">REGULAR</span>');
 
                 return `
                     <tr>
@@ -4055,7 +4066,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         <td class="staff-cost-cell">$${(product.cost || 0).toFixed(2)}</td>
                         <td class="staff-price-cell">$${(product.price || 0).toFixed(2)}</td>
                         <td class="staff-profit-cell ${profitClass}">$${profit.toFixed(2)}</td>
-                        <td><span class="staff-status-badge ${status}">${statusText}</span></td>
+                        <td>${statusTags.join(' ')}</td>
                         <td>
                             <div class="staff-actions-cell">
                                 <button class="staff-action-btn" onclick="editStaffProduct('${String(product.id).replace(/'/g, "\\'")}')" title="Edit">

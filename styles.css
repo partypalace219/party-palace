@@ -1440,6 +1440,17 @@
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
+            z-index: 3;
+        }
+
+        .product-badge.sale-badge {
+            background: #059669;
+            right: auto;
+            left: 12px;
+        }
+
+        .product-badge.popular-badge {
+            background: var(--red-accent);
         }
         
         .product-info {
