@@ -3124,9 +3124,14 @@
                 </div>
                 <div class="staff-form-group">
                     <label class="staff-checkbox-label">
-                        <input type="checkbox" id="staff-product-sale">
+                        <input type="checkbox" id="staff-product-sale" onchange="toggleDiscountField()">
                         On Sale
                     </label>
+                </div>
+                <div class="staff-form-group" id="staff-discount-group" style="display: none;">
+                    <label for="staff-product-discount">Discount Percent (%)</label>
+                    <input type="number" id="staff-product-discount" min="0" max="100" step="1" placeholder="e.g. 20">
+                    <small style="color: var(--gray-500); font-size: 0.75rem;">Leave empty for no specific discount</small>
                 </div>
                 <div class="staff-form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeStaffModal('staff-product-modal')">Cancel</button>

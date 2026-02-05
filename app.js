@@ -4069,6 +4069,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         emoji: p.emoji,
                         featured: p.featured,
                         sale: p.sale || false,
+                        discount_percent: p.discount_percent || null,
                         image: image,
                         image_url: p.image_url || null
                     };
@@ -4993,6 +4994,15 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.body.style.overflow = '';
         }
 
+        function toggleDiscountField() {
+            const saleCheckbox = document.getElementById('staff-product-sale');
+            const discountGroup = document.getElementById('staff-discount-group');
+            if (discountGroup) {
+                discountGroup.style.display = saleCheckbox.checked ? 'block' : 'none';
+            }
+        }
+        window.toggleDiscountField = toggleDiscountField;
+
         function openStaffProductModal(product = null) {
             const form = document.getElementById('staff-product-form');
             const title = document.getElementById('staff-modal-title');
@@ -5013,11 +5023,16 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 document.getElementById('staff-product-image').value = product.image_url || product.image || '';
                 document.getElementById('staff-product-featured').checked = product.featured;
                 document.getElementById('staff-product-sale').checked = product.sale;
+                document.getElementById('staff-product-discount').value = product.discount_percent || '';
             } else {
                 title.textContent = 'Add New Product';
                 staffEditingProductId = null;
                 document.getElementById('staff-product-id').value = '';
+                document.getElementById('staff-product-discount').value = '';
             }
+
+            // Show/hide discount field based on sale checkbox
+            toggleDiscountField();
 
             openStaffModal('staff-product-modal');
         }
@@ -5047,6 +5062,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const isEditing = id != null;
 
             const name = document.getElementById('staff-product-name').value;
+            const discountValue = document.getElementById('staff-product-discount').value;
             const productData = {
                 name: name,
                 slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
@@ -5054,6 +5070,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 price: parseFloat(document.getElementById('staff-product-price').value) || 0,
                 cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
                 sale: document.getElementById('staff-product-sale').checked,
+                discount_percent: discountValue ? parseInt(discountValue) : null,
                 description: document.getElementById('staff-product-description').value,
                 emoji: document.getElementById('staff-product-emoji').value,
                 featured: document.getElementById('staff-product-featured').checked,
