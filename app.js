@@ -3755,6 +3755,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         let staffCurrentFilter = 'all';
         let staffUser = null;
         let staffPortalInitialized = false;
+        let staffSearchQuery = '';
+        let staffSortColumn = 'name';
+        let staffSortDirection = 'asc';
+        let staffSelectedIds = new Set();
 
         function initStaffPortal() {
             if (staffPortalInitialized) return;
@@ -3815,6 +3819,15 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         staffCurrentFilter = btn.dataset.category;
                         renderStaffProducts();
                     }
+                });
+            }
+
+            // Search input
+            const searchInput = document.getElementById('staff-search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    staffSearchQuery = e.target.value.toLowerCase().trim();
+                    renderStaffProducts();
                 });
             }
 
@@ -4024,26 +4037,68 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const emptyState = document.getElementById('staff-empty');
             const table = document.getElementById('staff-table');
             const resultsText = document.getElementById('staff-filter-results');
+            const bulkActions = document.getElementById('staff-bulk-actions');
+            const selectAllCheckbox = document.getElementById('staff-select-all');
 
+            // Filter by category
             let filteredProducts = staffProducts;
             if (staffCurrentFilter !== 'all') {
-                filteredProducts = staffProducts.filter(p => p.category === staffCurrentFilter);
+                filteredProducts = filteredProducts.filter(p => p.category === staffCurrentFilter);
             }
+
+            // Filter by search query
+            if (staffSearchQuery) {
+                filteredProducts = filteredProducts.filter(p =>
+                    p.name.toLowerCase().includes(staffSearchQuery) ||
+                    p.category.toLowerCase().includes(staffSearchQuery) ||
+                    (p.description && p.description.toLowerCase().includes(staffSearchQuery))
+                );
+            }
+
+            // Sort products
+            filteredProducts = [...filteredProducts].sort((a, b) => {
+                let aVal, bVal;
+                switch (staffSortColumn) {
+                    case 'name': aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); break;
+                    case 'category': aVal = a.category.toLowerCase(); bVal = b.category.toLowerCase(); break;
+                    case 'cost': aVal = a.cost || 0; bVal = b.cost || 0; break;
+                    case 'price': aVal = a.price || 0; bVal = b.price || 0; break;
+                    case 'profit': aVal = (a.price || 0) - (a.cost || 0); bVal = (b.price || 0) - (b.cost || 0); break;
+                    default: aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase();
+                }
+                if (aVal < bVal) return staffSortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return staffSortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Update sort indicators in header
+            document.querySelectorAll('.staff-table th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.sort === staffSortColumn) {
+                    th.classList.add(staffSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
 
             if (filteredProducts.length === 0) {
                 table.style.display = 'none';
                 emptyState.style.display = 'block';
-                resultsText.textContent = staffCurrentFilter === 'all'
-                    ? 'No products found'
-                    : `No products in ${staffCurrentFilter}`;
+                resultsText.textContent = staffSearchQuery
+                    ? `No products matching "${staffSearchQuery}"`
+                    : (staffCurrentFilter === 'all' ? 'No products found' : `No products in ${staffCurrentFilter}`);
+                if (bulkActions) bulkActions.style.display = 'none';
                 return;
             }
 
             table.style.display = 'table';
             emptyState.style.display = 'none';
-            resultsText.textContent = staffCurrentFilter === 'all'
-                ? `Showing all ${filteredProducts.length} products`
-                : `Showing ${filteredProducts.length} products in ${staffCurrentFilter}`;
+
+            let resultsLabel = `Showing ${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`;
+            if (staffCurrentFilter !== 'all') resultsLabel += ` in ${staffCurrentFilter}`;
+            if (staffSearchQuery) resultsLabel += ` matching "${staffSearchQuery}"`;
+            resultsText.textContent = resultsLabel;
+
+            // Update bulk actions visibility
+            updateBulkActionsUI();
 
             tbody.innerHTML = filteredProducts.map(product => {
                 const profit = (product.price || 0) - (product.cost || 0);
@@ -4052,13 +4107,15 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 if (product.featured) statusTags.push('<span class="staff-status-badge new">POPULAR</span>');
                 if (product.sale) statusTags.push('<span class="staff-status-badge sale">SALE</span>');
                 if (statusTags.length === 0) statusTags.push('<span class="staff-status-badge regular">REGULAR</span>');
+                const isSelected = staffSelectedIds.has(product.id);
 
                 return `
-                    <tr>
+                    <tr class="${isSelected ? 'selected' : ''}" data-product-id="${product.id}">
+                        <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleProductSelection('${product.id}')"></td>
                         <td>
                             ${product.image
                                 ? `<img src="${product.image}" alt="${product.name}" class="staff-table-thumb">`
-                                : `<div class="staff-table-thumb-placeholder">${product.emoji || 'ðŸ“¦'}</div>`
+                                : `<div class="staff-table-thumb-placeholder">${product.emoji || '📦'}</div>`
                             }
                         </td>
                         <td><strong style="cursor: pointer; text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color 0.2s;" onmouseover="this.style.textDecorationColor='currentColor'" onmouseout="this.style.textDecorationColor='transparent'" onclick="editStaffProduct('${String(product.id).replace(/'/g, "\\'")}')">${product.name}</strong></td>
@@ -4086,7 +4143,155 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     </tr>
                 `;
             }).join('');
+
+            // Update select all checkbox state
+            if (selectAllCheckbox) {
+                const visibleIds = filteredProducts.map(p => p.id);
+                const allSelected = visibleIds.length > 0 && visibleIds.every(id => staffSelectedIds.has(id));
+                selectAllCheckbox.checked = allSelected;
+            }
         }
+
+        // Sort staff table
+        function sortStaffTable(column) {
+            if (staffSortColumn === column) {
+                staffSortDirection = staffSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                staffSortColumn = column;
+                staffSortDirection = 'asc';
+            }
+            renderStaffProducts();
+        }
+        window.sortStaffTable = sortStaffTable;
+
+        // Toggle individual product selection
+        function toggleProductSelection(productId) {
+            if (staffSelectedIds.has(productId)) {
+                staffSelectedIds.delete(productId);
+            } else {
+                staffSelectedIds.add(productId);
+            }
+            renderStaffProducts();
+        }
+        window.toggleProductSelection = toggleProductSelection;
+
+        // Toggle select all
+        function toggleSelectAll(checkbox) {
+            const visibleProducts = getFilteredProducts();
+            if (checkbox.checked) {
+                visibleProducts.forEach(p => staffSelectedIds.add(p.id));
+            } else {
+                visibleProducts.forEach(p => staffSelectedIds.delete(p.id));
+            }
+            renderStaffProducts();
+        }
+        window.toggleSelectAll = toggleSelectAll;
+
+        // Get currently filtered products
+        function getFilteredProducts() {
+            let filtered = staffProducts;
+            if (staffCurrentFilter !== 'all') {
+                filtered = filtered.filter(p => p.category === staffCurrentFilter);
+            }
+            if (staffSearchQuery) {
+                filtered = filtered.filter(p =>
+                    p.name.toLowerCase().includes(staffSearchQuery) ||
+                    p.category.toLowerCase().includes(staffSearchQuery)
+                );
+            }
+            return filtered;
+        }
+
+        // Update bulk actions UI
+        function updateBulkActionsUI() {
+            const bulkActions = document.getElementById('staff-bulk-actions');
+            const selectedCount = document.getElementById('staff-selected-count');
+            if (bulkActions && selectedCount) {
+                if (staffSelectedIds.size > 0) {
+                    bulkActions.style.display = 'flex';
+                    selectedCount.textContent = `${staffSelectedIds.size} selected`;
+                } else {
+                    bulkActions.style.display = 'none';
+                }
+            }
+        }
+
+        // Clear selection
+        function clearSelection() {
+            staffSelectedIds.clear();
+            renderStaffProducts();
+        }
+        window.clearSelection = clearSelection;
+
+        // Bulk delete selected products
+        async function bulkDeleteSelected() {
+            if (staffSelectedIds.size === 0) return;
+
+            const count = staffSelectedIds.size;
+            if (!confirm(`Are you sure you want to delete ${count} product${count > 1 ? 's' : ''}? This cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const idsToDelete = Array.from(staffSelectedIds);
+                const { error } = await supabaseClient
+                    .from('products')
+                    .delete()
+                    .in('id', idsToDelete);
+
+                if (error) throw error;
+
+                showStaffToast(`Deleted ${count} product${count > 1 ? 's' : ''}`, 'success');
+                staffSelectedIds.clear();
+                await loadStaffProducts();
+                updateStaffStats();
+                populateStaffFilters();
+                renderStaffProducts();
+                await loadProducts(true);
+            } catch (error) {
+                console.error('Bulk delete error:', error);
+                showStaffToast('Error deleting products: ' + error.message, 'error');
+            }
+        }
+        window.bulkDeleteSelected = bulkDeleteSelected;
+
+        // Export products to CSV
+        function exportProductsCSV() {
+            const products = getFilteredProducts();
+            if (products.length === 0) {
+                showStaffToast('No products to export', 'error');
+                return;
+            }
+
+            const headers = ['Name', 'Category', 'Price', 'Cost', 'Profit', 'Profit Margin', 'Popular', 'On Sale', 'Description'];
+            const rows = products.map(p => {
+                const profit = (p.price || 0) - (p.cost || 0);
+                const margin = p.price > 0 ? ((profit / p.price) * 100).toFixed(1) + '%' : '0%';
+                return [
+                    `"${(p.name || '').replace(/"/g, '""')}"`,
+                    p.category || '',
+                    (p.price || 0).toFixed(2),
+                    (p.cost || 0).toFixed(2),
+                    profit.toFixed(2),
+                    margin,
+                    p.featured ? 'Yes' : 'No',
+                    p.sale ? 'Yes' : 'No',
+                    `"${(p.description || '').replace(/"/g, '""')}"`
+                ].join(',');
+            });
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `party-palace-products-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showStaffToast(`Exported ${products.length} products to CSV`, 'success');
+        }
+        window.exportProductsCSV = exportProductsCSV;
 
         // Staff Modal Functions
         function openStaffModal(modalId) {

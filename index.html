@@ -2790,6 +2790,28 @@
                                     SCAN BARCODE
                                 </button>
                                 <button class="btn btn-primary" id="staff-add-product-btn">+ ADD PRODUCT</button>
+                                <button class="btn btn-outline" onclick="exportProductsCSV()" title="Export to CSV">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    EXPORT
+                                </button>
+                            </div>
+                        </div>
+                        <div class="staff-search-row">
+                            <div class="staff-search-box">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                                <input type="text" id="staff-search-input" placeholder="Search products..." autocomplete="off">
+                            </div>
+                            <div class="staff-bulk-actions" id="staff-bulk-actions" style="display: none;">
+                                <span id="staff-selected-count">0 selected</span>
+                                <button class="btn btn-danger btn-sm" onclick="bulkDeleteSelected()">Delete Selected</button>
+                                <button class="btn btn-outline btn-sm" onclick="clearSelection()">Clear</button>
                             </div>
                         </div>
                         <div class="staff-filters" id="staff-filters">
@@ -2800,12 +2822,13 @@
                             <table class="staff-table" id="staff-table">
                                 <thead>
                                     <tr>
+                                        <th style="width: 40px;"><input type="checkbox" id="staff-select-all" onclick="toggleSelectAll(this)"></th>
                                         <th>IMAGE</th>
-                                        <th>PRODUCT NAME</th>
-                                        <th>CATEGORY</th>
-                                        <th>COST</th>
-                                        <th>PRICE</th>
-                                        <th>PROFIT</th>
+                                        <th class="sortable" data-sort="name" onclick="sortStaffTable('name')">PRODUCT NAME <span class="sort-icon"></span></th>
+                                        <th class="sortable" data-sort="category" onclick="sortStaffTable('category')">CATEGORY <span class="sort-icon"></span></th>
+                                        <th class="sortable" data-sort="cost" onclick="sortStaffTable('cost')">COST <span class="sort-icon"></span></th>
+                                        <th class="sortable" data-sort="price" onclick="sortStaffTable('price')">PRICE <span class="sort-icon"></span></th>
+                                        <th class="sortable" data-sort="profit" onclick="sortStaffTable('profit')">PROFIT <span class="sort-icon"></span></th>
                                         <th>STATUS</th>
                                         <th>ACTIONS</th>
                                     </tr>
