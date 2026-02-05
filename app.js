@@ -4083,8 +4083,11 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         function updateStaffStats() {
             document.getElementById('staff-total-products').textContent = staffProducts.length;
 
-            const totalCost = staffProducts.reduce((sum, p) => sum + (p.cost || 0), 0);
-            document.getElementById('staff-inventory-value').textContent = '$' + totalCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            // Count total products sold from orders
+            const productsSold = staffOrders.reduce((sum, order) => {
+                return sum + (order.items || []).reduce((itemSum, item) => itemSum + (item.quantity || 1), 0);
+            }, 0);
+            document.getElementById('staff-products-sold').textContent = productsSold;
 
             const saleCount = staffProducts.filter(p => p.sale).length;
             document.getElementById('staff-on-sale').textContent = saleCount;
@@ -4094,6 +4097,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
             // Profit calculations
             const totalRevenue = staffProducts.reduce((sum, p) => sum + (p.price || 0), 0);
+            const totalCost = staffProducts.reduce((sum, p) => sum + (p.cost || 0), 0);
             const productsWithCost = staffProducts.filter(p => p.cost > 0);
             const avgMargin = productsWithCost.length > 0
                 ? (productsWithCost.reduce((sum, p) => sum + (((p.price - p.cost) / p.price) * 100), 0) / productsWithCost.length).toFixed(1)
