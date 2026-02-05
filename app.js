@@ -56,6 +56,9 @@
 
                 console.log('Loaded', products.length, 'products from Supabase');
 
+                // Render any new DB products not already in static HTML
+                renderDynamicProducts();
+
                 // Initialize the app after products are loaded (skip when refreshing from staff portal)
                 if (!skipInit) {
                     initializeApp();
@@ -82,6 +85,115 @@
             // DOM already loaded
             loadProducts();
             initStaffPortal();
+        }
+
+        // Dynamically append products from Supabase that aren't already in the static HTML
+        function renderDynamicProducts() {
+            renderDynamicEngravingProducts();
+            renderDynamicPrints3dProducts();
+        }
+
+        function renderDynamicEngravingProducts() {
+            const grid = document.getElementById('engravingGrid');
+            if (!grid) return;
+
+            // Remove previously appended dynamic cards
+            grid.querySelectorAll('.dynamic-product').forEach(el => el.remove());
+
+            // Get slugs already in the static HTML
+            const existingSlugs = new Set();
+            grid.querySelectorAll('[onclick*="navigateToProduct"]').forEach(el => {
+                const match = el.getAttribute('onclick').match(/navigateToProduct\('([^']+)'\)/);
+                if (match) existingSlugs.add(match[1]);
+            });
+
+            // Find engraving products from DB not already in static HTML
+            const newProducts = products.filter(p => p.category === 'engraving' && p.slug && !existingSlugs.has(p.slug));
+
+            newProducts.forEach(product => {
+                const slug = product.slug;
+                const image = product.images ? product.images[0] : '';
+                const icon = product.icon || '🪵';
+                const material = product.material || 'Wood';
+                const size = product.size || '';
+
+                let priceHtml = '';
+                if (product.tieredPricing && product.tieredPricing.length > 0) {
+                    const tiers = product.tieredPricing.map(t =>
+                        `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>${t.label}:</span><span style="font-weight: 600;">${t.price}</span></div>`
+                    ).join('');
+                    priceHtml = `
+                        <div style="margin-bottom: 0.75rem; font-size: 0.85rem; background: var(--gray-50); padding: 0.75rem; border-radius: 6px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-800);">Pricing:</div>
+                            ${tiers}
+                        </div>`;
+                } else {
+                    priceHtml = `<div class="product-price">$${(product.price || 0).toFixed(2)}</div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'product-card engraving-product dynamic-product';
+                card.dataset.material = material;
+                card.style.cssText = 'display: flex; flex-direction: column;';
+                card.innerHTML = `
+                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('${slug}')">
+                        ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                    </div>
+                    <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
+                        <div class="product-description">${product.description || ''}</div>
+                        ${size ? `<div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);"><strong>Size:</strong> ${size}</div>` : ''}
+                        ${priceHtml}
+                        <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            Add to Cart
+                        </button>
+                        <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderDynamicPrints3dProducts() {
+            const grid = document.getElementById('prints3dGrid');
+            if (!grid) return;
+
+            // Remove previously appended dynamic cards
+            grid.querySelectorAll('.dynamic-product').forEach(el => el.remove());
+
+            // Get slugs already in the static HTML
+            const existingSlugs = new Set();
+            grid.querySelectorAll('[onclick*="navigateToProduct"]').forEach(el => {
+                const match = el.getAttribute('onclick').match(/navigateToProduct\('([^']+)'\)/);
+                if (match) existingSlugs.add(match[1]);
+            });
+
+            // Find 3D prints products from DB not already in static HTML
+            const newProducts = products.filter(p => p.category === 'prints3d' && p.slug && !existingSlugs.has(p.slug));
+
+            newProducts.forEach(product => {
+                const slug = product.slug;
+                const image = product.images ? product.images[0] : '';
+                const icon = product.icon || '🖨️';
+                const subcategory = product.material || 'Other';
+
+                const card = document.createElement('div');
+                card.className = 'product-card prints3d-product dynamic-product';
+                card.dataset.category = subcategory;
+                card.style.cssText = 'display: flex; flex-direction: column;';
+                card.innerHTML = `
+                    <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer;" onclick="navigateToProduct('${slug}')">
+                        ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                    </div>
+                    <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
+                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
+                        <div class="product-description">${product.description || ''}</div>
+                        <div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>
+                        <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+                        <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                    </div>`;
+                grid.appendChild(card);
+            });
         }
 
         // Hero Slideshow
@@ -4029,8 +4141,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const id = staffEditingProductId;
             const isEditing = id != null;
 
+            const name = document.getElementById('staff-product-name').value;
             const productData = {
-                name: document.getElementById('staff-product-name').value,
+                name: name,
+                slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
                 category: document.getElementById('staff-product-category').value,
                 price: parseFloat(document.getElementById('staff-product-price').value) || 0,
                 cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
