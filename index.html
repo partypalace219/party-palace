@@ -2842,9 +2842,74 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- Orders Section -->
+                    <div class="staff-section" id="staff-orders-section">
+                        <div class="staff-section-header">
+                            <h3 class="staff-section-title">ORDERS</h3>
+                            <div class="staff-section-actions">
+                                <select id="staff-orders-filter" onchange="filterOrders(this.value)">
+                                    <option value="all">All Orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <button class="btn btn-outline" onclick="exportOrdersCSV()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    EXPORT
+                                </button>
+                            </div>
+                        </div>
+                        <p class="staff-filter-results" id="staff-orders-results">Loading orders...</p>
+                        <div class="staff-table-container">
+                            <table class="staff-table" id="staff-orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>ORDER #</th>
+                                        <th>DATE</th>
+                                        <th>CUSTOMER</th>
+                                        <th>ITEMS</th>
+                                        <th>TOTAL</th>
+                                        <th>PAYMENT</th>
+                                        <th>STATUS</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="staff-orders-body">
+                                    <!-- Orders loaded dynamically -->
+                                </tbody>
+                            </table>
+                            <p class="staff-empty" id="staff-orders-empty" style="display: none;">
+                                No orders yet. Orders will appear here when customers make purchases.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
+    </div>
+
+    <!-- Staff Order Detail Modal -->
+    <div class="staff-modal" id="staff-order-modal">
+        <div class="staff-modal-overlay" onclick="closeStaffModal('staff-order-modal')"></div>
+        <div class="staff-modal-content" style="max-width: 600px;">
+            <div class="staff-modal-header">
+                <h3 id="staff-order-modal-title">Order Details</h3>
+                <button class="staff-modal-close" onclick="closeStaffModal('staff-order-modal')">&times;</button>
+            </div>
+            <div class="staff-modal-body" id="staff-order-detail-content">
+                <!-- Order details loaded dynamically -->
+            </div>
+            <div class="staff-modal-footer">
+                <button class="btn btn-outline" onclick="closeStaffModal('staff-order-modal')">Close</button>
+            </div>
+        </div>
     </div>
 
     <!-- Staff Add/Edit Product Modal -->

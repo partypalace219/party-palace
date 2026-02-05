@@ -1600,6 +1600,61 @@
             return depositRadio && depositRadio.checked ? 'deposit' : 'full';
         }
 
+        // Create order in Supabase after successful payment
+        async function createOrderInSupabase(orderInfo, cartItems) {
+            try {
+                // Generate order number
+                const orderNumber = 'PP-' + Date.now().toString(36).toUpperCase();
+
+                // Build shipping address string
+                let shippingAddress = '';
+                if (orderInfo.shippingAddress) {
+                    const addr = orderInfo.shippingAddress;
+                    shippingAddress = [addr.address, addr.city, addr.state, addr.zip].filter(Boolean).join(', ');
+                }
+
+                // Calculate totals
+                const subtotal = cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+                const shipping = getShippingCost ? getShippingCost() : 0;
+                const tax = getTaxAmount ? getTaxAmount() : 0;
+                const total = subtotal + shipping + tax;
+
+                const orderData = {
+                    order_number: orderNumber,
+                    customer_name: orderInfo.name,
+                    customer_email: orderInfo.email,
+                    customer_phone: orderInfo.phone || null,
+                    shipping_address: shippingAddress || null,
+                    items: cartItems.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity || 1,
+                        category: item.category || 'other'
+                    })),
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    tax: tax,
+                    total: total,
+                    status: 'pending',
+                    payment_status: orderInfo.paymentType === 'full' ? 'paid' : 'partial',
+                    payment_method: 'stripe',
+                    notes: orderInfo.notes || null
+                };
+
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .insert(orderData);
+
+                if (error) {
+                    console.error('Error creating order:', error);
+                } else {
+                    console.log('Order created:', orderNumber);
+                }
+            } catch (error) {
+                console.error('Error creating order:', error);
+            }
+        }
+
         // Display order summary on success page
         function displaySuccessOrderSummary(orderInfo) {
             const summaryEl = document.getElementById('successOrderSummary');
@@ -1969,12 +2024,18 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
             // Handle checkout success - show success page with order details
             if (hash === 'checkout-success') {
-                // Get order info before clearing
+                // Get order info and cart before clearing
                 const orderInfo = JSON.parse(localStorage.getItem('partyPalaceOrderInfo') || '{}');
+                const orderCart = JSON.parse(localStorage.getItem('partyPalaceCart') || '[]');
 
                 // Display order summary if available
                 if (orderInfo.paymentType) {
                     displaySuccessOrderSummary(orderInfo);
+                }
+
+                // Create order in Supabase
+                if (orderInfo.name && orderCart.length > 0) {
+                    createOrderInSupabase(orderInfo, orderCart);
                 }
 
                 // Clear cart and order info
@@ -3759,6 +3820,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
         let staffSortColumn = 'name';
         let staffSortDirection = 'asc';
         let staffSelectedIds = new Set();
+        let staffOrders = [];
+        let staffOrdersFilter = 'all';
 
         function initStaffPortal() {
             if (staffPortalInitialized) return;
@@ -3947,11 +4010,13 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.getElementById('staff-user-name').textContent = name;
             document.getElementById('staff-user-email').textContent = email;
 
-            // Load products
+            // Load products and orders
             await loadStaffProducts();
+            await loadStaffOrders();
             updateStaffStats();
             populateStaffFilters();
             renderStaffProducts();
+            renderStaffOrders();
         }
 
         async function loadStaffProducts() {
@@ -4031,6 +4096,268 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 filtersContainer.appendChild(btn);
             });
         }
+
+        // ============================================
+        // ORDERS MANAGEMENT
+        // ============================================
+
+        async function loadStaffOrders() {
+            try {
+                const { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                staffOrders = orders || [];
+                console.log('Loaded', staffOrders.length, 'orders');
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                staffOrders = [];
+            }
+        }
+
+        function renderStaffOrders() {
+            const tbody = document.getElementById('staff-orders-body');
+            const emptyState = document.getElementById('staff-orders-empty');
+            const table = document.getElementById('staff-orders-table');
+            const resultsText = document.getElementById('staff-orders-results');
+
+            if (!tbody) return;
+
+            let filteredOrders = staffOrders;
+            if (staffOrdersFilter !== 'all') {
+                filteredOrders = staffOrders.filter(o => o.status === staffOrdersFilter);
+            }
+
+            if (filteredOrders.length === 0) {
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                resultsText.textContent = staffOrdersFilter === 'all'
+                    ? 'No orders yet'
+                    : `No ${staffOrdersFilter} orders`;
+                return;
+            }
+
+            table.style.display = 'table';
+            emptyState.style.display = 'none';
+            resultsText.textContent = `Showing ${filteredOrders.length} order${filteredOrders.length !== 1 ? 's' : ''}`;
+
+            tbody.innerHTML = filteredOrders.map(order => {
+                const date = new Date(order.created_at).toLocaleDateString();
+                const itemCount = order.items ? order.items.length : 0;
+                const statusClass = getOrderStatusClass(order.status);
+                const paymentClass = getPaymentStatusClass(order.payment_status);
+
+                return `
+                    <tr>
+                        <td><strong>${order.order_number}</strong></td>
+                        <td>${date}</td>
+                        <td>
+                            <div>${order.customer_name}</div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500);">${order.customer_email}</div>
+                        </td>
+                        <td>${itemCount} item${itemCount !== 1 ? 's' : ''}</td>
+                        <td><strong>$${(order.total || 0).toFixed(2)}</strong></td>
+                        <td><span class="staff-status-badge ${paymentClass}">${(order.payment_status || 'unpaid').toUpperCase()}</span></td>
+                        <td><span class="staff-status-badge ${statusClass}">${(order.status || 'pending').toUpperCase()}</span></td>
+                        <td>
+                            <div class="staff-actions-cell">
+                                <button class="staff-action-btn" onclick="viewOrderDetail('${order.id}')" title="View">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                                <button class="staff-action-btn" onclick="updateOrderStatus('${order.id}')" title="Update Status">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getOrderStatusClass(status) {
+            const classes = {
+                'pending': 'regular',
+                'processing': 'new',
+                'shipped': 'sale',
+                'delivered': 'sale',
+                'cancelled': 'regular'
+            };
+            return classes[status] || 'regular';
+        }
+
+        function getPaymentStatusClass(status) {
+            const classes = {
+                'unpaid': 'regular',
+                'partial': 'new',
+                'paid': 'sale',
+                'refunded': 'regular'
+            };
+            return classes[status] || 'regular';
+        }
+
+        function filterOrders(status) {
+            staffOrdersFilter = status;
+            renderStaffOrders();
+        }
+        window.filterOrders = filterOrders;
+
+        function viewOrderDetail(orderId) {
+            const order = staffOrders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const date = new Date(order.created_at).toLocaleString();
+            const items = order.items || [];
+
+            const content = document.getElementById('staff-order-detail-content');
+            content.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;">Order ${order.order_number}</h4>
+                        <span class="staff-status-badge ${getOrderStatusClass(order.status)}">${(order.status || 'pending').toUpperCase()}</span>
+                    </div>
+                    <p style="color: var(--gray-500); font-size: 0.875rem; margin: 0;">${date}</p>
+                </div>
+
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                    <h5 style="margin: 0 0 0.5rem; font-size: 0.875rem; color: var(--gray-500);">CUSTOMER</h5>
+                    <p style="margin: 0; font-weight: 600;">${order.customer_name}</p>
+                    <p style="margin: 0.25rem 0; font-size: 0.875rem;">${order.customer_email}</p>
+                    ${order.customer_phone ? `<p style="margin: 0.25rem 0; font-size: 0.875rem;">${order.customer_phone}</p>` : ''}
+                    ${order.shipping_address ? `<p style="margin: 0.5rem 0 0; font-size: 0.875rem; color: var(--gray-600);">${order.shipping_address}</p>` : ''}
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="margin: 0 0 0.75rem; font-size: 0.875rem; color: var(--gray-500);">ITEMS</h5>
+                    ${items.map(item => `
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--gray-200);">
+                            <span>${item.name}${item.quantity > 1 ? ` x${item.quantity}` : ''}</span>
+                            <span style="font-weight: 600;">$${(item.price * (item.quantity || 1)).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div style="padding: 1rem; background: var(--gray-100); border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Subtotal</span>
+                        <span>$${(order.subtotal || 0).toFixed(2)}</span>
+                    </div>
+                    ${order.shipping > 0 ? `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Shipping</span>
+                        <span>$${order.shipping.toFixed(2)}</span>
+                    </div>` : ''}
+                    ${order.tax > 0 ? `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Tax</span>
+                        <span>$${order.tax.toFixed(2)}</span>
+                    </div>` : ''}
+                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; border-top: 2px solid var(--gray-300); padding-top: 0.5rem; margin-top: 0.5rem;">
+                        <span>Total</span>
+                        <span>$${(order.total || 0).toFixed(2)}</span>
+                    </div>
+                </div>
+
+                ${order.notes ? `
+                <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 8px;">
+                    <h5 style="margin: 0 0 0.5rem; font-size: 0.875rem; color: #92400e;">NOTES</h5>
+                    <p style="margin: 0; font-size: 0.875rem;">${order.notes}</p>
+                </div>` : ''}
+
+                <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <select id="order-status-select" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="saveOrderStatus('${order.id}')">Update Status</button>
+                </div>
+            `;
+
+            document.getElementById('staff-order-modal-title').textContent = `Order ${order.order_number}`;
+            openStaffModal('staff-order-modal');
+        }
+        window.viewOrderDetail = viewOrderDetail;
+
+        async function saveOrderStatus(orderId) {
+            const newStatus = document.getElementById('order-status-select').value;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: newStatus, updated_at: new Date().toISOString() })
+                    .eq('id', orderId);
+
+                if (error) throw error;
+
+                showStaffToast('Order status updated', 'success');
+                closeStaffModal('staff-order-modal');
+                await loadStaffOrders();
+                renderStaffOrders();
+            } catch (error) {
+                console.error('Error updating order:', error);
+                showStaffToast('Error updating order: ' + error.message, 'error');
+            }
+        }
+        window.saveOrderStatus = saveOrderStatus;
+
+        function updateOrderStatus(orderId) {
+            viewOrderDetail(orderId);
+        }
+        window.updateOrderStatus = updateOrderStatus;
+
+        function exportOrdersCSV() {
+            let orders = staffOrders;
+            if (staffOrdersFilter !== 'all') {
+                orders = staffOrders.filter(o => o.status === staffOrdersFilter);
+            }
+
+            if (orders.length === 0) {
+                showStaffToast('No orders to export', 'error');
+                return;
+            }
+
+            const headers = ['Order Number', 'Date', 'Customer Name', 'Email', 'Phone', 'Items', 'Subtotal', 'Shipping', 'Tax', 'Total', 'Payment Status', 'Order Status', 'Notes'];
+            const rows = orders.map(o => {
+                const itemsSummary = (o.items || []).map(i => `${i.name} x${i.quantity || 1}`).join('; ');
+                return [
+                    o.order_number,
+                    new Date(o.created_at).toLocaleDateString(),
+                    `"${(o.customer_name || '').replace(/"/g, '""')}"`,
+                    o.customer_email || '',
+                    o.customer_phone || '',
+                    `"${itemsSummary.replace(/"/g, '""')}"`,
+                    (o.subtotal || 0).toFixed(2),
+                    (o.shipping || 0).toFixed(2),
+                    (o.tax || 0).toFixed(2),
+                    (o.total || 0).toFixed(2),
+                    o.payment_status || 'unpaid',
+                    o.status || 'pending',
+                    `"${(o.notes || '').replace(/"/g, '""')}"`
+                ].join(',');
+            });
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `party-palace-orders-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showStaffToast(`Exported ${orders.length} orders to CSV`, 'success');
+        }
+        window.exportOrdersCSV = exportOrdersCSV;
 
         function renderStaffProducts() {
             const tbody = document.getElementById('staff-table-body');
