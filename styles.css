@@ -3927,6 +3927,157 @@
     color: var(--gray-500);
 }
 
+/* Staff Sales Reports */
+.staff-reports-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .staff-reports-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .staff-reports-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.staff-report-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    padding: 1.25rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.staff-report-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.staff-report-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.staff-report-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.staff-report-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.staff-bestsellers {
+    margin-top: 1rem;
+}
+
+/* Staff Activity Log */
+.staff-activity-log {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: white;
+}
+
+.staff-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-100);
+    transition: background-color 0.2s;
+}
+
+.staff-activity-item:last-child {
+    border-bottom: none;
+}
+
+.staff-activity-item:hover {
+    background-color: var(--gray-50);
+}
+
+.staff-activity-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.staff-activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.staff-activity-text {
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    margin-bottom: 0.25rem;
+}
+
+.staff-activity-text strong {
+    color: var(--gray-900);
+}
+
+.staff-activity-details {
+    display: block;
+    color: var(--gray-500);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.staff-activity-meta {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--gray-400);
+}
+
+/* Staff Customers */
+.staff-customers-count {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-bottom: 1rem;
+}
+
+.staff-customers-table-wrapper {
+    overflow-x: auto;
+}
+
+.staff-search-input {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.staff-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 /* Staff Filters */
 .staff-filters {
     display: flex;

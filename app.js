@@ -1649,6 +1649,22 @@
                     console.error('Error creating order:', error);
                 } else {
                     console.log('Order created:', orderNumber);
+
+                    // Log activity (customer checkout)
+                    try {
+                        await supabaseClient
+                            .from('activity_log')
+                            .insert([{
+                                action: 'New order',
+                                entity_type: 'order',
+                                entity_id: orderNumber,
+                                entity_name: orderNumber,
+                                details: `$${total.toFixed(2)} from ${orderInfo.name}`,
+                                user_email: orderInfo.email || 'customer'
+                            }]);
+                    } catch (logError) {
+                        console.error('Error logging activity:', logError);
+                    }
                 }
             } catch (error) {
                 console.error('Error creating order:', error);
@@ -4010,13 +4026,18 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             document.getElementById('staff-user-name').textContent = name;
             document.getElementById('staff-user-email').textContent = email;
 
-            // Load products and orders
+            // Load products, orders, and activity log
             await loadStaffProducts();
             await loadStaffOrders();
+            await loadActivityLog();
             updateStaffStats();
             populateStaffFilters();
             renderStaffProducts();
             renderStaffOrders();
+            updateSalesReports();
+            renderActivityLog();
+            buildCustomerList();
+            renderCustomerList();
         }
 
         async function loadStaffProducts() {
@@ -4116,6 +4137,255 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 staffOrders = [];
             }
         }
+
+        // Activity Log
+        let staffActivityLog = [];
+        let staffActivityFilter = 'all';
+
+        async function logActivity(action, entityType, entityId, entityName, details = null) {
+            try {
+                const userEmail = staffUser?.email || 'unknown';
+                const { error } = await supabaseClient
+                    .from('activity_log')
+                    .insert([{
+                        action,
+                        entity_type: entityType,
+                        entity_id: entityId,
+                        entity_name: entityName,
+                        details,
+                        user_email: userEmail
+                    }]);
+
+                if (error) {
+                    console.error('Error logging activity:', error);
+                    return;
+                }
+
+                // Refresh the activity log display
+                await loadActivityLog();
+                renderActivityLog();
+            } catch (error) {
+                console.error('Error logging activity:', error);
+            }
+        }
+
+        async function loadActivityLog() {
+            try {
+                const { data: logs, error } = await supabaseClient
+                    .from('activity_log')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                if (error) throw error;
+                staffActivityLog = logs || [];
+            } catch (error) {
+                console.error('Error loading activity log:', error);
+                staffActivityLog = [];
+            }
+        }
+
+        function renderActivityLog() {
+            const container = document.getElementById('staff-activity-log');
+            if (!container) return;
+
+            let filteredLogs = staffActivityLog;
+            if (staffActivityFilter !== 'all') {
+                filteredLogs = staffActivityLog.filter(log => log.entity_type === staffActivityFilter);
+            }
+
+            if (filteredLogs.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray-400); font-size: 0.875rem; text-align: center; padding: 2rem;">No activity recorded yet</p>';
+                return;
+            }
+
+            container.innerHTML = filteredLogs.map(log => {
+                const timeAgo = getTimeAgo(new Date(log.created_at));
+                const actionIcon = getActionIcon(log.action);
+                const actionColor = getActionColor(log.action);
+
+                return `
+                    <div class="staff-activity-item">
+                        <div class="staff-activity-icon" style="background: ${actionColor}20; color: ${actionColor};">
+                            ${actionIcon}
+                        </div>
+                        <div class="staff-activity-content">
+                            <div class="staff-activity-text">
+                                <strong>${log.action}</strong> ${log.entity_type}: ${log.entity_name || log.entity_id || 'Unknown'}
+                                ${log.details ? `<span class="staff-activity-details">${log.details}</span>` : ''}
+                            </div>
+                            <div class="staff-activity-meta">
+                                <span>${log.user_email}</span>
+                                <span>${timeAgo}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            if (days < 7) return `${days}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        function getActionIcon(action) {
+            const icons = {
+                'Added': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>',
+                'Updated': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>',
+                'Deleted': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>',
+                'Status changed': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>',
+                'New order': '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>'
+            };
+            return icons[action] || '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>';
+        }
+
+        function getActionColor(action) {
+            const colors = {
+                'Added': '#16a34a',
+                'Updated': '#2563eb',
+                'Deleted': '#dc2626',
+                'Status changed': '#d97706',
+                'New order': '#9333ea'
+            };
+            return colors[action] || '#6b7280';
+        }
+
+        function filterActivityLog() {
+            const filter = document.getElementById('staff-activity-filter');
+            staffActivityFilter = filter ? filter.value : 'all';
+            renderActivityLog();
+        }
+        window.filterActivityLog = filterActivityLog;
+
+        // Customer List
+        let staffCustomers = [];
+        let staffCustomerSearch = '';
+
+        function buildCustomerList() {
+            // Build customer list from orders
+            const customerMap = {};
+
+            staffOrders.forEach(order => {
+                const email = order.customer_email;
+                if (!email) return;
+
+                if (!customerMap[email]) {
+                    customerMap[email] = {
+                        email: email,
+                        name: order.customer_name || 'Unknown',
+                        phone: order.customer_phone || '',
+                        orderCount: 0,
+                        totalSpent: 0,
+                        lastOrderDate: null
+                    };
+                }
+
+                customerMap[email].orderCount++;
+                customerMap[email].totalSpent += parseFloat(order.total) || 0;
+
+                // Keep name/phone from most recent order
+                const orderDate = new Date(order.created_at);
+                if (!customerMap[email].lastOrderDate || orderDate > customerMap[email].lastOrderDate) {
+                    customerMap[email].lastOrderDate = orderDate;
+                    if (order.customer_name) customerMap[email].name = order.customer_name;
+                    if (order.customer_phone) customerMap[email].phone = order.customer_phone;
+                }
+            });
+
+            // Convert to array and sort by total spent
+            staffCustomers = Object.values(customerMap).sort((a, b) => b.totalSpent - a.totalSpent);
+        }
+
+        function renderCustomerList() {
+            const tbody = document.getElementById('staff-customers-body');
+            const emptyState = document.getElementById('staff-customers-empty');
+            const table = document.getElementById('staff-customers-table');
+            const countEl = document.getElementById('staff-customers-count');
+
+            if (!tbody) return;
+
+            // Filter by search
+            let filteredCustomers = staffCustomers;
+            if (staffCustomerSearch) {
+                const search = staffCustomerSearch.toLowerCase();
+                filteredCustomers = staffCustomers.filter(c =>
+                    c.name.toLowerCase().includes(search) ||
+                    c.email.toLowerCase().includes(search) ||
+                    (c.phone && c.phone.includes(search))
+                );
+            }
+
+            if (countEl) {
+                countEl.textContent = `${filteredCustomers.length} customer${filteredCustomers.length !== 1 ? 's' : ''}`;
+            }
+
+            if (filteredCustomers.length === 0) {
+                if (table) table.style.display = 'none';
+                if (emptyState) {
+                    emptyState.style.display = 'block';
+                    emptyState.innerHTML = `<p>${staffCustomerSearch ? `No customers matching "${staffCustomerSearch}"` : 'No customers found'}</p>`;
+                }
+                return;
+            }
+
+            if (table) table.style.display = 'table';
+            if (emptyState) emptyState.style.display = 'none';
+
+            tbody.innerHTML = filteredCustomers.map(customer => `
+                <tr>
+                    <td><strong>${customer.name}</strong></td>
+                    <td><a href="mailto:${customer.email}" style="color: var(--primary-color);">${customer.email}</a></td>
+                    <td>${customer.phone || '-'}</td>
+                    <td>${customer.orderCount}</td>
+                    <td style="font-weight: 600; color: var(--emerald-600);">$${customer.totalSpent.toFixed(2)}</td>
+                    <td>${customer.lastOrderDate ? customer.lastOrderDate.toLocaleDateString() : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function searchCustomers() {
+            const searchInput = document.getElementById('staff-customer-search');
+            staffCustomerSearch = searchInput ? searchInput.value.toLowerCase() : '';
+            renderCustomerList();
+        }
+        window.searchCustomers = searchCustomers;
+
+        function exportCustomersCSV() {
+            if (staffCustomers.length === 0) {
+                showStaffToast('No customers to export', 'error');
+                return;
+            }
+
+            const headers = ['Name', 'Email', 'Phone', 'Orders', 'Total Spent', 'Last Order'];
+            const rows = staffCustomers.map(c => [
+                `"${(c.name || '').replace(/"/g, '""')}"`,
+                c.email || '',
+                c.phone || '',
+                c.orderCount,
+                c.totalSpent.toFixed(2),
+                c.lastOrderDate ? c.lastOrderDate.toLocaleDateString() : ''
+            ].join(','));
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `party-palace-customers-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showStaffToast(`Exported ${staffCustomers.length} customers to CSV`, 'success');
+        }
+        window.exportCustomersCSV = exportCustomersCSV;
 
         function renderStaffOrders() {
             const tbody = document.getElementById('staff-orders-body');
@@ -4290,6 +4560,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
         async function saveOrderStatus(orderId) {
             const newStatus = document.getElementById('order-status-select').value;
+            const order = staffOrders.find(o => o.id === orderId);
+            const orderNumber = order?.order_number || orderId;
 
             try {
                 const { error } = await supabaseClient
@@ -4301,8 +4573,13 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
                 showStaffToast('Order status updated', 'success');
                 closeStaffModal('staff-order-modal');
+
+                // Log activity
+                logActivity('Status changed', 'order', orderId, orderNumber, `Changed to ${newStatus}`);
+
                 await loadStaffOrders();
                 renderStaffOrders();
+                updateSalesReports();
             } catch (error) {
                 console.error('Error updating order:', error);
                 showStaffToast('Error updating order: ' + error.message, 'error');
@@ -4358,6 +4635,81 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             showStaffToast(`Exported ${orders.length} orders to CSV`, 'success');
         }
         window.exportOrdersCSV = exportOrdersCSV;
+
+        function updateSalesReports() {
+            const periodSelect = document.getElementById('staff-reports-period');
+            const period = periodSelect ? periodSelect.value : '30';
+
+            // Filter orders by time period
+            let filteredOrders = staffOrders;
+            if (period !== 'all') {
+                const days = parseInt(period);
+                const cutoff = new Date();
+                cutoff.setDate(cutoff.getDate() - days);
+                filteredOrders = staffOrders.filter(o => new Date(o.created_at) >= cutoff);
+            }
+
+            // Calculate metrics
+            const totalRevenue = filteredOrders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
+            const orderCount = filteredOrders.length;
+            const avgOrderValue = orderCount > 0 ? totalRevenue / orderCount : 0;
+
+            // Count unique customers by email
+            const uniqueEmails = new Set(filteredOrders.map(o => o.customer_email).filter(Boolean));
+            const customerCount = uniqueEmails.size;
+
+            // Update UI
+            const revenueEl = document.getElementById('staff-report-revenue');
+            const ordersEl = document.getElementById('staff-report-orders');
+            const avgEl = document.getElementById('staff-report-avg');
+            const customersEl = document.getElementById('staff-report-customers');
+
+            if (revenueEl) revenueEl.textContent = '$' + totalRevenue.toFixed(2);
+            if (ordersEl) ordersEl.textContent = orderCount;
+            if (avgEl) avgEl.textContent = '$' + avgOrderValue.toFixed(2);
+            if (customersEl) customersEl.textContent = customerCount;
+
+            // Calculate top selling items
+            const itemCounts = {};
+            filteredOrders.forEach(order => {
+                (order.items || []).forEach(item => {
+                    const name = item.name || 'Unknown';
+                    const qty = item.quantity || 1;
+                    if (!itemCounts[name]) {
+                        itemCounts[name] = { name, quantity: 0, revenue: 0 };
+                    }
+                    itemCounts[name].quantity += qty;
+                    itemCounts[name].revenue += (item.price || 0) * qty;
+                });
+            });
+
+            // Sort by quantity sold and get top 5
+            const topItems = Object.values(itemCounts)
+                .sort((a, b) => b.quantity - a.quantity)
+                .slice(0, 5);
+
+            // Render top selling items
+            const bestsellersListEl = document.getElementById('staff-bestsellers-list');
+            if (bestsellersListEl) {
+                if (topItems.length === 0) {
+                    bestsellersListEl.innerHTML = '<p style="color: var(--gray-400); font-size: 0.875rem;">No sales data yet</p>';
+                } else {
+                    bestsellersListEl.innerHTML = topItems.map((item, idx) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-200);">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <span style="width: 24px; height: 24px; background: var(--gray-100); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: var(--gray-500);">${idx + 1}</span>
+                                <span style="font-weight: 500;">${item.name}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="color: var(--gray-500); font-size: 0.875rem;">${item.quantity} sold</span>
+                                <span style="font-weight: 600; color: var(--emerald-600);">$${item.revenue.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+        window.updateSalesReports = updateSalesReports;
 
         function renderStaffProducts() {
             const tbody = document.getElementById('staff-table-body');
@@ -4569,6 +4921,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 if (error) throw error;
 
                 showStaffToast(`Deleted ${count} product${count > 1 ? 's' : ''}`, 'success');
+
+                // Log activity
+                logActivity('Deleted', 'product', 'bulk', `${count} products`, `Bulk deleted ${count} items`);
+
                 staffSelectedIds.clear();
                 await loadStaffProducts();
                 updateStaffStats();
@@ -4727,6 +5083,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 staffEditingProductId = null;
                 showStaffToast(isEditing ? 'Product updated!' : 'Product added!', 'success');
                 closeStaffModal('staff-product-modal');
+
+                // Log activity
+                logActivity(isEditing ? 'Updated' : 'Added', 'product', id || 'new', productData.name);
+
                 await loadStaffProducts();
                 updateStaffStats();
                 populateStaffFilters();
@@ -4744,6 +5104,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
         async function handleStaffDeleteProduct() {
             const id = document.getElementById('staff-delete-id').value;
+            const productName = document.getElementById('staff-delete-name')?.textContent || 'Unknown';
 
             if (!id) {
                 showStaffToast('No product selected for deletion', 'error');
@@ -4760,6 +5121,10 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
                 closeStaffModal('staff-delete-modal');
                 showStaffToast('Product deleted', 'success');
+
+                // Log activity
+                logActivity('Deleted', 'product', id, productName);
+
                 await loadStaffProducts();
                 updateStaffStats();
                 populateStaffFilters();

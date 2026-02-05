@@ -2774,6 +2774,134 @@
                         </div>
                     </div>
 
+                    <!-- Sales Reports -->
+                    <div class="staff-section">
+                        <div class="staff-section-header">
+                            <h3 class="staff-section-title">SALES REPORTS</h3>
+                            <div class="staff-section-actions">
+                                <select id="staff-reports-period" onchange="updateSalesReports()">
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30" selected>Last 30 Days</option>
+                                    <option value="90">Last 90 Days</option>
+                                    <option value="365">Last Year</option>
+                                    <option value="all">All Time</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="staff-reports-grid">
+                            <div class="staff-report-card">
+                                <div class="staff-report-icon" style="background: #dcfce7; color: #16a34a;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <div class="staff-report-info">
+                                    <span class="staff-report-value" id="staff-report-revenue">$0</span>
+                                    <span class="staff-report-label">Total Sales</span>
+                                </div>
+                            </div>
+                            <div class="staff-report-card">
+                                <div class="staff-report-icon" style="background: #dbeafe; color: #2563eb;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    </svg>
+                                </div>
+                                <div class="staff-report-info">
+                                    <span class="staff-report-value" id="staff-report-orders">0</span>
+                                    <span class="staff-report-label">Orders</span>
+                                </div>
+                            </div>
+                            <div class="staff-report-card">
+                                <div class="staff-report-icon" style="background: #fef3c7; color: #d97706;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <div class="staff-report-info">
+                                    <span class="staff-report-value" id="staff-report-avg">$0</span>
+                                    <span class="staff-report-label">Avg Order Value</span>
+                                </div>
+                            </div>
+                            <div class="staff-report-card">
+                                <div class="staff-report-icon" style="background: #f3e8ff; color: #9333ea;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <div class="staff-report-info">
+                                    <span class="staff-report-value" id="staff-report-customers">0</span>
+                                    <span class="staff-report-label">Customers</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="staff-bestsellers" id="staff-bestsellers">
+                            <h4 style="margin: 1.5rem 0 1rem; font-size: 0.875rem; color: var(--gray-500);">TOP SELLING ITEMS</h4>
+                            <div id="staff-bestsellers-list">
+                                <p style="color: var(--gray-400); font-size: 0.875rem;">No sales data yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log -->
+                    <div class="staff-section">
+                        <div class="staff-section-header">
+                            <h3 class="staff-section-title">ACTIVITY LOG</h3>
+                            <div class="staff-section-actions">
+                                <select id="staff-activity-filter" onchange="filterActivityLog()">
+                                    <option value="all">All Activity</option>
+                                    <option value="product">Products</option>
+                                    <option value="order">Orders</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="staff-activity-log" id="staff-activity-log">
+                            <p style="color: var(--gray-400); font-size: 0.875rem; text-align: center; padding: 2rem;">No activity recorded yet</p>
+                        </div>
+                    </div>
+
+                    <!-- Customer List -->
+                    <div class="staff-section">
+                        <div class="staff-section-header">
+                            <h3 class="staff-section-title">CUSTOMERS</h3>
+                            <div class="staff-section-actions">
+                                <input type="text" id="staff-customer-search" placeholder="Search customers..." class="staff-search-input" oninput="searchCustomers()" style="width: 200px;">
+                                <button class="btn btn-outline" onclick="exportCustomersCSV()" title="Export to CSV">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    EXPORT
+                                </button>
+                            </div>
+                        </div>
+                        <div class="staff-customers-count" id="staff-customers-count">0 customers</div>
+                        <div class="staff-customers-table-wrapper">
+                            <table class="staff-table" id="staff-customers-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Orders</th>
+                                        <th>Total Spent</th>
+                                        <th>Last Order</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="staff-customers-body"></tbody>
+                            </table>
+                            <div class="staff-empty" id="staff-customers-empty" style="display: none;">
+                                <p>No customers found</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Product Inventory -->
                     <div class="staff-section">
                         <div class="staff-section-header">
