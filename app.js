@@ -1928,6 +1928,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 renderServices();
             } else if (page === 'gallery') {
                 renderGallery();
+            } else if (page === 'prints3d' || page === 'engraving') {
+                renderDynamicProducts();
             }
 
             // Reset "Did we make your day better" section when navigating to home
