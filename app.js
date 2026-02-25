@@ -4,18 +4,53 @@
         
         // Fetch products from Supabase on page load
         async function loadProducts(skipInit) {
+            const supabaseUrl = 'https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g';
+            const fetchHeaders = {
+                'apikey': supabaseKey,
+                'Authorization': 'Bearer ' + supabaseKey
+            };
             try {
-                const response = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products?select=*', {
-                    headers: {
-                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g',
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g'
-                    }
-                });
+                // Paginate 50 rows at a time to avoid Supabase free-tier statement timeout
+                const pageSize = 50;
+                let allProducts = [];
+                let offset = 0;
 
-                const dbProducts = await response.json();
+                while (true) {
+                    const pageUrl = `${supabaseUrl}?select=*&limit=${pageSize}&offset=${offset}`;
+
+                    // Retry once with delay to handle Supabase cold-start timeouts
+                    let response = null;
+                    for (let attempt = 0; attempt < 2; attempt++) {
+                        if (attempt > 0) await new Promise(r => setTimeout(r, 3000));
+                        try {
+                            const r = await fetch(pageUrl, { headers: fetchHeaders });
+                            if (r.ok) { response = r; break; }
+                            const errText = await r.text().catch(() => String(r.status));
+                            console.error('Supabase error (attempt ' + (attempt + 1) + '):', r.status, errText);
+                        } catch (fetchErr) {
+                            console.error('Fetch failed (attempt ' + (attempt + 1) + '):', fetchErr);
+                        }
+                    }
+
+                    if (!response) break;
+
+                    const batch = await response.json();
+                    if (!Array.isArray(batch) || batch.length === 0) break;
+                    allProducts = allProducts.concat(batch);
+                    if (batch.length < pageSize) break;
+                    offset += pageSize;
+                }
+
+                if (allProducts.length === 0) {
+                    console.error('No products loaded from Supabase');
+                    products = [];
+                    if (!skipInit) initializeApp();
+                    return;
+                }
 
                 // Transform database products to match app format
-                products = dbProducts.map(p => ({
+                products = allProducts.map(p => ({
                     id: p.id,
                     name: p.name,
                     slug: p.slug,
