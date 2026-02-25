@@ -3,54 +3,24 @@
         let products = [];
         
         // Fetch products from Supabase on page load
+        // Two-phase: phase 1 fetches all metadata (fast), phase 2 fetches image_url in background
+        // (image_url contains long storage URLs — fetching 30+ at once hits Supabase free-tier timeout)
+        const SUPABASE_URL = 'https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g';
+        const SUPABASE_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
         async function loadProducts(skipInit) {
-            const supabaseUrl = 'https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g';
-            const fetchHeaders = {
-                'apikey': supabaseKey,
-                'Authorization': 'Bearer ' + supabaseKey
-            };
             try {
-                // Paginate 50 rows at a time to avoid Supabase free-tier statement timeout
-                const pageSize = 50;
-                let allProducts = [];
-                let offset = 0;
+                // Phase 1: fetch all columns EXCEPT image_url (avoids statement timeout)
+                const cols = 'id,name,slug,category,price,sale,emoji,featured,price_label,description,size,material';
+                const response = await fetch(`${SUPABASE_URL}?select=${cols}&limit=500`, { headers: SUPABASE_HEADERS });
 
-                while (true) {
-                    const pageUrl = `${supabaseUrl}?select=*&limit=${pageSize}&offset=${offset}`;
-
-                    // Retry once with delay to handle Supabase cold-start timeouts
-                    let response = null;
-                    for (let attempt = 0; attempt < 2; attempt++) {
-                        if (attempt > 0) await new Promise(r => setTimeout(r, 3000));
-                        try {
-                            const r = await fetch(pageUrl, { headers: fetchHeaders });
-                            if (r.ok) { response = r; break; }
-                            const errText = await r.text().catch(() => String(r.status));
-                            console.error('Supabase error (attempt ' + (attempt + 1) + '):', r.status, errText);
-                        } catch (fetchErr) {
-                            console.error('Fetch failed (attempt ' + (attempt + 1) + '):', fetchErr);
-                        }
-                    }
-
-                    if (!response) break;
-
-                    const batch = await response.json();
-                    if (!Array.isArray(batch) || batch.length === 0) break;
-                    allProducts = allProducts.concat(batch);
-                    if (batch.length < pageSize) break;
-                    offset += pageSize;
-                }
-
-                if (allProducts.length === 0) {
-                    console.error('No products loaded from Supabase');
-                    products = [];
-                    if (!skipInit) initializeApp();
-                    return;
-                }
+                if (!response.ok) throw new Error('Supabase error: ' + response.status);
+                const dbProducts = await response.json();
+                if (!Array.isArray(dbProducts)) throw new Error('Unexpected response: ' + JSON.stringify(dbProducts).slice(0, 100));
 
                 // Transform database products to match app format
-                products = allProducts.map(p => ({
+                products = dbProducts.map(p => ({
                     id: p.id,
                     name: p.name,
                     slug: p.slug,
@@ -61,26 +31,19 @@
                     icon: p.emoji,
                     popular: p.featured,
                     sale: p.sale || false,
-                    image_url: p.image_url,
+                    image_url: null,
                     size: p.size,
                     material: p.material,
-                    tieredPricing: p.tiered_pricing,
                     hasGallery: true
                 }));
 
-                // Attach images from productGalleryImages if available,
-                // fall back to image_url from database
+                // Attach images from productGalleryImages if available
                 products.forEach(product => {
                     if (typeof productGalleryImages !== 'undefined') {
                         const images = productGalleryImages[product.name];
                         if (images && images.length > 0) {
                             product.images = images;
-                            return;
                         }
-                    }
-                    // Fallback: use the image_url from the database
-                    if (product.image_url) {
-                        product.images = [product.image_url];
                     }
                 });
 
@@ -92,21 +55,50 @@
 
                 console.log('Loaded', products.length, 'products from Supabase');
 
-                // Render any new DB products not already in static HTML
+                // Render immediately with what we have (images may be emoji fallbacks for now)
                 renderDynamicProducts();
+                if (!skipInit) initializeApp();
 
-                // Initialize the app after products are loaded (skip when refreshing from staff portal)
-                if (!skipInit) {
-                    initializeApp();
-                }
+                // Phase 2 (background): fetch image_url in chunks of 20 using ID filter
+                loadProductImages();
+
             } catch (error) {
                 console.error('Error loading products from Supabase:', error);
-                // Fallback to empty array if fetch fails
                 products = [];
-                // Still initialize the app so event listeners are set up
-                if (!skipInit) {
-                    initializeApp();
-                }
+                if (!skipInit) initializeApp();
+            }
+        }
+
+        // Fetch image_url for all products in the background (20 at a time to avoid timeout)
+        async function loadProductImages() {
+            const ids = products.map(p => p.id).filter(Boolean);
+            const PAGE = 20;
+            let anyUpdated = false;
+
+            for (let i = 0; i < ids.length; i += PAGE) {
+                const chunk = ids.slice(i, i + PAGE);
+                try {
+                    const r = await fetch(`${SUPABASE_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: SUPABASE_HEADERS });
+                    if (!r.ok) continue;
+                    const batch = await r.json();
+                    if (!Array.isArray(batch)) continue;
+                    batch.forEach(row => {
+                        if (!row.image_url) return;
+                        const product = products.find(p => p.id === row.id);
+                        if (product && !product.images?.length) {
+                            product.image_url = row.image_url;
+                            product.images = [row.image_url];
+                            anyUpdated = true;
+                        }
+                    });
+                } catch (e) { /* continue on error */ }
+                if (i + PAGE < ids.length) await new Promise(r => setTimeout(r, 200));
+            }
+
+            // Re-render sections that needed images
+            if (anyUpdated) {
+                renderDynamicProducts();
+                if (typeof renderCatalog === 'function') renderCatalog();
             }
         }
 
@@ -4081,18 +4073,17 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
 
         async function loadStaffProducts() {
             try {
+                // Fetch without image_url first (avoids Supabase free-tier statement timeout)
                 const { data: dbProducts, error } = await supabaseClient
                     .from('products')
-                    .select('*');
+                    .select('id,name,slug,category,price,cost,sale,discount_percent,description,emoji,featured');
 
                 if (error) throw error;
 
-                console.log('[STAFF LOAD] First product raw:', dbProducts[0]);
-
                 // Load products from Supabase
                 staffProducts = dbProducts.map(p => {
-                    // Get first image from productGalleryImages if available
-                    let image = p.image_url || null;
+                    // Use productGalleryImages for known products, image_url loaded in background
+                    let image = null;
                     if (typeof productGalleryImages !== 'undefined' && productGalleryImages[p.name]) {
                         image = productGalleryImages[p.name][0];
                     }
@@ -4108,14 +4099,39 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         sale: p.sale || false,
                         discount_percent: p.discount_percent || null,
                         image: image,
-                        image_url: p.image_url || null
+                        image_url: null
                     };
                 });
+
+                // Fetch image_url in background (20 at a time to avoid timeout)
+                loadStaffProductImages();
 
             } catch (error) {
                 console.error('Error loading staff products:', error);
                 showStaffToast('Failed to load products', 'error');
             }
+        }
+
+        async function loadStaffProductImages() {
+            const ids = staffProducts.map(p => p.id).filter(Boolean);
+            const PAGE = 20;
+            let anyUpdated = false;
+            for (let i = 0; i < ids.length; i += PAGE) {
+                const chunk = ids.slice(i, i + PAGE);
+                try {
+                    const r = await fetch(`${SUPABASE_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: SUPABASE_HEADERS });
+                    if (!r.ok) continue;
+                    const batch = await r.json();
+                    if (!Array.isArray(batch)) continue;
+                    batch.forEach(row => {
+                        if (!row.image_url) return;
+                        const sp = staffProducts.find(p => p.id === row.id);
+                        if (sp && !sp.image) { sp.image = row.image_url; sp.image_url = row.image_url; anyUpdated = true; }
+                    });
+                } catch (e) { /* continue */ }
+                if (i + PAGE < ids.length) await new Promise(r => setTimeout(r, 200));
+            }
+            if (anyUpdated && typeof renderStaffProducts === 'function') renderStaffProducts();
         }
 
         function updateStaffStats() {
