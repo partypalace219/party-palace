@@ -3336,8 +3336,8 @@
         </div>
     </div>
 
-    <script src="product_image_urls.js"></script>
-    <script src="app.js"></script>
+    <script src="product_image_urls.js?v=4"></script>
+    <script src="app.js?v=4"></script>
 
     <!-- Did We Make Your Day Better Script -->
     <script>
@@ -3735,7 +3735,7 @@
     // Re-initialize when navigating (products are dynamically rendered)
     const originalNavigate = window.navigate;
     window.navigate = function(page) {
-        originalNavigate(page);
+        if (typeof originalNavigate === 'function') originalNavigate(page);
         setTimeout(initElectricBorders, 100);
     };
     </script>
