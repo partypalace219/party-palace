@@ -5,15 +5,15 @@
         // Fetch products from Supabase on page load
         // Two-phase: phase 1 fetches all metadata (fast), phase 2 fetches image_url in background
         // (image_url contains long storage URLs — fetching 30+ at once hits Supabase free-tier timeout)
-        const SUPABASE_URL = 'https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g';
-        const SUPABASE_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+        const DB_PRODUCTS_URL = 'https://nsedpvrqhxcikhlieize.supabase.co/rest/v1/products';
+        const DB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zZWRwdnJxaHhjaWtobGllaXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzMzMDksImV4cCI6MjA4NDUwOTMwOX0.yh4xyXG69LU5gC5cBjRLEZ_5gDtmVDSN1KqG0KIkj4g';
+        const DB_FETCH_HEADERS = { 'apikey': DB_ANON_KEY, 'Authorization': 'Bearer ' + DB_ANON_KEY };
 
         async function loadProducts(skipInit) {
             try {
                 // Phase 1: fetch all columns EXCEPT image_url (avoids statement timeout)
                 const cols = 'id,name,slug,category,price,sale,emoji,featured,price_label,description,size,material';
-                const response = await fetch(`${SUPABASE_URL}?select=${cols}&limit=500`, { headers: SUPABASE_HEADERS });
+                const response = await fetch(`${DB_PRODUCTS_URL}?select=${cols}&limit=500`, { headers: DB_FETCH_HEADERS });
 
                 if (!response.ok) throw new Error('Supabase error: ' + response.status);
                 const dbProducts = await response.json();
@@ -78,7 +78,7 @@
             for (let i = 0; i < ids.length; i += PAGE) {
                 const chunk = ids.slice(i, i + PAGE);
                 try {
-                    const r = await fetch(`${SUPABASE_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: SUPABASE_HEADERS });
+                    const r = await fetch(`${DB_PRODUCTS_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: DB_FETCH_HEADERS });
                     if (!r.ok) continue;
                     const batch = await r.json();
                     if (!Array.isArray(batch)) continue;
@@ -4119,7 +4119,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             for (let i = 0; i < ids.length; i += PAGE) {
                 const chunk = ids.slice(i, i + PAGE);
                 try {
-                    const r = await fetch(`${SUPABASE_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: SUPABASE_HEADERS });
+                    const r = await fetch(`${DB_PRODUCTS_URL}?select=id,image_url&id=in.(${chunk.join(',')})`, { headers: DB_FETCH_HEADERS });
                     if (!r.ok) continue;
                     const batch = await r.json();
                     if (!Array.isArray(batch)) continue;
