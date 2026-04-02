@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 1 of 4 (Security)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-04-02 — Plan 02 complete: dynamic CORS lockdown on all 4 edge functions
+Plan: 3 of 3 in current phase
+Status: Phase complete
+Last activity: 2026-04-02 — Plan 03 complete: escapeHtml() in email functions + textContent for product cards
 
-Progress: [██░░░░░░░░] 17%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
@@ -27,10 +27,10 @@ Progress: [██░░░░░░░░] 17%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-security | 2 | 5 min | 2.5 min |
+| 01-security | 3 | 13 min | 4.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 2 min
+- Last 5 plans: 3 min, 2 min, 8 min
 - Trend: —
 
 *Updated after each plan completion*
@@ -51,6 +51,9 @@ Recent decisions affecting current work:
 - 01-02: Dynamic CORS falls back to production domain (not request origin) for unlisted origins — browser rejects mismatch
 - 01-02: corsHeaders computed per-request as local variable via getCorsHeaders(req) — pattern established for all future edge functions
 - 01-02: stripe-webhook given OPTIONS handler for consistency even though Stripe never sends CORS preflight
+- 01-03: escapeHtml() defined once per edge function file (not shared module) — Deno edge functions are isolated deployments
+- 01-03: escape-before-replace pattern: escapeHtml(str).replace(/\n/g, '<br>') neutralizes tags before newline conversion
+- 01-03: For createProductCard (string-return), data-product-name/data-product-desc attributes enable post-DOM textContent fill
 
 ### Pending Todos
 
@@ -63,5 +66,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-02
-Stopped at: Completed 01-security Plan 02 — dynamic CORS lockdown on all 4 edge functions
+Stopped at: Completed 01-security Plan 03 — escapeHtml() in email functions + textContent for product cards
 Resume file: None
