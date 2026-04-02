@@ -6,6 +6,22 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
 import { hmac } from "https://deno.land/x/hmac@v2.0.1/mod.ts"
 
+const ALLOWED_ORIGINS = [
+  'https://thepartypalace.in',
+  'http://localhost:3000',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+]
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('Origin') || ''
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
+}
+
 // SMTP Configuration - Use Gmail SMTP
 const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
@@ -37,11 +53,17 @@ function verifyStripeSignature(payload: string, signature: string, secret: strin
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req)
+
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   const signature = req.headers.get('stripe-signature')
   const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
 
   if (!signature || !webhookSecret) {
-    return new Response('Missing signature or webhook secret', { status: 400 })
+    return new Response('Missing signature or webhook secret', { status: 400, headers: corsHeaders })
   }
 
   try {
@@ -50,7 +72,7 @@ serve(async (req) => {
     // Verify webhook signature
     if (!verifyStripeSignature(body, signature, webhookSecret)) {
       console.error('Invalid signature')
-      return new Response('Invalid signature', { status: 400 })
+      return new Response('Invalid signature', { status: 400, headers: corsHeaders })
     }
 
     const event = JSON.parse(body)
@@ -149,12 +171,12 @@ serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ received: true }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
   } catch (error) {
     console.error('Webhook error:', error)
-    return new Response(`Webhook Error: ${error.message}`, { status: 400 })
+    return new Response(`Webhook Error: ${error.message}`, { status: 400, headers: corsHeaders })
   }
 })
 
