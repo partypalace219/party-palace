@@ -313,12 +313,9 @@
                 .reduce((sum, item) => sum + item.price, 0);
         }
 
-        // Get discount amount (applied to products only)
+        // Get discount amount — always 0 client-side; server calculates from verified prices
         function getProductDiscount() {
-            if (!appliedCouponCode || !validCoupons[appliedCouponCode]) return 0;
-            const productSubtotal = getProductSubtotal();
-            const discountPercent = validCoupons[appliedCouponCode].discount;
-            return productSubtotal * (discountPercent / 100);
+            return 0;
         }
 
         // Get discounted product subtotal
@@ -447,6 +444,7 @@
                 if (!product) return;
 
                 itemToAdd = {
+                    id: product.id,
                     name: product.name,
                     price: product.price,
                     category: product.category,
@@ -455,6 +453,7 @@
             } else if (typeof productNameOrObj === 'object' && productNameOrObj !== null) {
                 // Direct item object passed (e.g., from 3D print products with color)
                 itemToAdd = {
+                    id: productNameOrObj.id || null,
                     name: productNameOrObj.name,
                     price: productNameOrObj.price,
                     category: productNameOrObj.category || 'prints3d',
@@ -1230,13 +1229,7 @@
             return cart.reduce((sum, item) => sum + item.price, 0);
         }
 
-        // Coupon codes system
-        const validCoupons = {
-            'PARTY10': { discount: 10, description: '10% off' },
-            'FUN30': { discount: 30, description: '30% off' },
-            'FAMILY50': { discount: 50, description: '50% off' }
-        };
-
+        // Coupon codes system — validation is server-side only
         let appliedCouponCode = null;
 
         function applyCoupon() {
@@ -1254,24 +1247,18 @@
                 return;
             }
 
-            if (validCoupons[code]) {
-                appliedCouponCode = code;
-                const coupon = validCoupons[code];
+            // Accept any code — the server validates it at checkout
+            appliedCouponCode = code;
 
-                // Show applied coupon
-                appliedText.textContent = `${code} - ${coupon.description} applied!`;
-                appliedDiv.style.display = 'block';
-                message.style.display = 'none';
-                input.value = '';
-                input.disabled = true;
+            // Show applied coupon
+            appliedText.textContent = `${code} — discount will be applied at checkout`;
+            appliedDiv.style.display = 'block';
+            message.style.display = 'none';
+            input.value = '';
+            input.disabled = true;
 
-                // Update totals
-                updateCheckoutWithDiscount();
-                showNotification(`Coupon applied: ${coupon.description}`, 'success');
-            } else {
-                showCouponMessage('Invalid coupon code', 'error');
-                appliedCouponCode = null;
-            }
+            updateCheckoutWithDiscount();
+            showNotification('Coupon code applied — discount will be calculated at checkout', 'success');
         }
 
         function removeCoupon() {
@@ -1302,21 +1289,8 @@
         }
 
         function getDiscountedTotal() {
+            // Discount is calculated server-side from verified prices — always return 0 here
             const subtotal = getCartTotal();
-            const productSubtotal = getProductSubtotal();
-            const serviceSubtotal = getServiceSubtotal();
-
-            if (appliedCouponCode && validCoupons[appliedCouponCode]) {
-                const discountPercent = validCoupons[appliedCouponCode].discount;
-                // Discount applies only to products, not services
-                const discountAmount = productSubtotal * (discountPercent / 100);
-                return {
-                    subtotal: subtotal,
-                    discountPercent: discountPercent,
-                    discountAmount: discountAmount,
-                    total: subtotal - discountAmount
-                };
-            }
             return {
                 subtotal: subtotal,
                 discountPercent: 0,
@@ -1824,10 +1798,9 @@
             submitBtn.classList.add('animation');
             statusEl.innerHTML = '';
 
-            // Calculate shipping, tax, and discount for products
+            // Calculate shipping and tax for products (discount is validated server-side)
             const shipping = getShippingCost();
             const tax = getTaxAmount();
-            const discount = getProductDiscount();
 
             try {
                 // Store order info in localStorage for retrieval after payment
@@ -1848,16 +1821,19 @@
                         hasProducts: hasProducts,
                         shipping: shipping,
                         tax: tax,
-                        discount: discount,
+                        couponCode: appliedCouponCode || null,
                         shippingAddress: shippingAddress
                     })
                 });
 
+                const responseData = await response.json();
+
                 if (!response.ok) {
-                    throw new Error('Failed to create checkout session');
+                    // Surface server error message (e.g. invalid coupon, unverified product)
+                    throw new Error(responseData.error || 'Failed to create checkout session');
                 }
 
-                const { url } = await response.json();
+                const { url } = responseData;
 
                 // Show truck animation completing then redirect to Stripe
                 setTimeout(() => {
@@ -1872,16 +1848,27 @@
             } catch (error) {
                 console.error('Checkout error:', error);
 
-                // Fallback: Use email submission if Stripe fails
-                statusEl.innerHTML = `
-                    <div class="form-error">
-                        Payment system temporarily unavailable.
-                        <br><br>
-                        <button type="button" onclick="submitViaEmail()" class="btn btn-outline" style="margin-top: 0.5rem;">
-                            Submit Order via Email Instead
-                        </button>
-                    </div>
-                `;
+                const isValidationError = error.message && (
+                    error.message.includes('Coupon') ||
+                    error.message.includes('could not be verified') ||
+                    error.message.includes('not valid')
+                );
+
+                if (isValidationError) {
+                    // Show the server's validation message directly (coupon errors, product errors)
+                    statusEl.innerHTML = `<div class="form-error">${error.message}</div>`;
+                } else {
+                    // Fallback: Use email submission if Stripe/network fails
+                    statusEl.innerHTML = `
+                        <div class="form-error">
+                            Payment system temporarily unavailable.
+                            <br><br>
+                            <button type="button" onclick="submitViaEmail()" class="btn btn-outline" style="margin-top: 0.5rem;">
+                                Submit Order via Email Instead
+                            </button>
+                        </div>
+                    `;
+                }
 
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('animation');
