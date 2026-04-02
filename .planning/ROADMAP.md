@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A curl request to the checkout edge function from an unlisted origin receives a CORS rejection
   4. Order confirmation emails display user-supplied strings (name, notes) as literal text — HTML tags entered by a user are not rendered
   5. Dynamic product card HTML sets user-derived fields via `textContent` — no XSS vector exists in rendered cards
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
 - [ ] 01-01: Server-side price verification and coupon validation in checkout edge function
@@ -44,7 +44,7 @@ Plans:
   1. After a successful Stripe test checkout, a row exists in the Supabase `orders` table with the correct line items, total, and customer details
   2. Order confirmation and booking confirmation emails arrive from Resend — no Gmail SMTP credentials or SMTP calls exist in the codebase
   3. Sending more than 10 checkout requests from the same IP within one minute results in HTTP 429 responses for the excess requests
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
 - [ ] 02-01: Create orders table and write order record in webhook handler
@@ -59,7 +59,7 @@ Plans:
   1. Requesting any `.backup*` file or Python script URL via HTTP returns 404 — no such paths are served from the public root
   2. The "Popular" badge on product cards is driven by the Supabase `featured` column — removing a product from the hardcoded JS array has no effect because that array no longer exists
   3. All dynamically rendered product `<img>` tags include `loading="lazy"` — verified by inspecting the DOM after products load
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
 - [ ] 03-01: Remove backup files and Python scripts from public web root
@@ -75,7 +75,7 @@ Plans:
   2. Engraving and 3D prints product cards are rendered entirely from Supabase data — static `<div class="product-card">` blocks for those categories are absent from index.html
   3. The engraving and 3D prints card builders contain no inline `style="..."` attributes — all visual styling is expressed as CSS class names in styles.css
   4. Rapid tab switching or page revisits do not produce stacked hero slideshow animations — clearing and re-initializing the interval produces a single clean timer
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
 - [ ] 04-01: Split app.js into ES modules (cart, products, checkout, staff, ui)
