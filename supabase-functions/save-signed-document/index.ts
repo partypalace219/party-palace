@@ -22,6 +22,15 @@ function getCorsHeaders(req: Request) {
   }
 }
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 // SMTP Configuration - Use Gmail SMTP
 const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
@@ -370,16 +379,16 @@ async function sendBusinessNotification(data: {
   <div class="content">
     <div class="section">
       <h2 style="margin-top: 0; color: ${headerColor};">Signer Information</h2>
-      <p><span class="label">Full Legal Name:</span> ${data.fullName}</p>
-      <p><span class="label">Event Date:</span> ${data.eventDate}</p>
-      <p><span class="label">Date Signed:</span> ${data.signedDate}</p>
+      <p><span class="label">Full Legal Name:</span> ${escapeHtml(data.fullName)}</p>
+      <p><span class="label">Event Date:</span> ${escapeHtml(data.eventDate)}</p>
+      <p><span class="label">Date Signed:</span> ${escapeHtml(data.signedDate)}</p>
       <p><span class="label">Timestamp:</span> ${new Date(data.timestamp).toLocaleString('en-US', { timeZone: 'America/Chicago' })} (Central Time)</p>
     </div>
 
     <div class="section">
       <h2 style="margin-top: 0; color: ${headerColor};">Electronic Signature</h2>
       <p style="font-size: 14px; color: #666;">The client typed their name below as their legal electronic signature:</p>
-      <div class="signature-box">${data.signature}</div>
+      <div class="signature-box">${escapeHtml(data.signature)}</div>
     </div>
 
     <div class="agreement-section">

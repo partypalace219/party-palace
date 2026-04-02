@@ -22,6 +22,15 @@ function getCorsHeaders(req: Request) {
   }
 }
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 // SMTP Configuration - Use Gmail SMTP
 const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
@@ -185,23 +194,23 @@ async function sendContactEmail(data: {
     ${hasProduct ? `
     <div class="product-highlight">
       <h2>Interested Product</h2>
-      <p class="product-name">${data.selectedProduct!.name}</p>
+      <p class="product-name">${escapeHtml(data.selectedProduct!.name)}</p>
       <p class="product-price">Starting at $${data.selectedProduct!.price}</p>
     </div>
     ` : ''}
 
     <div class="section">
       <h2 style="margin-top: 0; color: #667eea;">Customer Information</h2>
-      <p><span class="label">Name:</span> ${data.name}</p>
-      <p><span class="label">Email:</span> <a href="mailto:${data.email}">${data.email}</a></p>
-      <p><span class="label">Phone:</span> <a href="tel:${data.phone}">${data.phone}</a></p>
-      <p><span class="label">Event Type:</span> ${data.eventType}</p>
+      <p><span class="label">Name:</span> ${escapeHtml(data.name)}</p>
+      <p><span class="label">Email:</span> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
+      <p><span class="label">Phone:</span> <a href="tel:${escapeHtml(data.phone)}">${escapeHtml(data.phone)}</a></p>
+      <p><span class="label">Event Type:</span> ${escapeHtml(data.eventType)}</p>
     </div>
 
     <div class="section">
       <h2 style="margin-top: 0; color: #667eea;">Message</h2>
       <div class="message-box">
-        ${data.message.replace(/\n/g, '<br>')}
+        ${escapeHtml(data.message).replace(/\n/g, '<br>')}
       </div>
     </div>
 
@@ -269,27 +278,27 @@ async function sendCustomOrderEmail(data: {
 <body>
   <div class="header">
     <h1>New Custom Order Request</h1>
-    <p style="margin: 5px 0 0 0; opacity: 0.9;">${orderTypeLabels[data.orderType] || data.orderType}</p>
+    <p style="margin: 5px 0 0 0; opacity: 0.9;">${orderTypeLabels[data.orderType] || escapeHtml(data.orderType)}</p>
   </div>
 
   <div class="content">
     <div class="section">
       <h2 style="margin-top: 0; color: #059669;">Customer Information</h2>
-      <p><span class="label">Name:</span> ${data.name}</p>
-      <p><span class="label">Email:</span> <a href="mailto:${data.email}">${data.email}</a></p>
-      <p><span class="label">Phone:</span> <a href="tel:${data.phone}">${data.phone}</a></p>
+      <p><span class="label">Name:</span> ${escapeHtml(data.name)}</p>
+      <p><span class="label">Email:</span> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
+      <p><span class="label">Phone:</span> <a href="tel:${escapeHtml(data.phone)}">${escapeHtml(data.phone)}</a></p>
     </div>
 
     <div class="section">
       <h2 style="margin-top: 0; color: #059669;">Order Details</h2>
-      <p><span class="label">Order Type:</span> ${orderTypeLabels[data.orderType] || data.orderType}</p>
-      <p><span class="label">Product:</span> ${data.product}</p>
+      <p><span class="label">Order Type:</span> ${orderTypeLabels[data.orderType] || escapeHtml(data.orderType)}</p>
+      <p><span class="label">Product:</span> ${escapeHtml(data.product)}</p>
     </div>
 
     <div class="section">
       <h2 style="margin-top: 0; color: #059669;">Project Description</h2>
       <div class="description-box">
-        ${data.description.replace(/\n/g, '<br>')}
+        ${escapeHtml(data.description).replace(/\n/g, '<br>')}
       </div>
     </div>
 

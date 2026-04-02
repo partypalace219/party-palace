@@ -28,6 +28,15 @@ const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
 const SMTP_USER = Deno.env.get('SMTP_USER')
 const SMTP_PASS = Deno.env.get('SMTP_PASS')
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 // Verify Stripe webhook signature
 function verifyStripeSignature(payload: string, signature: string, secret: string): boolean {
   try {
@@ -210,8 +219,8 @@ async function sendProductConfirmationEmail(data: {
   shippingAddress: any
 }) {
   const shippingInfo = data.shippingAddress
-    ? `${data.shippingAddress.line1}${data.shippingAddress.line2 ? ', ' + data.shippingAddress.line2 : ''}<br>
-       ${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.postal_code}`
+    ? `${escapeHtml(data.shippingAddress.line1)}${data.shippingAddress.line2 ? ', ' + escapeHtml(data.shippingAddress.line2) : ''}<br>
+       ${escapeHtml(data.shippingAddress.city)}, ${escapeHtml(data.shippingAddress.state)} ${escapeHtml(data.shippingAddress.postal_code)}`
     : 'Address provided at checkout'
 
   const emailHtml = `
@@ -240,7 +249,7 @@ async function sendProductConfirmationEmail(data: {
   </div>
 
   <div class="content">
-    <p>Hi ${data.customerName},</p>
+    <p>Hi ${escapeHtml(data.customerName)},</p>
     <p>Thank you for your order! We've received your payment and will ship your items soon.</p>
 
     <div class="highlight">
@@ -250,7 +259,7 @@ async function sendProductConfirmationEmail(data: {
 
     <div class="section">
       <h2>Order Summary</h2>
-      <p style="margin-bottom: 15px;">${data.orderItems}</p>
+      <p style="margin-bottom: 15px;">${escapeHtml(data.orderItems)}</p>
       <div class="detail-row">
         <span class="detail-label">Subtotal:</span>
         <span>$${data.itemsSubtotal.toFixed(2)}</span>
@@ -336,8 +345,8 @@ async function sendProductBusinessNotification(data: {
   shippingAddress: any
 }) {
   const shippingInfo = data.shippingAddress
-    ? `${data.shippingAddress.line1}${data.shippingAddress.line2 ? ', ' + data.shippingAddress.line2 : ''},
-       ${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.postal_code}`
+    ? `${escapeHtml(data.shippingAddress.line1)}${data.shippingAddress.line2 ? ', ' + escapeHtml(data.shippingAddress.line2) : ''},
+       ${escapeHtml(data.shippingAddress.city)}, ${escapeHtml(data.shippingAddress.state)} ${escapeHtml(data.shippingAddress.postal_code)}`
     : 'Address provided at Stripe checkout'
 
   const emailHtml = `
@@ -361,14 +370,14 @@ async function sendProductBusinessNotification(data: {
   <div class="content">
     <div class="section">
       <h2>Customer Information</h2>
-      <p><span class="label">Name:</span> ${data.customerName}</p>
-      <p><span class="label">Email:</span> ${data.customerEmail}</p>
-      <p><span class="label">Phone:</span> ${data.customerPhone || 'Not provided'}</p>
+      <p><span class="label">Name:</span> ${escapeHtml(data.customerName)}</p>
+      <p><span class="label">Email:</span> ${escapeHtml(data.customerEmail)}</p>
+      <p><span class="label">Phone:</span> ${data.customerPhone ? escapeHtml(data.customerPhone) : 'Not provided'}</p>
     </div>
 
     <div class="section">
       <h2>Order Details</h2>
-      <p><span class="label">Items:</span> ${data.orderItems}</p>
+      <p><span class="label">Items:</span> ${escapeHtml(data.orderItems)}</p>
       <p><span class="label">Subtotal:</span> $${data.itemsSubtotal.toFixed(2)}</p>
       ${data.discount > 0 ? `<p><span class="label">Discount:</span> -$${data.discount.toFixed(2)}</p>` : ''}
       <p><span class="label">Shipping:</span> ${data.shipping > 0 ? '$' + data.shipping.toFixed(2) : 'FREE'}</p>
@@ -449,7 +458,7 @@ async function sendBookingConfirmationEmail(data: {
   </div>
 
   <div class="content">
-    <p>Hi ${data.customerName},</p>
+    <p>Hi ${escapeHtml(data.customerName)},</p>
     <p>Thank you for your booking! ${isFullPayment ? 'Your full payment has been received.' : 'Your deposit has been received and your event is now secured.'}</p>
 
     <div class="highlight">
@@ -460,19 +469,19 @@ async function sendBookingConfirmationEmail(data: {
     <div class="section">
       <h2>Event Details</h2>
       <div class="detail-row">
-        <span class="detail-label">Event Type:</span> ${data.eventType || 'To be confirmed'}
+        <span class="detail-label">Event Type:</span> ${data.eventType ? escapeHtml(data.eventType) : 'To be confirmed'}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Event Date:</span> ${data.eventDate || 'To be confirmed'}
+        <span class="detail-label">Event Date:</span> ${data.eventDate ? escapeHtml(data.eventDate) : 'To be confirmed'}
       </div>
       <div class="detail-row">
-        <span class="detail-label">Venue:</span> ${data.venue || 'To be confirmed'}
+        <span class="detail-label">Venue:</span> ${data.venue ? escapeHtml(data.venue) : 'To be confirmed'}
       </div>
     </div>
 
     <div class="section">
       <h2>Your Order</h2>
-      <p>${data.orderItems || 'Custom order'}</p>
+      <p>${data.orderItems ? escapeHtml(data.orderItems) : 'Custom order'}</p>
       <div class="detail-row" style="border-top: 2px solid #667eea; margin-top: 15px; padding-top: 15px;">
         <span class="detail-label">${isFullPayment ? 'Total Paid:' : 'Estimated Total:'}</span>
         <span style="font-size: 18px; color: #667eea; font-weight: bold;">$${data.estimatedTotal}</span>
@@ -487,7 +496,7 @@ async function sendBookingConfirmationEmail(data: {
     ${data.notes ? `
     <div class="section">
       <h2>Your Notes</h2>
-      <p>${data.notes}</p>
+      <p>${escapeHtml(data.notes)}</p>
     </div>
     ` : ''}
 
@@ -570,21 +579,21 @@ async function sendBookingBusinessNotification(data: {
   <div class="content">
     <div class="section">
       <h2>Customer Information</h2>
-      <p><span class="label">Name:</span> ${data.customerName}</p>
-      <p><span class="label">Email:</span> ${data.customerEmail}</p>
-      <p><span class="label">Phone:</span> ${data.customerPhone}</p>
+      <p><span class="label">Name:</span> ${escapeHtml(data.customerName)}</p>
+      <p><span class="label">Email:</span> ${escapeHtml(data.customerEmail)}</p>
+      <p><span class="label">Phone:</span> ${escapeHtml(data.customerPhone)}</p>
     </div>
 
     <div class="section">
       <h2>Event Details</h2>
-      <p><span class="label">Event Type:</span> ${data.eventType || 'Not specified'}</p>
-      <p><span class="label">Event Date:</span> ${data.eventDate || 'Not specified'}</p>
-      <p><span class="label">Venue:</span> ${data.venue || 'Not specified'}</p>
+      <p><span class="label">Event Type:</span> ${data.eventType ? escapeHtml(data.eventType) : 'Not specified'}</p>
+      <p><span class="label">Event Date:</span> ${data.eventDate ? escapeHtml(data.eventDate) : 'Not specified'}</p>
+      <p><span class="label">Venue:</span> ${data.venue ? escapeHtml(data.venue) : 'Not specified'}</p>
     </div>
 
     <div class="section">
       <h2>Order</h2>
-      <p><span class="label">Items:</span> ${data.orderItems}</p>
+      <p><span class="label">Items:</span> ${escapeHtml(data.orderItems)}</p>
       <p><span class="label">Estimated Total:</span> $${data.estimatedTotal}</p>
       <p><span class="label">${isFullPayment ? 'Full Payment' : 'Deposit'} Paid:</span> $${data.depositAmount}</p>
     </div>
@@ -592,7 +601,7 @@ async function sendBookingBusinessNotification(data: {
     ${data.notes ? `
     <div class="section">
       <h2>Customer Notes</h2>
-      <p>${data.notes}</p>
+      <p>${escapeHtml(data.notes)}</p>
     </div>
     ` : ''}
 
