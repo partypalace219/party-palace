@@ -2,6 +2,7 @@
 // Uses Stripe API directly via fetch (no SDK)
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,14 +18,82 @@ serve(async (req) => {
   try {
     const STRIPE_SECRET_KEY = Deno.env.get('STRIPE_SECRET_KEY') as string
 
-    const { items, customerInfo, paymentType, paymentAmount, hasProducts, shipping, tax, discount, shippingAddress } = await req.json()
+    const { items, customerInfo, paymentType, paymentAmount, hasProducts, shipping, tax, couponCode, shippingAddress } = await req.json()
+
+    // --- Server-side price verification ---
+    // Only look up items that have a UUID id (DB products). Items without id
+    // (services, legacy 3D-print cart items) keep their client-supplied price.
+    const productIds = items
+      .filter((item: any) => item.id)
+      .map((item: any) => item.id)
+
+    let priceMap = new Map<string, number>()
+
+    if (productIds.length > 0) {
+      const supabase = createClient(
+        Deno.env.get('SUPABASE_URL') as string,
+        Deno.env.get('SB_SERVICE_KEY') as string
+      )
+
+      const { data: dbProducts, error } = await supabase
+        .from('products')
+        .select('id, name, price')
+        .in('id', productIds)
+
+      if (error) {
+        console.error('Supabase price lookup error:', error)
+        return new Response(
+          JSON.stringify({ error: 'Could not verify product prices. Please try again.' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
+      for (const p of (dbProducts || [])) {
+        priceMap.set(p.id, p.price)
+      }
+    }
+
+    // Replace client-supplied prices with server-authoritative prices for DB products
+    const verifiedItems = items.map((item: any) => {
+      if (!item.id) return item  // service / local item — keep client price
+      const serverPrice = priceMap.get(item.id)
+      return { ...item, price: serverPrice !== undefined ? serverPrice : null }
+    })
+
+    // Reject if any DB product could not be resolved
+    const unresolved = verifiedItems.filter((item: any) => item.id && item.price === null)
+    if (unresolved.length > 0) {
+      return new Response(
+        JSON.stringify({ error: 'One or more products could not be verified. Please refresh and try again.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // --- Server-side coupon validation ---
+    const couponMap: Record<string, number> = JSON.parse(Deno.env.get('COUPON_CODES') || '{}')
+
+    const productSubtotal = verifiedItems
+      .filter((item: any) => item.id)  // discount applies only to DB products
+      .reduce((sum: number, item: any) => sum + item.price, 0)
+
+    let discountAmount = 0
+    if (couponCode) {
+      const upperCode = String(couponCode).toUpperCase()
+      const discountPercent = couponMap[upperCode]
+      if (discountPercent === undefined) {
+        return new Response(
+          JSON.stringify({ error: `Coupon code "${couponCode}" is not valid.` }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+      discountAmount = productSubtotal * (discountPercent / 100)
+    }
 
     // Get item names for the description
-    const itemNames = items.map((item: any) => item.name).join(', ')
-    const itemsSubtotal = items.reduce((sum: number, item: any) => sum + item.price, 0)
+    const itemNames = verifiedItems.map((item: any) => item.name).join(', ')
+    const itemsSubtotal = verifiedItems.reduce((sum: number, item: any) => sum + item.price, 0)
 
-    // Apply discount to product subtotal (discount only applies to products)
-    const discountAmount = discount || 0
+    // Apply server-calculated discount
     const discountedSubtotal = itemsSubtotal - discountAmount
 
     // Build line items
@@ -95,7 +164,7 @@ serve(async (req) => {
       })
     }
 
-    // Calculate total for metadata (with discount applied)
+    // Calculate total for metadata (with server-verified discount applied)
     const totalAmount = hasProducts
       ? discountedSubtotal + (shipping || 0) + (tax || 0)
       : (paymentType === 'full' ? itemsSubtotal : paymentAmount)
