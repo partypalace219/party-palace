@@ -165,13 +165,13 @@
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
                     <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                        ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${image ? `<img src="" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                         ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                         ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
                     <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
-                        <div class="product-description">${product.description || ''}</div>
+                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')"></div>
+                        <div class="product-description"></div>
                         ${size ? `<div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);"><strong>Size:</strong> ${size}</div>` : ''}
                         ${priceHtml}
                         <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
@@ -180,6 +180,10 @@
                         </button>
                         <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
                     </div>`;
+                card.querySelector('.product-name').textContent = product.name;
+                card.querySelector('.product-description').textContent = product.description || '';
+                const imgEl1 = card.querySelector('.product-image img');
+                if (imgEl1) { imgEl1.src = image; imgEl1.alt = product.name; }
                 grid.appendChild(card);
             });
         }
@@ -213,17 +217,21 @@
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
                     <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                        ${image ? `<img src="${image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${image ? `<img src="" alt="" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                         ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                         ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
                     <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')">${product.name}</div>
-                        <div class="product-description">${product.description || ''}</div>
+                        <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')"></div>
+                        <div class="product-description"></div>
                         <div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>
                         <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
                         <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
                     </div>`;
+                card.querySelector('.product-name').textContent = product.name;
+                card.querySelector('.product-description').textContent = product.description || '';
+                const imgEl2 = card.querySelector('.product-image img');
+                if (imgEl2) { imgEl2.src = image; imgEl2.alt = product.name; }
                 grid.appendChild(card);
             });
         }
@@ -2128,8 +2136,8 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     </div>
                     <div class="product-info">
                         <div class="product-category">${isService ? 'Service' : categoryLabels[product.category]}</div>
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-description">${product.description}</div>
+                        <div class="product-name" data-product-name></div>
+                        <div class="product-description" data-product-desc></div>
                         <div class="product-price">
                             <span class="product-price-label">Starting at</span>
                             <span class="product-price-amount">$${product.price}</span>
@@ -2239,7 +2247,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             
             // Generate main image (clickable to open lightbox)
             const mainImage = hasImages
-                ? `<img src="${product.images[0]}" alt="${product.name}" id="productMainImage" onclick="openProductLightbox(0)" style="cursor: pointer;">`
+                ? `<img src="${product.images[0]}" alt="" id="productMainImage" onclick="openProductLightbox(0)" style="cursor: pointer;">`
                 : `<div class="placeholder" style="background: ${gradient}">${product.icon}</div>`;
 
             // Store current product images for lightbox
@@ -2283,12 +2291,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                         <span class="product-detail-category">${categoryLabels[product.category] || product.category}</span>
                         ${product.sale ? '<span style="display: inline-block; background: #059669; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem;">Sale</span>' : ''}
                         ${product.popular ? '<span style="display: inline-block; background: var(--red-accent); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; margin-left: 0.5rem;">Popular</span>' : ''}
-                        <h1 class="product-detail-title">${product.name}</h1>
+                        <h1 class="product-detail-title"></h1>
                         <div class="product-detail-price">
                             <span class="label">${product.category === 'engraving' ? 'Price' : 'Starting at'}</span>
                             <span class="amount">$${product.price}</span>
                         </div>
-                        <p class="product-detail-description">${product.description}</p>
+                        <p class="product-detail-description"></p>
                         ${(product.category === 'prints3d' || product.category === 'engraving') ? '<span class="product-detail-processing">ðŸ• Processing: 3-10 business days</span>' : ''}
 
                         ${features}
@@ -2346,8 +2354,12 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                     </div>
                 </div>
             `;
+            container.querySelector('.product-detail-title').textContent = product.name;
+            container.querySelector('.product-detail-description').textContent = product.description || '';
+            const detailImg = container.querySelector('#productMainImage');
+            if (detailImg) detailImg.alt = product.name;
         }
-        
+
         // Change main product image (for thumbnail clicks)
         function changeProductImage(src, thumb, index) {
             const mainImg = document.getElementById('productMainImage');
@@ -2398,12 +2410,26 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 filtered = [...popularItems, ...otherItems];
             }
 
-            document.getElementById('productsGrid').innerHTML = filtered.map(p => createProductCard(p)).join('');
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+            productsGrid.querySelectorAll('[data-product-name]').forEach((el, i) => {
+                el.textContent = filtered[i].name;
+            });
+            productsGrid.querySelectorAll('[data-product-desc]').forEach((el, i) => {
+                el.textContent = filtered[i].description || '';
+            });
         }
         // Render Services
         function renderServices() {
             const services = products.filter(p => p.category === 'services');
-            document.getElementById('servicesGrid').innerHTML = services.map(p => createProductCard(p, true)).join('');
+            const servicesGrid = document.getElementById('servicesGrid');
+            servicesGrid.innerHTML = services.map(p => createProductCard(p, true)).join('');
+            servicesGrid.querySelectorAll('[data-product-name]').forEach((el, i) => {
+                el.textContent = services[i].name;
+            });
+            servicesGrid.querySelectorAll('[data-product-desc]').forEach((el, i) => {
+                el.textContent = services[i].description || '';
+            });
         }
         // Filter Products
         function filterProducts(category) {
