@@ -1836,6 +1836,14 @@
 
                 const responseData = await response.json();
 
+                if (response.status === 429) {
+                    // Rate limit hit — show friendly message directly, no email fallback
+                    statusEl.innerHTML = `<div class="form-error">${responseData.error || 'Too many requests. Please wait a moment and try again.'}</div>`;
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('animation');
+                    return;
+                }
+
                 if (!response.ok) {
                     // Surface server error message (e.g. invalid coupon, unverified product)
                     throw new Error(responseData.error || 'Failed to create checkout session');
