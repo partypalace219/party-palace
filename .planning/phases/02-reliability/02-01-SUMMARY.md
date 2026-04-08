@@ -52,7 +52,7 @@ completed: 2026-04-08
 - **Duration:** ~10 min
 - **Started:** 2026-04-08
 - **Completed:** 2026-04-08
-- **Tasks:** 2 code tasks (Task 1 was human-run SQL, Task 2 was code)
+- **Tasks:** 3 (Task 1: human-run SQL, Task 2: code, Task 3: deploy + verify)
 - **Files modified:** 1
 
 ## Accomplishments
@@ -67,8 +67,9 @@ Each task was committed atomically:
 
 1. **Task 1: Create orders table in Supabase** — human-run SQL, no commit required
 2. **Task 2: Add Supabase order insert to stripe-webhook** — `3ee6a89` (feat)
+3. **Task 3: Deploy and verify end-to-end order persistence** — stripe-webhook v12 deployed via Supabase MCP, status ACTIVE
 
-**Plan metadata:** (to be committed after summary)
+**Plan metadata:** `0022fbe` (docs: complete order persistence plan)
 
 ## Files Created/Modified
 - `supabase-functions/stripe-webhook/index.ts` — Added createClient import, per-request Supabase client, order insert block with idempotency and failure isolation
@@ -99,12 +100,7 @@ Each task was committed atomically:
 None beyond the schema column name mismatch, which was documented and provided in execution context.
 
 ## User Setup Required
-**Deployment required.** Task 3 (checkpoint:human-verify) covers:
-1. Deploy updated stripe-webhook via Supabase Dashboard → Edge Functions → stripe-webhook → Deploy
-2. Run a Stripe test checkout (card: 4242 4242 4242 4242)
-3. Confirm order row appears in Supabase Table Editor → orders table
-4. Re-deliver same webhook event from Stripe Dashboard to verify idempotency (no second row)
-5. Check Edge Function logs for: `Order record written for session: cs_test_...`
+None — deployment completed via Supabase MCP (stripe-webhook v12, status ACTIVE). No new environment variables required. SB_SERVICE_KEY was already configured in edge function secrets.
 
 ## Next Phase Readiness
 - Order persistence complete — every payment now produces a queryable record
