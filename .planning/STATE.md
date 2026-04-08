@@ -56,6 +56,9 @@ Recent decisions affecting current work:
 - 01-03: For createProductCard (string-return), data-product-name/data-product-desc attributes enable post-DOM textContent fill
 - 02-03: rateLimitMap declared at MODULE SCOPE (outside serve()) in Deno edge functions — inside serve() resets per-request
 - 02-03: 429 branch uses return not throw in handleCheckoutSubmit — rate limiting is expected behavior, not a payment failure
+- [Phase 02-01]: Use actual orders table column names (items, total) not plan's speculative names (line_items, order_total)
+- [Phase 02-01]: 02-01: Supabase client instantiated inside serve() per-request — module scope resets per request in Deno edge functions
+- [Phase 02-01]: 02-01: items JSONB stores single entry with comma-joined order_items string — quantity always 1 since Stripe metadata lacks per-item quantities
 
 ### Pending Todos
 
