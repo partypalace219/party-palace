@@ -4,7 +4,6 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
-import { hmac } from "https://deno.land/x/hmac@v2.0.1/mod.ts"
 
 const ALLOWED_ORIGINS = [
   'https://thepartypalace.in',
@@ -37,8 +36,8 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#x27;')
 }
 
-// Verify Stripe webhook signature
-function verifyStripeSignature(payload: string, signature: string, secret: string): boolean {
+// Verify Stripe webhook signature using Web Crypto (no external dependency)
+async function verifyStripeSignature(payload: string, signature: string, secret: string): Promise<boolean> {
   try {
     const elements = signature.split(',')
     let timestamp = ''
@@ -53,7 +52,18 @@ function verifyStripeSignature(payload: string, signature: string, secret: strin
     if (!timestamp || !sig) return false
 
     const signedPayload = `${timestamp}.${payload}`
-    const expectedSig = hmac('sha256', secret, signedPayload, 'utf8', 'hex')
+    const encoder = new TextEncoder()
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    )
+    const signatureBytes = await crypto.subtle.sign('HMAC', key, encoder.encode(signedPayload))
+    const expectedSig = Array.from(new Uint8Array(signatureBytes))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
 
     return sig === expectedSig
   } catch {
@@ -79,7 +89,7 @@ serve(async (req) => {
     const body = await req.text()
 
     // Verify webhook signature
-    if (!verifyStripeSignature(body, signature, webhookSecret)) {
+    if (!await verifyStripeSignature(body, signature, webhookSecret)) {
       console.error('Invalid signature')
       return new Response('Invalid signature', { status: 400, headers: corsHeaders })
     }
