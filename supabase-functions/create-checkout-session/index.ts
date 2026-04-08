@@ -20,12 +20,48 @@ function getCorsHeaders(req: Request) {
   }
 }
 
+// Rate limiting: 10 requests per IP per 60-second window
+// IMPORTANT: declared at MODULE SCOPE so it persists across requests in a warm isolate.
+// Placing this inside serve() would reset it on every request.
+const RATE_LIMIT_MAX = 10
+const RATE_LIMIT_WINDOW_MS = 60_000 // 60 seconds
+
+interface RateLimitEntry {
+  count: number
+  windowStart: number
+}
+const rateLimitMap = new Map<string, RateLimitEntry>()
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req)
 
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  // Extract client IP — x-forwarded-for is set by Supabase's edge network
+  const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                   req.headers.get('x-real-ip') ||
+                   'unknown'
+
+  // Rate limit check
+  const now = Date.now()
+  const entry = rateLimitMap.get(clientIP)
+
+  if (entry && now - entry.windowStart < RATE_LIMIT_WINDOW_MS) {
+    // Within current window
+    if (entry.count >= RATE_LIMIT_MAX) {
+      console.log(`Rate limit exceeded for IP: ${clientIP} (${entry.count} requests in window)`)
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait a moment and try again.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+    entry.count++
+  } else {
+    // New window (first request or expired window)
+    rateLimitMap.set(clientIP, { count: 1, windowStart: now })
   }
 
   try {
