@@ -4,6 +4,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const ALLOWED_ORIGINS = [
   'https://thepartypalace.in',
@@ -85,6 +86,11 @@ serve(async (req) => {
     return new Response('Missing signature or webhook secret', { status: 400, headers: corsHeaders })
   }
 
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') as string,
+    Deno.env.get('SB_SERVICE_KEY') as string
+  )
+
   try {
     const body = await req.text()
 
@@ -120,6 +126,48 @@ serve(async (req) => {
       const totalAmount = metadata.total_amount || '0'
       const paymentType = metadata.payment_type || 'deposit'
       const shippingAddress = metadata.shipping_address ? JSON.parse(metadata.shipping_address) : null
+
+      // --- Write order record to Supabase ---
+      // NOTE: items is best-effort. metadata.order_items is a comma-joined string of
+      // product names (not structured data). Stored as a single JSONB entry; quantity is
+      // always 1 because Stripe metadata does not carry per-item quantities.
+      const itemsJson = [{
+        name: orderItems || 'Unknown items',
+        quantity: 1,
+        unit_price: parseFloat(itemsSubtotal) || 0
+      }]
+
+      const orderType = hasProducts ? 'product' : 'service'
+      const orderTotalNum = parseFloat(totalAmount) || 0
+
+      try {
+        const { error: insertError } = await supabase
+          .from('orders')
+          .insert({
+            stripe_session_id: session.id,
+            customer_name: customerName,
+            customer_email: customerEmail || '',
+            items: itemsJson,
+            total: orderTotalNum,
+            order_type: orderType,
+          })
+
+        if (insertError) {
+          if (insertError.code === '23505') {
+            // Duplicate webhook delivery — idempotent, not an error
+            console.log('Duplicate webhook event for session:', session.id, '— skipping insert')
+          } else {
+            // Log full event data for manual recovery; do NOT block email sending
+            console.error('Supabase order insert failed:', insertError, 'Event data:', JSON.stringify(event))
+          }
+        } else {
+          console.log('Order record written for session:', session.id)
+        }
+      } catch (dbError) {
+        // Database is unreachable — log and continue to email sending
+        console.error('Supabase order write threw:', dbError, 'Session:', session.id)
+      }
+      // --- End order record write ---
 
       // Send emails if SMTP is configured
       if (customerEmail && SMTP_USER && SMTP_PASS) {
