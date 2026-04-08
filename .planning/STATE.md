@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 2 of 4 (Reliability)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-04-02 — Phase 1 complete: all security vulnerabilities closed (verified 5/5)
+Plan: 3 of 3 in current phase (awaiting checkpoint verification)
+Status: Checkpoint — awaiting human verification of rate limit deployment
+Last activity: 2026-04-08 — Phase 2 Plan 3: rate limiting code complete, deployment checkpoint pending
 
-Progress: [██░░░░░░░░] 25%
+Progress: [████░░░░░░] 44%
 
 ## Performance Metrics
 
@@ -54,6 +54,8 @@ Recent decisions affecting current work:
 - 01-03: escapeHtml() defined once per edge function file (not shared module) — Deno edge functions are isolated deployments
 - 01-03: escape-before-replace pattern: escapeHtml(str).replace(/\n/g, '<br>') neutralizes tags before newline conversion
 - 01-03: For createProductCard (string-return), data-product-name/data-product-desc attributes enable post-DOM textContent fill
+- 02-03: rateLimitMap declared at MODULE SCOPE (outside serve()) in Deno edge functions — inside serve() resets per-request
+- 02-03: 429 branch uses return not throw in handleCheckoutSubmit — rate limiting is expected behavior, not a payment failure
 
 ### Pending Todos
 
@@ -65,6 +67,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02
-Stopped at: Completed 01-security Plan 03 — escapeHtml() in email functions + textContent for product cards
+Last session: 2026-04-08
+Stopped at: 02-reliability Plan 03 — rate limiting code complete, checkpoint awaiting deployment verification
 Resume file: None
