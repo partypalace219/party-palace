@@ -1,9 +1,8 @@
 // Supabase Edge Function: stripe-webhook
-// Handles Stripe webhook events and sends confirmation emails via SMTP
+// Handles Stripe webhook events and sends confirmation emails via Resend
 // Uses direct Stripe API calls (no SDK) for Deno compatibility
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const ALLOWED_ORIGINS = [
@@ -22,11 +21,9 @@ function getCorsHeaders(req: Request) {
   }
 }
 
-// SMTP Configuration - Use Gmail SMTP
-const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
-const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
-const SMTP_USER = Deno.env.get('SMTP_USER')
-const SMTP_PASS = Deno.env.get('SMTP_PASS')
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const FROM_ADDRESS = 'Party Palace <onboarding@resend.dev>'
+const BUSINESS_EMAIL = 'partypalace.in@gmail.com'
 
 function escapeHtml(str: string): string {
   return String(str)
@@ -35,6 +32,32 @@ function escapeHtml(str: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
+}
+
+async function sendEmail(opts: {
+  from: string
+  to: string
+  subject: string
+  html: string
+}): Promise<void> {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: opts.from,
+      to: [opts.to],
+      subject: opts.subject,
+      html: opts.html,
+    }),
+  })
+  if (!res.ok) {
+    const errBody = await res.text()
+    throw new Error(`Resend API error ${res.status}: ${errBody}`)
+  }
+  console.log('Email sent via Resend to:', opts.to, '| subject:', opts.subject)
 }
 
 // Verify Stripe webhook signature using Web Crypto (no external dependency)
@@ -169,8 +192,8 @@ serve(async (req) => {
       }
       // --- End order record write ---
 
-      // Send emails if SMTP is configured
-      if (customerEmail && SMTP_USER && SMTP_PASS) {
+      // Send emails if Resend is configured
+      if (customerEmail && RESEND_API_KEY) {
         try {
           if (hasProducts) {
             // Product purchase emails
@@ -246,20 +269,6 @@ serve(async (req) => {
     return new Response(`Webhook Error: ${error.message}`, { status: 400, headers: corsHeaders })
   }
 })
-
-async function getSmtpClient() {
-  return new SMTPClient({
-    connection: {
-      hostname: SMTP_HOST,
-      port: SMTP_PORT,
-      tls: true,
-      auth: {
-        username: SMTP_USER!,
-        password: SMTP_PASS!,
-      },
-    },
-  })
-}
 
 // ============================================
 // PRODUCT PURCHASE EMAILS
@@ -374,20 +383,13 @@ async function sendProductConfirmationEmail(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  try {
-    await client.send({
-      from: `Party Palace <${SMTP_USER}>`,
-      to: data.to,
-      subject: 'Order Confirmed - Party Palace',
-      content: 'Your order has been confirmed!',
-      html: emailHtml,
-    })
-    console.log('Product confirmation email sent to:', data.to)
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: data.to,
+    subject: 'Order Confirmed - Party Palace',
+    html: emailHtml,
+  })
+  console.log('Product confirmation email sent to:', data.to)
 }
 
 async function sendProductBusinessNotification(data: {
@@ -456,20 +458,13 @@ async function sendProductBusinessNotification(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  try {
-    await client.send({
-      from: `Party Palace Orders <${SMTP_USER}>`,
-      to: SMTP_USER!,
-      subject: `New Order: ${data.customerName} - $${data.totalAmount.toFixed(2)}`,
-      content: `New product order from ${data.customerName}`,
-      html: emailHtml,
-    })
-    console.log('Product business notification sent')
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: BUSINESS_EMAIL,
+    subject: `New Order: ${data.customerName} - $${data.totalAmount.toFixed(2)}`,
+    html: emailHtml,
+  })
+  console.log('Product business notification sent')
 }
 
 // ============================================
@@ -585,20 +580,13 @@ async function sendBookingConfirmationEmail(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  try {
-    await client.send({
-      from: `Party Palace <${SMTP_USER}>`,
-      to: data.to,
-      subject: 'Booking Confirmed - Party Palace',
-      content: 'Your booking has been confirmed!',
-      html: emailHtml,
-    })
-    console.log('Booking confirmation email sent to:', data.to)
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: data.to,
+    subject: 'Booking Confirmed - Party Palace',
+    html: emailHtml,
+  })
+  console.log('Booking confirmation email sent to:', data.to)
 }
 
 async function sendBookingBusinessNotification(data: {
@@ -671,18 +659,11 @@ async function sendBookingBusinessNotification(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  try {
-    await client.send({
-      from: `Party Palace Bookings <${SMTP_USER}>`,
-      to: SMTP_USER!,
-      subject: `New Booking: ${data.customerName} - ${data.eventType || 'Event'}`,
-      content: `New booking from ${data.customerName}`,
-      html: emailHtml,
-    })
-    console.log('Booking business notification sent')
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: BUSINESS_EMAIL,
+    subject: `New Booking: ${data.customerName} - ${data.eventType || 'Event'}`,
+    html: emailHtml,
+  })
+  console.log('Booking business notification sent')
 }
