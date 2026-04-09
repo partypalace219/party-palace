@@ -131,33 +131,32 @@ export function renderDynamicEngravingProducts() {
         let priceHtml = '';
         if (product.tieredPricing && product.tieredPricing.length > 0) {
             const tiers = product.tieredPricing.map(t =>
-                `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>${t.label}:</span><span style="font-weight: 600;">${t.price}</span></div>`
+                `<div class="pricing-row"><span>${t.label}:</span><span class="pricing-row-value">${t.price}</span></div>`
             ).join('');
             priceHtml = `
-                <div style="margin-bottom: 0.75rem; font-size: 0.85rem; background: var(--gray-50); padding: 0.75rem; border-radius: 6px;">
-                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-800);">Pricing:</div>
+                <div class="pricing-tiers">
+                    <div class="pricing-tiers-header">Pricing:</div>
                     ${tiers}
                 </div>`;
         } else {
-            priceHtml = `<div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>`;
+            priceHtml = `<div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>`;
         }
 
         const card = document.createElement('div');
         card.className = 'product-card engraving-product';
         card.dataset.material = material;
-        card.style.cssText = 'display: flex; flex-direction: column;';
         card.innerHTML = `
-            <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                ${image ? `<img src="" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+            <div class="product-image product-image-clickable" onclick="navigateToProduct('${slug}')">
+                ${image ? `<img src="" alt="" loading="lazy" class="product-img-cover" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                 ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                 ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
             </div>
-            <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')"></div>
+            <div class="product-info">
+                <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
-                ${size ? `<div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);"><strong>Size:</strong> ${size}</div>` : ''}
+                ${size ? `<div class="product-size-label"><strong>Size:</strong> ${size}</div>` : ''}
                 ${priceHtml}
-                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary" style="width: 100%; margin-top: auto;">View Details</button>
+                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';
@@ -185,18 +184,17 @@ export function renderDynamicPrints3dProducts() {
         const card = document.createElement('div');
         card.className = 'product-card prints3d-product';
         card.dataset.category = subcategory;
-        card.style.cssText = 'display: flex; flex-direction: column;';
         card.innerHTML = `
-            <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                ${image ? `<img src="" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+            <div class="product-image product-image-clickable" onclick="navigateToProduct('${slug}')">
+                ${image ? `<img src="" alt="" loading="lazy" class="product-img-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                 ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                 ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
             </div>
-            <div class="product-info" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')"></div>
+            <div class="product-info">
+                <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
-                <div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>
-                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary add-to-cart-btn" style="width: 100%;">View Details</button>
+                <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
+                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary add-to-cart-btn btn-block">View Details</button>
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';

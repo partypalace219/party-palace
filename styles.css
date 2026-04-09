@@ -4633,3 +4633,81 @@
 @keyframes staffSpin {
     to { transform: rotate(360deg); }
 }
+
+/* FE-03: Product card rendering classes (replacing inline styles) */
+
+.product-image-clickable {
+    background: var(--gray-100);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+.product-img-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.product-img-contain {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.product-name-clickable {
+    cursor: pointer;
+}
+
+.product-size-label {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.pricing-tiers {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    background: var(--gray-50);
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.pricing-tiers-header {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--gray-800);
+}
+
+.pricing-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+}
+
+.pricing-row-value {
+    font-weight: 600;
+}
+
+.product-price-bottom {
+    margin-top: auto;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-block-mt {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.btn-block-cart {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
