@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 4 of 4 (Frontend Refactor) — IN PROGRESS
-Plan: 2 of 3 in current phase (complete)
-Status: In progress — plan 04-02 complete
-Last activity: 2026-04-09 — Phase 4 Plan 2: Eliminated 61 static product cards, rewrote dynamic renderers for full Supabase rendering
+Phase: 4 of 4 (Frontend Refactor) — COMPLETE
+Plan: 3 of 3 in current phase (complete)
+Status: Complete — all plans in phase 04 done
+Last activity: 2026-04-09 — Phase 4 Plan 3: Replaced inline styles in dynamic renderers with CSS classes; fixed hero slideshow timer stacking
 
-Progress: [█████████░] 92%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -37,6 +37,7 @@ Progress: [█████████░] 92%
 
 *Updated after each plan completion*
 | Phase 04-frontend-refactor P02 | 20 | 2 tasks | 2 files |
+| Phase 04-frontend-refactor P03 | 8 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 04-01]: window.products exposed from products.js for inline search script in index.html
 - [Phase 04-frontend-refactor]: 04-02: All engraving and prints3d grid cards use View Details only — color-dependent products handled in renderProductDetail detail page
 - [Phase 04-frontend-refactor]: 04-02: grid.innerHTML='' replaces existingSlugs deduplication — cleaner full-replace pattern now that grids start empty
+- [Phase 04-frontend-refactor]: 04-03: card.style.cssText removed — product-info CSS already provides flex:1; display:flex; flex-direction:column (was redundant)
+- [Phase 04-frontend-refactor]: 04-03: heroSlideshowInterval stored as module-level null; clearInterval guard prevents timer stacking on repeated initHeroSlideshow calls
 
 ### Pending Todos
 
@@ -90,5 +93,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Completed 04-01-PLAN.md (app.js modularization into 5 ES modules) — both tasks done
+Stopped at: Completed 04-03-PLAN.md (inline style migration + slideshow fix) — all phase 04 plans complete
 Resume file: None
