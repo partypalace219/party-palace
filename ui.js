@@ -14,6 +14,8 @@ export { initializeApp, navigate, initHeroSlideshow };
 // HERO SLIDESHOW
 // ============================================
 
+let heroSlideshowInterval = null;
+
 function initHeroSlideshow() {
     const slideshow = document.getElementById('heroSlideshow');
     if (!slideshow) return;
@@ -21,9 +23,15 @@ function initHeroSlideshow() {
     const images = slideshow.querySelectorAll('.slideshow-img');
     if (images.length <= 1) return;
 
+    // Clear any existing timer before starting a new one
+    if (heroSlideshowInterval) {
+        clearInterval(heroSlideshowInterval);
+        heroSlideshowInterval = null;
+    }
+
     let currentIndex = 0;
 
-    setInterval(() => {
+    heroSlideshowInterval = setInterval(() => {
         images[currentIndex].style.opacity = '0';
         currentIndex = (currentIndex + 1) % images.length;
         images[currentIndex].style.opacity = '1';
