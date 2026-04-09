@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 3 of 4 (Cleanup) — IN PROGRESS
-Plan: 2 of 3 in current phase (complete)
-Status: In progress — plan 03-02 complete
-Last activity: 2026-04-09 — Phase 3 Plan 2: DB-driven Popular badge + lazy loading added to all dynamic product imgs
+Phase: 4 of 4 (Frontend Refactor) — IN PROGRESS
+Plan: 1 of 3 in current phase (complete)
+Status: In progress — plan 04-01 complete
+Last activity: 2026-04-09 — Phase 4 Plan 1: Split 5,633-line app.js monolith into 5 ES modules
 
-Progress: [████████░░] 72%
+Progress: [█████████░] 88%
 
 ## Performance Metrics
 
@@ -70,6 +70,11 @@ Recent decisions affecting current work:
 - [Phase 03-02]: Removed popularProducts hardcoded override — Supabase featured column is sole source of truth for Popular badge
 - [Phase 03-02]: Vases.featured=false in DB — needs manual UPDATE in Supabase dashboard (no service role key available in project)
 - [Phase 03-02]: loading=lazy excluded from lightbox img (empty src) and staff admin thumbnail — intentional exclusions
+- [Phase 04-01]: ui.js is sole root entry point — all other modules load via import graph, no separate script tags needed
+- [Phase 04-01]: products and cart are mutable const arrays so all importing modules share the same reference (never reassigned)
+- [Phase 04-01]: Dynamic import('./ui.js') inside loadProducts() body breaks the products->ui circular dependency
+- [Phase 04-01]: window.supabaseClient used explicitly in checkout.js and staff.js — supabase CDN is a plain script, not a module
+- [Phase 04-01]: window.products exposed from products.js for inline search script in index.html
 
 ### Pending Todos
 
@@ -82,5 +87,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Completed 03-02-PLAN.md (DB-driven Popular badge + lazy loading) — both tasks done
+Stopped at: Completed 04-01-PLAN.md (app.js modularization into 5 ES modules) — both tasks done
 Resume file: None
