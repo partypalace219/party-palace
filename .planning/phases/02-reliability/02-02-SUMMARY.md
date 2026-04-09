@@ -57,7 +57,7 @@ completed: 2026-04-08
 - **Duration:** ~20 min
 - **Started:** 2026-04-08
 - **Completed:** 2026-04-08
-- **Tasks:** 2 of 4 auto tasks completed (Task 1 was human-completed pre-session, Task 4 is a human-verify checkpoint)
+- **Tasks:** 4 of 4 complete (Task 1 human-completed pre-session, Tasks 2-3 auto, Task 4 human-verified post-deployment)
 - **Files modified:** 2
 
 ## Accomplishments
@@ -75,7 +75,7 @@ Each task was committed atomically:
 1. **Task 1: Set up Resend account + RESEND_API_KEY secret** - human-completed (no commit)
 2. **Task 2: Migrate stripe-webhook** - `783e858` (feat)
 3. **Task 3: Migrate send-contact-email** - `f5892ab` (feat)
-4. **Task 4: Deploy + verify** - checkpoint (pending human verification)
+4. **Task 4: Deploy + verify** - MCP deploy (stripe-webhook v14, send-contact-email v12) — human verified
 
 ## Files Created/Modified
 
@@ -99,23 +99,16 @@ None - plan executed exactly as written. All HTML templates, rate limiting logic
 
 ## User Setup Required
 
-Task 4 is a human-verify checkpoint. To complete deployment:
+None — deployment and verification are complete.
 
-1. Go to https://supabase.com/dashboard/project/nsedpvrqhxcikhlieize/functions
-2. Click `stripe-webhook` → Deploy (or redeploy)
-3. Click `send-contact-email` → Deploy (or redeploy)
-4. Trigger a test checkout (Stripe test card 4242 4242 4242 4242) — confirm email arrives
-5. Submit contact form on https://thepartypalace.in — confirm email arrives at partypalace.in@gmail.com
-6. Sender will show `onboarding@resend.dev` until thepartypalace.in domain is verified in Resend
-
-**Future:** After verifying thepartypalace.in in Resend Dashboard, update FROM_ADDRESS in both files from `onboarding@resend.dev` to `orders@thepartypalace.in`.
+**Future (not blocking):** After verifying thepartypalace.in in Resend Dashboard, update FROM_ADDRESS in both files from `onboarding@resend.dev` to `orders@thepartypalace.in`. Until then, emails send from `onboarding@resend.dev` which is functional but not branded.
 
 ## Next Phase Readiness
 
-- Code migration is complete and committed
-- Deployment pending (human action required via Supabase Dashboard)
-- Once deployed and verified, email infrastructure is on Resend — no more SMTP credential maintenance
-- Phase 3 can begin once deployment is confirmed working
+- Email infrastructure fully migrated to Resend — no more SMTP credential maintenance
+- Both edge functions deployed and active (stripe-webhook v14, send-contact-email v12)
+- save-signed-document still uses SMTP (out of scope for this plan — addressed if needed in future phase)
+- Phase 2 complete, ready for Phase 3
 
 ---
 *Phase: 02-reliability*
