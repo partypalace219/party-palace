@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 
 ## Current Position
 
-Phase: 2 of 4 (Reliability) — COMPLETE
-Plan: 3 of 3 in current phase (complete)
-Status: Ready to advance to Phase 3
-Last activity: 2026-04-08 — Phase 2 Plan 3: rate limiting deployed and verified, phase 2 complete
+Phase: 3 of 4 (Cleanup) — IN PROGRESS
+Plan: 1 of 3 in current phase (complete)
+Status: In progress — plan 03-01 complete
+Last activity: 2026-04-09 — Phase 3 Plan 1: backup files and migration scripts deleted from public web root
 
-Progress: [██████░░░░] 56%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -29,6 +29,7 @@ Progress: [██████░░░░] 56%
 |-------|-------|-------|----------|
 | 01-security | 3 | 13 min | 4.3 min |
 | 02-reliability | 3 | ~17 min | 5.7 min |
+| 03-cleanup | 1 | 5 min | 5 min |
 
 **Recent Trend:**
 - Last 5 plans: 3 min, 2 min, 8 min
@@ -65,6 +66,7 @@ Recent decisions affecting current work:
 - [Phase 02-02]: FROM_ADDRESS uses onboarding@resend.dev until thepartypalace.in is verified in Resend Dashboard
 - [Phase 02-02]: sendEmail() helper defined per-file (not shared module) — Deno edge functions are isolated deployments
 - [Phase 02-02]: Business notification emails route to BUSINESS_EMAIL constant replacing removed SMTP_USER reference
+- [Phase 03-01]: Backup files were gitignored but some were tracked — git rm removed tracked ones, disk rm removed untracked ones
 
 ### Pending Todos
 
@@ -76,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-08
-Stopped at: Completed 02-02-PLAN.md (email migration to Resend) — all 4 tasks done, both functions deployed and verified
+Last session: 2026-04-09
+Stopped at: Completed 03-01-PLAN.md (backup and script cleanup) — all 2 tasks done, 7 tracked + 24 untracked files deleted
 Resume file: None
