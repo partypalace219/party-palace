@@ -59,12 +59,11 @@ Plans:
   1. Requesting any `.backup*` file or Python script URL via HTTP returns 404 — no such paths are served from the public root
   2. The "Popular" badge on product cards is driven by the Supabase `featured` column — removing a product from the hardcoded JS array has no effect because that array no longer exists
   3. All dynamically rendered product `<img>` tags include `loading="lazy"` — verified by inspecting the DOM after products load
-**Plans:** 3 plans
+**Plans:** 2 plans
 
 Plans:
-- [ ] 03-01: Remove backup files and Python scripts from public web root
-- [ ] 03-02: Replace hardcoded popularProducts array with Supabase featured column
-- [ ] 03-03: Add loading="lazy" to all dynamic product image tags
+- [ ] 03-01-PLAN.md — Remove backup files and migration scripts from public web root
+- [ ] 03-02-PLAN.md — Remove hardcoded popularProducts array and add lazy loading to product images
 
 ### Phase 4: Frontend Refactor
 **Goal**: app.js is decomposed into maintainable ES modules and the dual product system is eliminated
@@ -91,5 +90,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Security | 3/3 | ✓ Complete | 2026-04-02 |
 | 2. Reliability | 3/3 | ✓ Complete | 2026-04-09 |
-| 3. Cleanup | 0/3 | Not started | - |
+| 3. Cleanup | 0/2 | Not started | - |
 | 4. Frontend Refactor | 0/3 | Not started | - |
