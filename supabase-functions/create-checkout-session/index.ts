@@ -256,6 +256,9 @@ serve(async (req) => {
     params.append('metadata[payment_type]', hasProducts ? 'full' : paymentType)
     params.append('metadata[has_products]', hasProducts ? 'true' : 'false')
     params.append('metadata[shipping_address]', shippingAddress ? JSON.stringify(shippingAddress) : '')
+    if (!hasProducts && paymentType !== 'full') {
+      params.append('metadata[deposit_amount]', paymentAmount.toString())
+    }
 
     // Call Stripe API directly
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
