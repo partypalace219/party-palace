@@ -61,6 +61,11 @@ Recent decisions affecting current work:
 - [Phase 02-01]: 02-01: Supabase client instantiated inside serve() per-request — module scope resets per request in Deno edge functions
 - [Phase 02-01]: 02-01: items JSONB stores single entry with comma-joined order_items string — quantity always 1 since Stripe metadata lacks per-item quantities
 
+- [Phase 02-02]: Use raw fetch to Resend REST API — no npm:resend SDK to avoid Deno bundler issues
+- [Phase 02-02]: FROM_ADDRESS uses onboarding@resend.dev until thepartypalace.in is verified in Resend Dashboard
+- [Phase 02-02]: sendEmail() helper defined per-file (not shared module) — Deno edge functions are isolated deployments
+- [Phase 02-02]: Business notification emails route to BUSINESS_EMAIL constant replacing removed SMTP_USER reference
+
 ### Pending Todos
 
 None yet.
@@ -72,5 +77,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-08
-Stopped at: Completed 02-reliability Plan 03 — Phase 2 fully complete
+Stopped at: Completed 02-02-PLAN.md (email migration to Resend) — Task 4 checkpoint pending human deploy verification
 Resume file: None
