@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 4 of 4 (Frontend Refactor) — IN PROGRESS
-Plan: 1 of 3 in current phase (complete)
-Status: In progress — plan 04-01 complete
-Last activity: 2026-04-09 — Phase 4 Plan 1: Split 5,633-line app.js monolith into 5 ES modules
+Plan: 2 of 3 in current phase (complete)
+Status: In progress — plan 04-02 complete
+Last activity: 2026-04-09 — Phase 4 Plan 2: Eliminated 61 static product cards, rewrote dynamic renderers for full Supabase rendering
 
-Progress: [█████████░] 88%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -36,6 +36,7 @@ Progress: [█████████░] 88%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 04-frontend-refactor P02 | 20 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 04-01]: Dynamic import('./ui.js') inside loadProducts() body breaks the products->ui circular dependency
 - [Phase 04-01]: window.supabaseClient used explicitly in checkout.js and staff.js — supabase CDN is a plain script, not a module
 - [Phase 04-01]: window.products exposed from products.js for inline search script in index.html
+- [Phase 04-frontend-refactor]: 04-02: All engraving and prints3d grid cards use View Details only — color-dependent products handled in renderProductDetail detail page
+- [Phase 04-frontend-refactor]: 04-02: grid.innerHTML='' replaces existingSlugs deduplication — cleaner full-replace pattern now that grids start empty
 
 ### Pending Todos
 
