@@ -116,20 +116,12 @@ export function renderDynamicEngravingProducts() {
     const grid = document.getElementById('engravingGrid');
     if (!grid) return;
 
-    // Remove previously appended dynamic cards
-    grid.querySelectorAll('.dynamic-product').forEach(el => el.remove());
+    // Clear grid entirely -- all engraving products come from Supabase
+    grid.innerHTML = '';
 
-    // Get slugs already in the static HTML
-    const existingSlugs = new Set();
-    grid.querySelectorAll('[onclick*="navigateToProduct"]').forEach(el => {
-        const match = el.getAttribute('onclick').match(/navigateToProduct\('([^']+)'\)/);
-        if (match) existingSlugs.add(match[1]);
-    });
+    const engravingProducts = products.filter(p => p.category === 'engraving' && p.slug);
 
-    // Find engraving products from DB not already in static HTML
-    const newProducts = products.filter(p => p.category === 'engraving' && p.slug && !existingSlugs.has(p.slug));
-
-    newProducts.forEach(product => {
+    engravingProducts.forEach(product => {
         const slug = product.slug;
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🪵';
@@ -147,11 +139,11 @@ export function renderDynamicEngravingProducts() {
                     ${tiers}
                 </div>`;
         } else {
-            priceHtml = `<div class="product-price">$${(product.price || 0).toFixed(2)}</div>`;
+            priceHtml = `<div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>`;
         }
 
         const card = document.createElement('div');
-        card.className = 'product-card engraving-product dynamic-product';
+        card.className = 'product-card engraving-product';
         card.dataset.material = material;
         card.style.cssText = 'display: flex; flex-direction: column;';
         card.innerHTML = `
@@ -165,11 +157,7 @@ export function renderDynamicEngravingProducts() {
                 <div class="product-description"></div>
                 ${size ? `<div style="margin: 0.5rem 0; font-size: 0.9rem; color: var(--gray-600);"><strong>Size:</strong> ${size}</div>` : ''}
                 ${priceHtml}
-                <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: auto;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    Add to Cart
-                </button>
-                <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary" style="width: 100%; margin-top: auto;">View Details</button>
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';
@@ -183,27 +171,19 @@ export function renderDynamicPrints3dProducts() {
     const grid = document.getElementById('prints3dGrid');
     if (!grid) return;
 
-    // Remove previously appended dynamic cards
-    grid.querySelectorAll('.dynamic-product').forEach(el => el.remove());
+    // Clear grid entirely -- all 3D prints products come from Supabase
+    grid.innerHTML = '';
 
-    // Get slugs already in the static HTML
-    const existingSlugs = new Set();
-    grid.querySelectorAll('[onclick*="navigateToProduct"]').forEach(el => {
-        const match = el.getAttribute('onclick').match(/navigateToProduct\('([^']+)'\)/);
-        if (match) existingSlugs.add(match[1]);
-    });
+    const prints3dProducts = products.filter(p => p.category === 'prints3d' && p.slug);
 
-    // Find 3D prints products from DB not already in static HTML
-    const newProducts = products.filter(p => p.category === 'prints3d' && p.slug && !existingSlugs.has(p.slug));
-
-    newProducts.forEach(product => {
+    prints3dProducts.forEach(product => {
         const slug = product.slug;
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🖨️';
         const subcategory = product.material || 'Other';
 
         const card = document.createElement('div');
-        card.className = 'product-card prints3d-product dynamic-product';
+        card.className = 'product-card prints3d-product';
         card.dataset.category = subcategory;
         card.style.cssText = 'display: flex; flex-direction: column;';
         card.innerHTML = `
@@ -216,8 +196,7 @@ export function renderDynamicPrints3dProducts() {
                 <div class="product-name" style="cursor: pointer;" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
                 <div class="product-price" style="margin-top: auto;">$${(product.price || 0).toFixed(2)}</div>
-                <button onclick="addToCart('${product.name.replace(/'/g, "\\'")}')" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
-                <button onclick="navigateToProduct('${slug}')" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">View Details</button>
+                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary add-to-cart-btn" style="width: 100%;">View Details</button>
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';
