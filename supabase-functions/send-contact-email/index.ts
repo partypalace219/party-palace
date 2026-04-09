@@ -1,9 +1,8 @@
 // Supabase Edge Function: send-contact-email
-// Handles contact form submissions and sends email notifications
+// Handles contact form submissions and sends email notifications via Resend
 // Deploy this via Supabase Dashboard > Edge Functions > Create Function
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
 const ALLOWED_ORIGINS = [
@@ -31,15 +30,41 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#x27;')
 }
 
-// SMTP Configuration - Use Gmail SMTP
-const SMTP_HOST = Deno.env.get('SMTP_HOST') || 'smtp.gmail.com'
-const SMTP_PORT = parseInt(Deno.env.get('SMTP_PORT') || '465')
-const SMTP_USER = Deno.env.get('SMTP_USER') // partypalace.in@gmail.com
-const SMTP_PASS = Deno.env.get('SMTP_PASS') // Gmail App Password
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const FROM_ADDRESS = 'Party Palace <onboarding@resend.dev>'
+const BUSINESS_EMAIL = 'partypalace.in@gmail.com'
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
 const RATE_LIMIT_MAX_REQUESTS = 5 // Max 5 submissions per hour per IP
+
+async function sendEmail(opts: {
+  from: string
+  to: string
+  subject: string
+  html: string
+  replyTo?: string
+}): Promise<void> {
+  const body: Record<string, unknown> = {
+    from: opts.from,
+    to: [opts.to],
+    subject: opts.subject,
+    html: opts.html,
+  }
+  if (opts.replyTo) body.reply_to = opts.replyTo
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const errBody = await res.text()
+    throw new Error(`Resend API error ${res.status}: ${errBody}`)
+  }
+}
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req)
@@ -75,9 +100,9 @@ serve(async (req) => {
       )
     }
 
-    // Check SMTP configuration
-    if (!SMTP_USER || !SMTP_PASS) {
-      console.error('SMTP not configured')
+    // Check Resend configuration
+    if (!RESEND_API_KEY) {
+      console.error('Resend API key not configured')
       return new Response(
         JSON.stringify({ error: 'Email service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -142,20 +167,6 @@ serve(async (req) => {
     )
   }
 })
-
-async function getSmtpClient() {
-  return new SMTPClient({
-    connection: {
-      hostname: SMTP_HOST,
-      port: SMTP_PORT,
-      tls: true,
-      auth: {
-        username: SMTP_USER!,
-        password: SMTP_PASS!,
-      },
-    },
-  })
-}
 
 async function sendContactEmail(data: {
   name: string
@@ -222,30 +233,16 @@ async function sendContactEmail(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  // Include product in subject if available
-  const subject = hasProduct
-    ? `New Inquiry: ${data.name} - ${data.selectedProduct!.name}`
-    : `New Inquiry: ${data.name} - ${data.eventType}`
-
-  const plainText = hasProduct
-    ? `New contact inquiry from ${data.name}\n\nInterested Product: ${data.selectedProduct!.name} (Starting at $${data.selectedProduct!.price})\n\nEmail: ${data.email}\nPhone: ${data.phone}\nEvent Type: ${data.eventType}\n\nMessage:\n${data.message}`
-    : `New contact inquiry from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone}\nEvent Type: ${data.eventType}\n\nMessage:\n${data.message}`
-
-  try {
-    await client.send({
-      from: `Party Palace Website <${SMTP_USER}>`,
-      to: SMTP_USER!, // Send to yourself
-      replyTo: data.email, // So you can reply directly to customer
-      subject,
-      content: plainText,
-      html: emailHtml,
-    })
-    console.log('Contact email sent for:', data.name)
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: BUSINESS_EMAIL,
+    replyTo: data.email,
+    subject: hasProduct
+      ? `New Inquiry: ${data.name} - ${data.selectedProduct!.name}`
+      : `New Inquiry: ${data.name} - ${data.eventType}`,
+    html: emailHtml,
+  })
+  console.log('Contact email sent for:', data.name)
 }
 
 async function sendCustomOrderEmail(data: {
@@ -310,19 +307,12 @@ async function sendCustomOrderEmail(data: {
 </html>
   `
 
-  const client = await getSmtpClient()
-
-  try {
-    await client.send({
-      from: `Party Palace Website <${SMTP_USER}>`,
-      to: SMTP_USER!, // Send to yourself
-      replyTo: data.email, // So you can reply directly to customer
-      subject: `Custom Order: ${data.name} - ${orderTypeLabels[data.orderType] || data.orderType}`,
-      content: `New custom order request from ${data.name}\n\nEmail: ${data.email}\nPhone: ${data.phone}\nOrder Type: ${data.orderType}\nProduct: ${data.product}\n\nDescription:\n${data.description}`,
-      html: emailHtml,
-    })
-    console.log('Custom order email sent for:', data.name)
-  } finally {
-    await client.close()
-  }
+  await sendEmail({
+    from: FROM_ADDRESS,
+    to: BUSINESS_EMAIL,
+    replyTo: data.email,
+    subject: `Custom Order: ${data.name} - ${orderTypeLabels[data.orderType] || data.orderType}`,
+    html: emailHtml,
+  })
+  console.log('Custom order email sent for:', data.name)
 }
