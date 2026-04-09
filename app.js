@@ -159,7 +159,7 @@
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
                     <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                        ${image ? `<img src="" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${image ? `<img src="" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                         ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                         ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
@@ -211,7 +211,7 @@
                 card.style.cssText = 'display: flex; flex-direction: column;';
                 card.innerHTML = `
                     <div class="product-image" style="background: var(--gray-100); overflow: hidden; cursor: pointer; position: relative;" onclick="navigateToProduct('${slug}')">
-                        ${image ? `<img src="" alt="" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                        ${image ? `<img src="" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; object-position: center;" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
                         ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
                         ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
                     </div>
@@ -2122,7 +2122,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             const hasImages = product.images && product.images.length > 0;
             const hasSecondImage = product.images && product.images.length > 1;
             const imageContent = hasImages
-                ? `<img src="${product.images[0]}" alt="${product.name}" class="primary-image" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">${hasSecondImage ? `<img src="${product.images[1]}" alt="${product.name} alternate view" class="secondary-image">` : ''}`
+                ? `<img src="${product.images[0]}" alt="${product.name}" loading="lazy" class="primary-image" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">${hasSecondImage ? `<img src="${product.images[1]}" alt="${product.name} alternate view" loading="lazy" class="secondary-image">` : ''}`
                 : `<span>${product.icon}</span>`;
             const imageStyle = hasImages
                 ? 'background: var(--gray-50);'
@@ -2249,7 +2249,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
             
             // Generate main image (clickable to open lightbox)
             const mainImage = hasImages
-                ? `<img src="${product.images[0]}" alt="" id="productMainImage" onclick="openProductLightbox(0)" style="cursor: pointer;">`
+                ? `<img src="${product.images[0]}" alt="" id="productMainImage" loading="lazy" onclick="openProductLightbox(0)" style="cursor: pointer;">`
                 : `<div class="placeholder" style="background: ${gradient}">${product.icon}</div>`;
 
             // Store current product images for lightbox
@@ -2265,7 +2265,7 @@ NOTE: This order was submitted via email fallback. Payment was not collected onl
                 thumbnailsHtml = `<div class="product-detail-thumbnails">
                     ${product.images.map((img, idx) => `
                         <div class="product-detail-thumb ${idx === 0 ? 'active' : ''}" onclick="changeProductImage('${img}', this, ${idx})">
-                            <img src="${img}" alt="${product.name} ${idx + 1}">
+                            <img src="${img}" alt="${product.name} ${idx + 1}" loading="lazy">
                         </div>
                     `).join('')}
                 </div>`;
