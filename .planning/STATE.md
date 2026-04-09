@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 ## Current Position
 
 Phase: 3 of 4 (Cleanup) — IN PROGRESS
-Plan: 1 of 3 in current phase (complete)
-Status: In progress — plan 03-01 complete
-Last activity: 2026-04-09 — Phase 3 Plan 1: backup files and migration scripts deleted from public web root
+Plan: 2 of 3 in current phase (complete)
+Status: In progress — plan 03-02 complete
+Last activity: 2026-04-09 — Phase 3 Plan 2: DB-driven Popular badge + lazy loading added to all dynamic product imgs
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 72%
 
 ## Performance Metrics
 
@@ -29,10 +29,10 @@ Progress: [███████░░░] 67%
 |-------|-------|-------|----------|
 | 01-security | 3 | 13 min | 4.3 min |
 | 02-reliability | 3 | ~17 min | 5.7 min |
-| 03-cleanup | 1 | 5 min | 5 min |
+| 03-cleanup | 2 | 13 min | 6.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 3 min, 2 min, 8 min
+- Last 5 plans: 3 min, 2 min, 8 min, 5 min, 8 min
 - Trend: —
 
 *Updated after each plan completion*
@@ -67,6 +67,9 @@ Recent decisions affecting current work:
 - [Phase 02-02]: sendEmail() helper defined per-file (not shared module) — Deno edge functions are isolated deployments
 - [Phase 02-02]: Business notification emails route to BUSINESS_EMAIL constant replacing removed SMTP_USER reference
 - [Phase 03-01]: Backup files were gitignored but some were tracked — git rm removed tracked ones, disk rm removed untracked ones
+- [Phase 03-02]: Removed popularProducts hardcoded override — Supabase featured column is sole source of truth for Popular badge
+- [Phase 03-02]: Vases.featured=false in DB — needs manual UPDATE in Supabase dashboard (no service role key available in project)
+- [Phase 03-02]: loading=lazy excluded from lightbox img (empty src) and staff admin thumbnail — intentional exclusions
 
 ### Pending Todos
 
@@ -79,5 +82,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-09
-Stopped at: Completed 03-01-PLAN.md (backup and script cleanup) — all 2 tasks done, 7 tracked + 24 untracked files deleted
+Stopped at: Completed 03-02-PLAN.md (DB-driven Popular badge + lazy loading) — both tasks done
 Resume file: None
