@@ -1423,6 +1423,13 @@ function handleStaffFileSelect(event) {
             const token = sessionData?.session?.access_token;
             if (!token) throw new Error('Not authenticated — please log out and log back in');
 
+            // Diagnostic: decode JWT role
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                showStaffToast('Token role: ' + payload.role + ' | uid: ' + (payload.sub || 'none'), '');
+                await new Promise(r => setTimeout(r, 3000));
+            } catch(e) { /* ignore */ }
+
             const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
             const uploadUrl = `https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/product-images/${fileName}`;
 
