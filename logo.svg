@@ -1,35 +1,75 @@
-<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Main circle -->
-  <circle cx="200" cy="200" r="180" stroke="#0066FF" stroke-width="4" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <clipPath id="clip">
+      <circle cx="200" cy="200" r="190"/>
+    </clipPath>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00E8FF"/>
+      <stop offset="100%" stop-color="#1E90FF"/>
+    </linearGradient>
+    <radialGradient id="navyBalloon" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#0A1460"/>
+    </radialGradient>
+    <radialGradient id="cyanBalloon" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#40F0FF"/>
+      <stop offset="100%" stop-color="#00B8D4"/>
+    </radialGradient>
+  </defs>
 
-  <!-- Decorative stars/sparkles -->
-  <!-- Top left stars -->
-  <g transform="translate(80, 120)">
-    <path d="M0,-15 L3,-3 L15,0 L3,3 L0,15 L-3,3 L-15,0 L-3,-3 Z" fill="#0066FF"/>
-  </g>
-  <g transform="translate(110, 100)">
-    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#0066FF"/>
-  </g>
-  <g transform="translate(65, 160)">
-    <path d="M0,-12 L2.5,-2.5 L12,0 L2.5,2.5 L0,12 L-2.5,2.5 L-12,0 L-2.5,-2.5 Z" fill="#0066FF"/>
+  <!-- White background circle -->
+  <circle cx="200" cy="200" r="190" fill="white"/>
+
+  <g clip-path="url(#clip)">
+
+    <!-- Navy balloon (back/left) -->
+    <ellipse cx="165" cy="84" rx="24" ry="30" fill="url(#navyBalloon)"/>
+    <ellipse cx="158" cy="74" rx="6" ry="8" fill="white" opacity="0.25"/>
+    <path d="M162 114 L165 123 L168 114 Q168 112 165 112 Q162 112 162 114Z" fill="#0A1460"/>
+    <path d="M165 123 Q159 148 167 170" stroke="#0A1460" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Cyan balloon (front/right) -->
+    <ellipse cx="202" cy="70" rx="22" ry="28" fill="url(#cyanBalloon)"/>
+    <ellipse cx="195" cy="60" rx="5" ry="7" fill="white" opacity="0.3"/>
+    <path d="M199 98 L202 107 L205 98 Q205 96 202 96 Q199 96 199 98Z" fill="#00B8D4"/>
+    <path d="M202 107 Q197 132 204 155" stroke="#00B8D4" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Sparkle top left (large) -->
+    <path d="M126,112 L129.5,122 L140,125 L129.5,128 L126,138 L122.5,128 L112,125 L122.5,122 Z" fill="#00CED1"/>
+    <!-- Sparkle top right (medium) -->
+    <path d="M264,84 L266.5,91 L274,93.5 L266.5,96 L264,103 L261.5,96 L254,93.5 L261.5,91 Z" fill="#1E90FF"/>
+    <!-- Sparkle bottom right (medium) -->
+    <path d="M296,266 L298.5,273 L306,275.5 L298.5,278 L296,285 L293.5,278 L286,275.5 L293.5,273 Z" fill="#00CED1"/>
+    <!-- Sparkle bottom left (small) -->
+    <path d="M116,294 L118,300 L124,302 L118,304 L116,310 L114,304 L108,302 L114,300 Z" fill="#00CED1" opacity="0.8"/>
+    <!-- Dot accents -->
+    <circle cx="106" cy="192" r="3" fill="#1E90FF" opacity="0.65"/>
+    <circle cx="286" cy="146" r="2.5" fill="#00CED1" opacity="0.65"/>
+
+    <!-- "Party" bubble text -->
+    <text x="200" y="200"
+          font-family="'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif"
+          font-size="80" font-weight="900" text-anchor="middle"
+          stroke="#0A1460" stroke-width="13" stroke-linejoin="round"
+          paint-order="stroke fill"
+          fill="url(#textGrad)">Party</text>
+
+    <!-- "Palace" bubble text -->
+    <text x="200" y="282"
+          font-family="'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif"
+          font-size="80" font-weight="900" text-anchor="middle"
+          stroke="#0A1460" stroke-width="13" stroke-linejoin="round"
+          paint-order="stroke fill"
+          fill="url(#textGrad)">Palace</text>
+
+    <!-- Tagline -->
+    <text x="200" y="320"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="12.5" font-weight="400" text-anchor="middle"
+          fill="#0A1460" letter-spacing="0.4">Prints &#8226; Portraits &#8226; Party &#8226; Programs</text>
+
   </g>
 
-  <!-- Bottom right stars -->
-  <g transform="translate(320, 280)">
-    <path d="M0,-15 L3,-3 L15,0 L3,3 L0,15 L-3,3 L-15,0 L-3,-3 Z" fill="#0066FF"/>
-  </g>
-  <g transform="translate(300, 310)">
-    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#0066FF"/>
-  </g>
-  <g transform="translate(335, 250)">
-    <path d="M0,-12 L2.5,-2.5 L12,0 L2.5,2.5 L0,12 L-2.5,2.5 L-12,0 L-2.5,-2.5 Z" fill="#0066FF"/>
-  </g>
-
-  <!-- Text: Party Palace -->
-  <text x="200" y="190" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#0066FF" text-anchor="middle" font-style="italic">
-    Party
-  </text>
-  <text x="200" y="260" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#0066FF" text-anchor="middle" font-style="italic">
-    Palace
-  </text>
+  <!-- Bold circle border on top for clean, unbroken ring -->
+  <circle cx="200" cy="200" r="190" fill="none" stroke="#0A1460" stroke-width="10"/>
 </svg>
