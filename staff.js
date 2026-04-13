@@ -1430,6 +1430,7 @@ function handleStaffFileSelect(event) {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + token,
+                    'apikey': DB_ANON_KEY,
                     'x-upsert': 'true',
                     'Content-Type': file.type
                 },
