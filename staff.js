@@ -1259,8 +1259,14 @@ window.confirmStaffDelete = confirmStaffDelete;
 
 let staffEditingProductId = null;
 
+let staffProductSubmitting = false;
 async function handleStaffProductSubmit(e) {
     e.preventDefault();
+    if (staffProductSubmitting) return;
+    staffProductSubmitting = true;
+
+    const submitBtn = e.target.querySelector('[type="submit"]');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
 
     const id = staffEditingProductId;
     const isEditing = id != null;
@@ -1326,6 +1332,9 @@ async function handleStaffProductSubmit(e) {
     } catch (error) {
         console.error('Error saving product:', error);
         showStaffToast('Error: ' + error.message, 'error');
+    } finally {
+        staffProductSubmitting = false;
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Save Product'; }
     }
 }
 window.handleStaffProductSubmit = handleStaffProductSubmit;
@@ -1448,7 +1457,7 @@ function handleStaffFileSelect(event) {
                 }
             } catch (fallbackError) {
                 console.error('Fallback upload error:', fallbackError);
-                showStaffToast('Image upload failed — using preview as fallback', 'error');
+                showStaffToast('Upload failed: ' + (fallbackError?.message || JSON.stringify(fallbackError)), 'error');
                 document.getElementById('staff-product-image').value = e.target.result;
             }
         }
