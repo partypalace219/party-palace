@@ -1436,8 +1436,10 @@ function handleStaffFileSelect(event) {
                 body: JSON.stringify({ fileName, fileData: base64, contentType: file.type })
             });
 
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.error || 'Upload failed');
+            const text = await res.text();
+            let json;
+            try { json = JSON.parse(text); } catch(e) { throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`); }
+            if (!res.ok) throw new Error(`HTTP ${res.status}: ${json.error || text.slice(0, 200)}`);
 
             document.getElementById('staff-product-image').value = json.url;
             showStaffToast('Image uploaded!', 'success');
