@@ -1416,50 +1416,38 @@ function handleStaffFileSelect(event) {
         document.getElementById('staff-upload-preview').style.display = 'block';
         document.getElementById('staff-upload-placeholder').style.display = 'none';
 
-        // Upload to Supabase Storage
+        // Upload to Supabase Storage via direct REST API with auth token
         showStaffToast('Uploading image...', '');
         try {
+            const { data: sessionData } = await window.supabaseClient.auth.getSession();
+            const token = sessionData?.session?.access_token;
+            if (!token) throw new Error('Not authenticated — please log out and log back in');
+
             const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const { data, error } = await window.supabaseClient.storage
-                .from('product-images')
-                .upload(fileName, file, {
-                    cacheControl: '3600',
-                    upsert: true
-                });
+            const uploadUrl = `https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/product-images/${fileName}`;
 
-            if (error) throw error;
+            const res = await fetch(uploadUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'x-upsert': 'true',
+                    'Content-Type': file.type
+                },
+                body: file
+            });
 
-            // Get public URL
-            const { data: urlData } = window.supabaseClient.storage
-                .from('product-images')
-                .getPublicUrl(fileName);
+            if (!res.ok) {
+                const errBody = await res.text();
+                throw new Error(`Upload failed (${res.status}): ${errBody}`);
+            }
 
-            // Set the URL in the input
-            document.getElementById('staff-product-image').value = urlData.publicUrl;
+            const publicUrl = `https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/${fileName}`;
+            document.getElementById('staff-product-image').value = publicUrl;
             showStaffToast('Image uploaded!', 'success');
         } catch (uploadError) {
             console.error('Upload error:', uploadError);
-            // Try using a signed URL approach as fallback
-            try {
-                const fallbackName = `product-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${file.name.split('.').pop()}`;
-                const { data: fallbackData, error: fallbackErr } = await window.supabaseClient.storage
-                    .from('product-images')
-                    .upload(fallbackName, file, { upsert: true });
-
-                if (!fallbackErr) {
-                    const { data: urlData } = window.supabaseClient.storage
-                        .from('product-images')
-                        .getPublicUrl(fallbackName);
-                    document.getElementById('staff-product-image').value = urlData.publicUrl;
-                    showStaffToast('Image uploaded!', 'success');
-                } else {
-                    throw fallbackErr;
-                }
-            } catch (fallbackError) {
-                console.error('Fallback upload error:', fallbackError);
-                showStaffToast('Upload failed: ' + (fallbackError?.message || JSON.stringify(fallbackError)), 'error');
-                document.getElementById('staff-product-image').value = e.target.result;
-            }
+            showStaffToast('Upload failed: ' + uploadError.message, 'error');
+            document.getElementById('staff-product-image').value = e.target.result;
         }
     };
     reader.readAsDataURL(file);
