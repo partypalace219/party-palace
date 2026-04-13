@@ -32,6 +32,10 @@ upload-images-to-supabase.js
 debug_images.html
 attach_images_to_products.js
 
+# Secrets
+.env
+.env.local
+
 # Claude local settings
 .claude/settings.local.json
 stripe_backup_code.txt

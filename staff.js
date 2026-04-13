@@ -1416,41 +1416,22 @@ function handleStaffFileSelect(event) {
         document.getElementById('staff-upload-preview').style.display = 'block';
         document.getElementById('staff-upload-placeholder').style.display = 'none';
 
-        // Upload to Supabase Storage via direct REST API with auth token
+        // Upload to Supabase Storage via server-side API route
         showStaffToast('Uploading image...', '');
         try {
-            const { data: sessionData } = await window.supabaseClient.auth.getSession();
-            const token = sessionData?.session?.access_token;
-            if (!token) throw new Error('Not authenticated — please log out and log back in');
-
-            // Diagnostic: decode JWT role
-            try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                showStaffToast('Token role: ' + payload.role + ' | uid: ' + (payload.sub || 'none'), '');
-                await new Promise(r => setTimeout(r, 3000));
-            } catch(e) { /* ignore */ }
-
             const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const uploadUrl = `https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/product-images/${fileName}`;
+            const base64 = e.target.result.split(',')[1];
 
-            const res = await fetch(uploadUrl, {
+            const res = await fetch('/api/upload-image', {
                 method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'apikey': DB_ANON_KEY,
-                    'x-upsert': 'true',
-                    'Content-Type': file.type
-                },
-                body: file
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fileName, fileData: base64, contentType: file.type })
             });
 
-            if (!res.ok) {
-                const errBody = await res.text();
-                throw new Error(`Upload failed (${res.status}): ${errBody}`);
-            }
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Upload failed');
 
-            const publicUrl = `https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/${fileName}`;
-            document.getElementById('staff-product-image').value = publicUrl;
+            document.getElementById('staff-product-image').value = json.url;
             showStaffToast('Image uploaded!', 'success');
         } catch (uploadError) {
             console.error('Upload error:', uploadError);
