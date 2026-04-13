@@ -1416,15 +1416,23 @@ function handleStaffFileSelect(event) {
         document.getElementById('staff-upload-preview').style.display = 'block';
         document.getElementById('staff-upload-placeholder').style.display = 'none';
 
-        // Upload to Supabase Storage via server-side API route
+        // Upload via Supabase Edge Function (uses service role key server-side)
         showStaffToast('Uploading image...', '');
         try {
+            const { data: sessionData } = await window.supabaseClient.auth.getSession();
+            const token = sessionData?.session?.access_token;
+            if (!token) throw new Error('Not authenticated — please log out and log back in');
+
             const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
             const base64 = e.target.result.split(',')[1];
 
-            const res = await fetch('/api/upload-image', {
+            const res = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/upload-product-image', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    'apikey': DB_ANON_KEY
+                },
                 body: JSON.stringify({ fileName, fileData: base64, contentType: file.type })
             });
 
