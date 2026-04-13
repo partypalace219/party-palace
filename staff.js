@@ -220,17 +220,15 @@ async function showStaffDashboard() {
 
 async function loadStaffProducts() {
     try {
-        // Fetch without image_url first (avoids Supabase free-tier statement timeout)
         const { data: dbProducts, error } = await window.supabaseClient
             .from('products')
-            .select('id,name,slug,category,price,cost,sale,discount_percent,description,emoji,featured');
+            .select('id,name,slug,category,price,cost,sale,discount_percent,description,emoji,featured,image_url');
 
         if (error) throw error;
 
         // Load products from Supabase
         staffProducts = dbProducts.map(p => {
-            // Use productGalleryImages for known products, image_url loaded in background
-            let image = null;
+            let image = p.image_url || null;
             if (typeof productGalleryImages !== 'undefined' && productGalleryImages[p.name]) {
                 image = productGalleryImages[p.name][0];
             }
@@ -246,12 +244,9 @@ async function loadStaffProducts() {
                 sale: p.sale || false,
                 discount_percent: p.discount_percent || null,
                 image: image,
-                image_url: null
+                image_url: p.image_url || null
             };
         });
-
-        // Fetch image_url in background (20 at a time to avoid timeout)
-        loadStaffProductImages();
 
     } catch (error) {
         console.error('Error loading staff products:', error);
