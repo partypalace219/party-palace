@@ -256,6 +256,7 @@
             height: 85px;
             width: auto;
             display: block;
+            mix-blend-mode: multiply;
         }
 
         /* Right navigation and actions */
@@ -1758,7 +1759,7 @@
         .footer-logo .logo-img {
             height: 100px;
             width: auto;
-            filter: brightness(0) invert(1);
+            border-radius: 12px;
         }
 
         .footer-logo .logo-icon {
