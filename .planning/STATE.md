@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-04-09 — v1.0 Production Hardening milestone complete
+Last activity: 2026-04-27 - Completed quick task 1: Migrate products table to support multiple images, sizes, colors, and sub-categories
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -34,6 +34,12 @@ None.
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 1 | Migrate products table to support multiple images, sizes, colors, and sub-categories | 2026-04-27 | dd04934 | [1-migrate-products-table-to-support-multip](./quick/1-migrate-products-table-to-support-multip/) |
 
 ## Session Continuity
 
