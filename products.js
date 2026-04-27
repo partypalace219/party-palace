@@ -660,20 +660,45 @@ export function filterEngravingProducts(material) {
 
 // Filter 3D Prints by Category
 export function filter3DProducts(category) {
-    // Update filter buttons
+    // Update filter buttons — toggle active on matching button
     document.querySelectorAll('#prints3dFilterButtons .filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.category === category);
     });
 
-    // Show/hide products based on category
-    document.querySelectorAll('#prints3dGrid .prints3d-product').forEach(product => {
+    const grid = document.getElementById('prints3dGrid');
+    if (!grid) return;
+
+    if (category === 'all') {
+        // Show all cards
+        grid.querySelectorAll('.prints3d-product').forEach(card => {
+            card.style.display = '';
+        });
+        // Remove any existing empty-state
+        const existing = grid.querySelector('.empty-state');
+        if (existing) existing.remove();
+        return;
+    }
+
+    // Sub-category filter: show matching, hide others
+    let visibleCount = 0;
+    grid.querySelectorAll('.prints3d-product').forEach(product => {
         const productCategories = product.dataset.category.split(',');
-        if (category === 'all' || productCategories.includes(category)) {
-            product.style.display = 'flex';
-        } else {
-            product.style.display = 'none';
-        }
+        const visible = productCategories.includes(category);
+        product.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
     });
+
+    // Remove any pre-existing empty-state
+    const existing = grid.querySelector('.empty-state');
+    if (existing) existing.remove();
+
+    // Show empty-state when no products match
+    if (visibleCount === 0) {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'empty-state';
+        emptyEl.textContent = 'No items in this category yet';
+        grid.appendChild(emptyEl);
+    }
 }
 
 // Inquire Product
