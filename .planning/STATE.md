@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-04-27 - Completed quick task 9: Specialty Materials engraving filter + empty-state; Party Rentals rebuilt as filterable catalog; Gallery routing confirmed canonical
+Last activity: 2026-04-27 - Completed quick task 10: Rebuilt staff portal Add/Edit form with multi-image upload, sizes, colors, category/sub-category
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -48,6 +48,7 @@ None.
 | 7 | Add ?v=2026-04 cache-busting to favicon link tags in index.html; add 180x180 apple-touch-icon pointing to favicon-192x192.png | 2026-04-27 | 3588b7c | [7-add-cache-busting-query-strings-to-favic](./quick/7-add-cache-busting-query-strings-to-favic/) |
 | 8 | Remove "Did we make your day better?" section: markup from index.html, handlers from inline script, resetLoveQuestionSection from ui.js, all CSS from styles.css | 2026-04-27 | 2f51e53 | [8-remove-did-we-make-your-day-better-foote](./quick/8-remove-did-we-make-your-day-better-foote/) |
 | 9 | Specialty Materials engraving filter + empty-state for all Engraving filters; Party Rentals rebuilt as filterable catalog (sub_category); Gallery routing confirmed canonical | 2026-04-27 | 920ab24 | [9-add-specialty-materials-filter-to-engrav](./quick/9-add-specialty-materials-filter-to-engrav/) |
+| 10 | Rebuild staff portal Add/Edit Item form: multi-image upload, sizes, colors, category/sub-category | 2026-04-27 | 1d9031c | [10-rebuild-staff-portal-add-edit-item-form-](./quick/10-rebuild-staff-portal-add-edit-item-form-/) |
 
 ## Engraving Follow-up Decision Needed
 
