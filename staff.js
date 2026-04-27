@@ -17,6 +17,10 @@ let staffSelectedIds = new Set();
 let staffOrders = [];
 let staffOrdersFilter = 'all';
 
+// Multi-image + variant state for add/edit modal
+let staffProductImages = []; // [{type:'existing',url}|{type:'new',file,previewUrl}]
+let staffProductColors = []; // ['White','Blue',...]
+
 function initStaffPortal() {
     if (staffPortalInitialized) return;
     staffPortalInitialized = true;
@@ -57,6 +61,20 @@ function initStaffPortal() {
     const productForm = document.getElementById('staff-product-form');
     if (productForm) {
         productForm.addEventListener('submit', handleStaffProductSubmit);
+    }
+
+    // Build category options from ITEM_CATEGORIES
+    const categorySelect = document.getElementById('staff-product-category');
+    if (categorySelect && window.ITEM_CATEGORIES) {
+        Object.keys(window.ITEM_CATEGORIES).forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            categorySelect.appendChild(opt);
+        });
+        categorySelect.addEventListener('change', function() {
+            staffOnCategoryChange(this.value);
+        });
     }
 
     // Delete confirmation
@@ -222,7 +240,7 @@ async function loadStaffProducts() {
     try {
         const { data: dbProducts, error } = await window.supabaseClient
             .from('products')
-            .select('id,name,slug,category,price,cost,sale,discount_percent,description,emoji,featured,image_url');
+            .select('id,name,slug,category,sub_category,price,price_label,cost,sale,discount_percent,description,emoji,featured,image_url,image_urls,sizes,colors');
 
         if (error) throw error;
 
@@ -235,8 +253,11 @@ async function loadStaffProducts() {
             return {
                 id: p.id,
                 name: p.name,
+                slug: p.slug || '',
                 category: p.category,
+                sub_category: p.sub_category || null,
                 price: p.price || 0,
+                price_label: p.price_label || '',
                 cost: p.cost || 0,
                 description: p.description,
                 emoji: p.emoji,
@@ -244,7 +265,10 @@ async function loadStaffProducts() {
                 sale: p.sale || false,
                 discount_percent: p.discount_percent || null,
                 image: image,
-                image_url: p.image_url || null
+                image_url: p.image_url || null,
+                image_urls: p.image_urls || [],
+                sizes: p.sizes || [],
+                colors: p.colors || []
             };
         });
 
@@ -1205,32 +1229,57 @@ function openStaffProductModal(product = null) {
     const title = document.getElementById('staff-modal-title');
 
     form.reset();
-    removeStaffImage();
+    clearFieldErrors();
+
+    // Reset image/color state
+    staffProductImages = [];
+    staffProductColors = [];
 
     if (product) {
         title.textContent = 'Edit Product';
         staffEditingProductId = product.id;
         document.getElementById('staff-product-id').value = product.id;
         document.getElementById('staff-product-name').value = product.name;
-        document.getElementById('staff-product-category').value = product.category;
-        document.getElementById('staff-product-price').value = product.price;
+        document.getElementById('staff-product-price').value = product.price || '';
+        document.getElementById('staff-product-price-label').value = product.price_label || '';
         document.getElementById('staff-product-cost').value = product.cost > 0 ? product.cost : '';
         document.getElementById('staff-product-description').value = product.description || '';
         document.getElementById('staff-product-emoji').value = product.emoji || '';
-        document.getElementById('staff-product-image').value = product.image_url || product.image || '';
-        document.getElementById('staff-product-featured').checked = product.featured;
-        document.getElementById('staff-product-sale').checked = product.sale;
+        document.getElementById('staff-product-featured').checked = !!product.featured;
+        document.getElementById('staff-product-sale').checked = !!product.sale;
         document.getElementById('staff-product-discount').value = product.discount_percent || '';
+
+        // Category + sub-category
+        const catSelect = document.getElementById('staff-product-category');
+        catSelect.value = product.category || '';
+        populateSubCategoryOptions(product.category || '', product.sub_category || '');
+
+        // Images: prefer image_urls array, fall back to single image_url
+        const urls = (product.image_urls && product.image_urls.length > 0)
+            ? product.image_urls
+            : (product.image_url ? [product.image_url] : []);
+        staffProductImages = urls.map(url => ({ type: 'existing', url }));
+
+        // Sizes
+        const sizeCheckboxes = document.querySelectorAll('input[name="staff-product-size"]');
+        const savedSizes = product.sizes || [];
+        sizeCheckboxes.forEach(cb => { cb.checked = savedSizes.includes(cb.value); });
+
+        // Colors
+        staffProductColors = [...(product.colors || [])];
     } else {
         title.textContent = 'Add New Product';
         staffEditingProductId = null;
         document.getElementById('staff-product-id').value = '';
         document.getElementById('staff-product-discount').value = '';
+        document.getElementById('staff-product-price-label').value = '';
+        // Reset sub-category options
+        populateSubCategoryOptions('', '');
     }
 
-    // Show/hide discount field based on sale checkbox
+    renderStaffImageThumbnails();
+    renderColorChips();
     toggleDiscountField();
-
     openStaffModal('staff-product-modal');
 }
 window.openStaffProductModal = openStaffProductModal;
@@ -1258,33 +1307,70 @@ let staffProductSubmitting = false;
 async function handleStaffProductSubmit(e) {
     e.preventDefault();
     if (staffProductSubmitting) return;
-    staffProductSubmitting = true;
 
+    clearFieldErrors();
+
+    const category = document.getElementById('staff-product-category').value;
+    const subCategory = document.getElementById('staff-product-subcategory').value;
+
+    // Validate
+    let hasError = false;
+    if (!category) {
+        showFieldError('err-category', 'Category is required');
+        hasError = true;
+    }
+    if (!subCategory) {
+        showFieldError('err-subcategory', 'Sub-category is required');
+        hasError = true;
+    } else if (category && window.ITEM_CATEGORIES && !window.ITEM_CATEGORIES[category]?.includes(subCategory)) {
+        showFieldError('err-subcategory', 'Invalid sub-category for this category');
+        hasError = true;
+    }
+    if (staffProductImages.length === 0) {
+        showFieldError('err-images', 'At least 1 image is required');
+        hasError = true;
+    }
+    if (hasError) return;
+
+    staffProductSubmitting = true;
     const submitBtn = e.target.querySelector('[type="submit"]');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
 
     const id = staffEditingProductId;
     const isEditing = id != null;
-
-    const name = document.getElementById('staff-product-name').value;
+    const name = document.getElementById('staff-product-name').value.trim();
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const discountValue = document.getElementById('staff-product-discount').value;
-    const productData = {
-        name: name,
-        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-        category: document.getElementById('staff-product-category').value,
-        price: parseFloat(document.getElementById('staff-product-price').value) || 0,
-        cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
-        sale: document.getElementById('staff-product-sale').checked,
-        discount_percent: discountValue ? parseInt(discountValue) : null,
-        description: document.getElementById('staff-product-description').value,
-        emoji: document.getElementById('staff-product-emoji').value,
-        featured: document.getElementById('staff-product-featured').checked,
-        image_url: document.getElementById('staff-product-image').value || null
-    };
 
     try {
+        // Upload any new images
+        const imageUrls = await uploadAllNewImages(slug);
+
+        // Collect sizes
+        const sizes = Array.from(
+            document.querySelectorAll('input[name="staff-product-size"]:checked')
+        ).map(cb => cb.value);
+
+        const productData = {
+            name,
+            slug,
+            category,
+            sub_category: subCategory,
+            price: parseFloat(document.getElementById('staff-product-price').value) || 0,
+            price_label: document.getElementById('staff-product-price-label').value || 'Starting at',
+            cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
+            sale: document.getElementById('staff-product-sale').checked,
+            discount_percent: discountValue ? parseInt(discountValue) : null,
+            description: document.getElementById('staff-product-description').value,
+            emoji: document.getElementById('staff-product-emoji').value,
+            featured: document.getElementById('staff-product-featured').checked,
+            image_url: imageUrls[0] || null,
+            image_urls: imageUrls,
+            sizes,
+            colors: [...staffProductColors]
+        };
+
         if (isEditing) {
-            // Update existing product
             const { data, error } = await window.supabaseClient
                 .from('products')
                 .update(productData)
@@ -1292,14 +1378,11 @@ async function handleStaffProductSubmit(e) {
                 .select();
 
             if (error) throw error;
-
             if (!data || data.length === 0) {
-                // Update matched no rows — likely an RLS policy issue
-                showStaffToast('Update blocked — go to Supabase > Authentication > Policies and add an UPDATE policy for the products table', 'error');
+                showStaffToast('Update blocked — check Supabase UPDATE policy for products table', 'error');
                 return;
             }
         } else {
-            // Insert new product
             const { data, error } = await window.supabaseClient
                 .from('products')
                 .insert(productData)
@@ -1312,7 +1395,6 @@ async function handleStaffProductSubmit(e) {
         showStaffToast(isEditing ? 'Product updated!' : 'Product added!', 'success');
         closeStaffModal('staff-product-modal');
 
-        // Log activity
         logActivity(isEditing ? 'Updated' : 'Added', 'product', id || 'new', productData.name);
 
         await loadStaffProducts();
@@ -1320,7 +1402,6 @@ async function handleStaffProductSubmit(e) {
         populateStaffFilters();
         renderStaffProducts();
 
-        // Reload main site products without re-initializing the app (stay on staff page)
         if (typeof window.loadProducts === 'function') await window.loadProducts(true);
         if (typeof window.renderCatalog === 'function') window.renderCatalog();
         if (typeof window.renderServices === 'function') window.renderServices();
@@ -1385,101 +1466,191 @@ function showStaffToast(message, type = '') {
     }, 3000);
 }
 
-// Staff Image Upload Functions
-function switchStaffImageTab(tab) {
-    document.querySelectorAll('.staff-image-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.staff-image-panel').forEach(p => p.classList.remove('active'));
+// ============================================
+// MULTI-IMAGE UPLOAD
+// ============================================
 
-    document.querySelector(`.staff-image-tab[data-tab="${tab}"]`).classList.add('active');
-    document.getElementById(`staff-${tab}-panel`).classList.add('active');
+function handleStaffMultiFileSelect(event) {
+    const files = Array.from(event.target.files || []);
+    files.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const previewUrl = URL.createObjectURL(file);
+        staffProductImages.push({ type: 'new', file, previewUrl });
+    });
+    event.target.value = '';
+    clearFieldErrors('err-images');
+    renderStaffImageThumbnails();
 }
-window.switchStaffImageTab = switchStaffImageTab;
+window.handleStaffMultiFileSelect = handleStaffMultiFileSelect;
 
-function handleStaffFileSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-        showStaffToast('Please select an image file', 'error');
-        return;
-    }
-
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        document.getElementById('staff-preview-img').src = e.target.result;
-        document.getElementById('staff-upload-preview').style.display = 'block';
-        document.getElementById('staff-upload-placeholder').style.display = 'none';
-
-        // Upload via Supabase Edge Function (uses service role key server-side)
-        showStaffToast('Uploading image...', '');
-        try {
-            const { data: sessionData } = await window.supabaseClient.auth.getSession();
-            const token = sessionData?.session?.access_token;
-            if (!token) throw new Error('Not authenticated — please log out and log back in');
-
-            const fileName = `product-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const base64 = e.target.result.split(',')[1];
-
-            const res = await fetch('https://nsedpvrqhxcikhlieize.supabase.co/functions/v1/upload-product-image', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'apikey': DB_ANON_KEY
-                },
-                body: JSON.stringify({ fileName, fileData: base64, contentType: file.type })
-            });
-
-            const text = await res.text();
-            let json;
-            try { json = JSON.parse(text); } catch(e) { throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`); }
-            if (!res.ok) throw new Error(`HTTP ${res.status}: ${json.error || text.slice(0, 200)}`);
-
-            document.getElementById('staff-product-image').value = json.url;
-            showStaffToast('Image uploaded!', 'success');
-        } catch (uploadError) {
-            console.error('Upload error:', uploadError);
-            showStaffToast('Upload failed: ' + uploadError.message, 'error');
-            document.getElementById('staff-product-image').value = e.target.result;
-        }
-    };
-    reader.readAsDataURL(file);
+function staffHandleImageDrop(event) {
+    event.preventDefault();
+    event.currentTarget.classList.remove('dragover');
+    const files = Array.from(event.dataTransfer.files || []);
+    files.forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const previewUrl = URL.createObjectURL(file);
+        staffProductImages.push({ type: 'new', file, previewUrl });
+    });
+    clearFieldErrors('err-images');
+    renderStaffImageThumbnails();
 }
-window.handleStaffFileSelect = handleStaffFileSelect;
+window.staffHandleImageDrop = staffHandleImageDrop;
 
-function removeStaffImage() {
-    document.getElementById('staff-preview-img').src = '';
-    document.getElementById('staff-upload-preview').style.display = 'none';
-    document.getElementById('staff-upload-placeholder').style.display = 'flex';
-    document.getElementById('staff-file-input').value = '';
-    document.getElementById('staff-product-image').value = '';
+function removeStaffImage(idx) {
+    staffProductImages.splice(idx, 1);
+    renderStaffImageThumbnails();
 }
 window.removeStaffImage = removeStaffImage;
 
-// Setup drag and drop for file upload
-document.addEventListener('DOMContentLoaded', function() {
-    const uploadArea = document.getElementById('staff-file-upload');
-    if (uploadArea) {
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+function moveStaffImage(idx, dir) {
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= staffProductImages.length) return;
+    const temp = staffProductImages[idx];
+    staffProductImages[idx] = staffProductImages[newIdx];
+    staffProductImages[newIdx] = temp;
+    renderStaffImageThumbnails();
+}
+window.moveStaffImage = moveStaffImage;
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+function renderStaffImageThumbnails() {
+    const grid = document.getElementById('staff-image-grid');
+    if (!grid) return;
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                document.getElementById('staff-file-input').files = e.dataTransfer.files;
-                handleStaffFileSelect({ target: { files: e.dataTransfer.files } });
-            }
-        });
+    grid.innerHTML = staffProductImages.map((img, idx) => {
+        const src = img.type === 'existing' ? img.url : img.previewUrl;
+        const badge = idx === 0 ? '<span class="staff-thumb-badge">Primary</span>' : `<span class="staff-thumb-badge staff-thumb-badge-n">${idx + 1}</span>`;
+        return `
+            <div class="staff-thumb-item">
+                <img src="${src}" alt="Image ${idx + 1}" class="staff-thumb-img">
+                ${badge}
+                <div class="staff-thumb-controls">
+                    <button type="button" class="staff-thumb-btn" onclick="moveStaffImage(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="Move left">&#8592;</button>
+                    <button type="button" class="staff-thumb-btn staff-thumb-remove" onclick="removeStaffImage(${idx})" title="Remove">&times;</button>
+                    <button type="button" class="staff-thumb-btn" onclick="moveStaffImage(${idx}, 1)" ${idx === staffProductImages.length - 1 ? 'disabled' : ''} title="Move right">&#8594;</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+window.renderStaffImageThumbnails = renderStaffImageThumbnails;
+
+async function uploadProductImageToStorage(file, productSlug) {
+    const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
+    const path = `${productSlug}/${Date.now()}-${cleanName}`;
+
+    const { data, error } = await window.supabaseClient.storage
+        .from('product-images')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+
+    if (error) throw new Error('Storage upload failed: ' + error.message);
+
+    const { data: urlData } = window.supabaseClient.storage
+        .from('product-images')
+        .getPublicUrl(data.path);
+
+    return urlData.publicUrl;
+}
+
+async function uploadAllNewImages(productSlug) {
+    const urls = [];
+    for (const img of staffProductImages) {
+        if (img.type === 'new') {
+            showStaffToast('Uploading image…', '');
+            const url = await uploadProductImageToStorage(img.file, productSlug);
+            img.type = 'existing';
+            img.url = url;
+            urls.push(url);
+        } else {
+            urls.push(img.url);
+        }
     }
-});
+    return urls;
+}
+
+// ============================================
+// CATEGORY / SUB-CATEGORY
+// ============================================
+
+function staffOnCategoryChange(cat) {
+    populateSubCategoryOptions(cat, '');
+}
+window.staffOnCategoryChange = staffOnCategoryChange;
+
+function populateSubCategoryOptions(cat, selectedVal) {
+    const sel = document.getElementById('staff-product-subcategory');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Select sub-category</option>';
+    if (!cat || !window.ITEM_CATEGORIES || !window.ITEM_CATEGORIES[cat]) return;
+    window.ITEM_CATEGORIES[cat].forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub;
+        opt.textContent = sub;
+        if (sub === selectedVal) opt.selected = true;
+        sel.appendChild(opt);
+    });
+}
+window.populateSubCategoryOptions = populateSubCategoryOptions;
+
+// ============================================
+// COLOR CHIPS
+// ============================================
+
+function renderColorChips() {
+    const container = document.getElementById('staff-color-chips');
+    if (!container) return;
+    container.innerHTML = staffProductColors.map((color, idx) => `
+        <span class="staff-chip">${color} <button type="button" onclick="removeColorChip(${idx})" aria-label="Remove ${color}">&times;</button></span>
+    `).join('');
+}
+window.renderColorChips = renderColorChips;
+
+function addColorChip(color) {
+    const trimmed = color.trim();
+    if (!trimmed || staffProductColors.includes(trimmed)) return;
+    staffProductColors.push(trimmed);
+    renderColorChips();
+}
+window.addColorChip = addColorChip;
+
+function removeColorChip(idx) {
+    staffProductColors.splice(idx, 1);
+    renderColorChips();
+}
+window.removeColorChip = removeColorChip;
+
+function handleColorChipKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const input = event.target;
+        addColorChip(input.value);
+        input.value = '';
+    }
+}
+window.handleColorChipKeydown = handleColorChipKeydown;
+
+// ============================================
+// INLINE VALIDATION HELPERS
+// ============================================
+
+function showFieldError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+window.showFieldError = showFieldError;
+
+function clearFieldErrors(specificId) {
+    if (specificId) {
+        const el = document.getElementById(specificId);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+        return;
+    }
+    ['err-category', 'err-subcategory', 'err-images'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = ''; el.style.display = 'none'; }
+    });
+}
+window.clearFieldErrors = clearFieldErrors;
 
 // ============================================
 // BARCODE SCANNER FUNCTIONS
@@ -1681,13 +1852,12 @@ window.lookupBarcode = lookupBarcode;
 
 function guessCategory(tags, name) {
     const text = (tags.join(' ') + ' ' + name).toLowerCase();
-    if (text.includes('balloon') || text.includes('party') || text.includes('decor')) return 'arches';
-    if (text.includes('centerpiece') || text.includes('vase') || text.includes('flower')) return 'centerpieces';
-    if (text.includes('column') || text.includes('pillar')) return 'columns';
-    if (text.includes('wall') || text.includes('backdrop')) return 'walls';
-    if (text.includes('rental') || text.includes('tent') || text.includes('chair')) return 'rentals';
-    if (text.includes('engrav') || text.includes('wood') || text.includes('laser')) return 'engraving';
-    if (text.includes('3d') || text.includes('print') || text.includes('lithophane')) return 'prints3d';
+    if (text.includes('engrav') || text.includes('laser')) return 'Engraving';
+    if (text.includes('3d') || text.includes('print') || text.includes('lithophane')) return '3D Prints';
+    if (text.includes('rental') || text.includes('tent') || text.includes('chair') || text.includes('table')) return 'Party Rentals';
+    if (text.includes('balloon') || text.includes('party') || text.includes('decor') ||
+        text.includes('arch') || text.includes('centerpiece') || text.includes('column') ||
+        text.includes('wall') || text.includes('backdrop')) return 'Party Decor';
     return '';
 }
 
@@ -1746,23 +1916,14 @@ function fillFormFromScan() {
     openStaffProductModal();
 
     // Auto-fill all form fields from the scanned data
-    if (data.name) {
-        document.getElementById('staff-product-name').value = data.name;
-    }
+    if (data.name) document.getElementById('staff-product-name').value = data.name;
+    if (data.price) document.getElementById('staff-product-price').value = parseFloat(data.price).toFixed(2);
+    if (data.description) document.getElementById('staff-product-description').value = data.description;
+    if (data.emoji) document.getElementById('staff-product-emoji').value = data.emoji;
     if (data.category) {
-        document.getElementById('staff-product-category').value = data.category;
-    }
-    if (data.price) {
-        document.getElementById('staff-product-price').value = parseFloat(data.price).toFixed(2);
-    }
-    if (data.description) {
-        document.getElementById('staff-product-description').value = data.description;
-    }
-    if (data.emoji) {
-        document.getElementById('staff-product-emoji').value = data.emoji;
-    }
-    if (data.image) {
-        document.getElementById('staff-product-image').value = data.image;
+        const catSelect = document.getElementById('staff-product-category');
+        catSelect.value = data.category;
+        staffOnCategoryChange(data.category);
     }
 
     showStaffToast('Form filled from barcode scan', 'success');

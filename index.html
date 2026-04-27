@@ -2045,30 +2045,88 @@
             </div>
             <form id="staff-product-form" class="staff-modal-body">
                 <input type="hidden" id="staff-product-id">
+
+                <!-- Name -->
                 <div class="staff-form-group">
                     <label for="staff-product-name">Product Name *</label>
                     <input type="text" id="staff-product-name" required>
                 </div>
+
+                <!-- Category + Sub-Category -->
                 <div class="staff-form-row">
                     <div class="staff-form-group">
                         <label for="staff-product-category">Category *</label>
                         <select id="staff-product-category" required>
                             <option value="">Select category</option>
-                            <option value="arches">Arches</option>
-                            <option value="columns">Columns</option>
-                            <option value="walls">Walls</option>
-                            <option value="centerpieces">Centerpieces</option>
-                            <option value="rentals">Rentals</option>
-                            <option value="services">Services</option>
-                            <option value="engraving">Engraving</option>
-                            <option value="prints3d">3D Prints</option>
                         </select>
+                        <span class="staff-field-error" id="err-category"></span>
                     </div>
                     <div class="staff-form-group">
-                        <label for="staff-product-price">Price ($) *</label>
-                        <input type="number" id="staff-product-price" min="0" step="0.01" required>
+                        <label for="staff-product-subcategory">Sub-Category *</label>
+                        <select id="staff-product-subcategory" required>
+                            <option value="">Select sub-category</option>
+                        </select>
+                        <span class="staff-field-error" id="err-subcategory"></span>
                     </div>
                 </div>
+
+                <!-- Description -->
+                <div class="staff-form-group">
+                    <label for="staff-product-description">Description</label>
+                    <textarea id="staff-product-description" rows="3"></textarea>
+                </div>
+
+                <!-- Price + Price Label -->
+                <div class="staff-form-row">
+                    <div class="staff-form-group">
+                        <label for="staff-product-price">Price ($)</label>
+                        <input type="number" id="staff-product-price" min="0" step="0.01">
+                    </div>
+                    <div class="staff-form-group">
+                        <label for="staff-product-price-label">Price Label</label>
+                        <input type="text" id="staff-product-price-label" placeholder="Starting at">
+                    </div>
+                </div>
+
+                <!-- Multi-image uploader -->
+                <div class="staff-form-group">
+                    <label>Images <span style="color:var(--red-accent,#e53e3e)">*</span></label>
+                    <div class="staff-image-grid" id="staff-image-grid"></div>
+                    <div class="staff-image-add-area" id="staff-image-add-area"
+                         onclick="document.getElementById('staff-multi-file-input').click()"
+                         ondragover="event.preventDefault();this.classList.add('dragover')"
+                         ondragleave="this.classList.remove('dragover')"
+                         ondrop="staffHandleImageDrop(event)">
+                        <input type="file" id="staff-multi-file-input" accept="image/*" multiple style="display:none;" onchange="handleStaffMultiFileSelect(event)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <span>Add images</span>
+                    </div>
+                    <span class="staff-field-error" id="err-images"></span>
+                </div>
+
+                <!-- Sizes -->
+                <div class="staff-form-group">
+                    <label>Sizes</label>
+                    <div class="staff-sizes-grid">
+                        <label class="staff-size-check"><input type="checkbox" name="staff-product-size" value="Small"> Small</label>
+                        <label class="staff-size-check"><input type="checkbox" name="staff-product-size" value="Medium"> Medium</label>
+                        <label class="staff-size-check"><input type="checkbox" name="staff-product-size" value="Large"> Large</label>
+                        <label class="staff-size-check"><input type="checkbox" name="staff-product-size" value="Extra Large"> Extra Large</label>
+                    </div>
+                </div>
+
+                <!-- Colors chip input -->
+                <div class="staff-form-group">
+                    <label>Colors</label>
+                    <div class="staff-color-chips" id="staff-color-chips"></div>
+                    <input type="text" id="staff-color-input" class="staff-chip-input" placeholder="Type a color and press Enter" onkeydown="handleColorChipKeydown(event)">
+                </div>
+
+                <!-- Cost + Emoji -->
                 <div class="staff-form-row">
                     <div class="staff-form-group">
                         <label for="staff-product-cost">Cost ($)</label>
@@ -2079,43 +2137,16 @@
                         <input type="text" id="staff-product-emoji" placeholder="e.g., 🎈">
                     </div>
                 </div>
-                <div class="staff-form-group">
-                    <label for="staff-product-description">Description</label>
-                    <textarea id="staff-product-description" rows="3"></textarea>
-                </div>
-                <div class="staff-form-group">
-                    <label>Product Image</label>
-                    <div class="staff-image-tabs">
-                        <button type="button" class="staff-image-tab active" data-tab="url" onclick="switchStaffImageTab('url')">URL</button>
-                        <button type="button" class="staff-image-tab" data-tab="upload" onclick="switchStaffImageTab('upload')">Upload File</button>
-                    </div>
-                    <div class="staff-image-panel active" id="staff-url-panel">
-                        <input type="text" id="staff-product-image" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <div class="staff-image-panel" id="staff-upload-panel">
-                        <div class="staff-file-upload" id="staff-file-upload" onclick="document.getElementById('staff-file-input').click()">
-                            <input type="file" id="staff-file-input" accept="image/*" style="display: none;" onchange="handleStaffFileSelect(event)">
-                            <div class="staff-upload-placeholder" id="staff-upload-placeholder">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="17 8 12 3 7 8"></polyline>
-                                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                                </svg>
-                                <span>Click or drag image here</span>
-                            </div>
-                            <div class="staff-upload-preview" id="staff-upload-preview" style="display: none;">
-                                <img id="staff-preview-img" src="" alt="Preview">
-                                <button type="button" class="staff-remove-img" onclick="event.stopPropagation(); removeStaffImage()">&times;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                <!-- Featured -->
                 <div class="staff-form-group">
                     <label class="staff-checkbox-label">
                         <input type="checkbox" id="staff-product-featured">
                         Featured Product (New Arrival)
                     </label>
                 </div>
+
+                <!-- On Sale + Discount -->
                 <div class="staff-form-group">
                     <label class="staff-checkbox-label">
                         <input type="checkbox" id="staff-product-sale" onchange="toggleDiscountField()">
@@ -2127,9 +2158,10 @@
                     <input type="number" id="staff-product-discount" min="0" max="100" step="1" placeholder="e.g. 20">
                     <small style="color: var(--gray-500); font-size: 0.75rem;">Leave empty for no specific discount</small>
                 </div>
+
                 <div class="staff-form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeStaffModal('staff-product-modal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Product</button>
+                    <button type="submit" class="btn btn-primary" id="staff-product-save-btn">Save Product</button>
                 </div>
             </form>
         </div>
@@ -2302,6 +2334,7 @@
         </div>
     </div>
 
+    <script src="js/itemCategories.js"></script>
     <script src="product_image_urls.js"></script>
     <script type="module" src="ui.js"></script>
 

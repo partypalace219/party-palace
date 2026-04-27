@@ -4365,6 +4365,206 @@
     justify-content: center;
 }
 
+/* Multi-image thumbnail grid */
+.staff-image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.staff-thumb-item {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 6px;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.staff-thumb-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--gray-300);
+    display: block;
+}
+
+.staff-thumb-badge {
+    position: absolute;
+    top: -6px;
+    left: -2px;
+    background: var(--blue-primary, #0066ff);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+.staff-thumb-badge-n {
+    background: var(--gray-500);
+}
+
+.staff-thumb-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.55);
+    border-radius: 0 0 6px 6px;
+    padding: 2px 3px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.staff-thumb-item:hover .staff-thumb-controls {
+    opacity: 1;
+}
+
+.staff-thumb-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0 3px;
+    line-height: 1.4;
+    border-radius: 3px;
+    transition: background 0.1s;
+}
+
+.staff-thumb-btn:hover:not([disabled]) {
+    background: rgba(255,255,255,0.2);
+}
+
+.staff-thumb-btn[disabled] {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.staff-thumb-remove {
+    font-size: 1rem;
+    color: #fca5a5;
+}
+
+.staff-thumb-remove:hover {
+    color: #ef4444;
+    background: rgba(255,255,255,0.15) !important;
+}
+
+.staff-image-add-area {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 2px dashed var(--gray-300);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    transition: border-color 0.2s, background 0.2s;
+    margin-top: 0.25rem;
+}
+
+.staff-image-add-area:hover,
+.staff-image-add-area.dragover {
+    border-color: var(--blue-primary, #0066ff);
+    background: rgba(0,102,255,0.04);
+    color: var(--blue-primary, #0066ff);
+}
+
+/* Sizes checkboxes */
+.staff-sizes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1.5rem;
+}
+
+.staff-size-check {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: var(--gray-700);
+}
+
+.staff-size-check input[type="checkbox"] {
+    accent-color: var(--blue-primary, #0066ff);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+/* Color chips */
+.staff-color-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+    min-height: 0;
+}
+
+.staff-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    padding: 3px 10px 3px 10px;
+    font-size: 0.8rem;
+    color: var(--gray-700);
+    white-space: nowrap;
+}
+
+.staff-chip button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--gray-400);
+    font-size: 0.95rem;
+    line-height: 1;
+    padding: 0 0 0 2px;
+    transition: color 0.1s;
+}
+
+.staff-chip button:hover {
+    color: #ef4444;
+}
+
+.staff-chip-input {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    transition: border-color 0.2s;
+}
+
+.staff-chip-input:focus {
+    outline: none;
+    border-color: var(--blue-primary, #0066ff);
+    background: #fff;
+}
+
+/* Inline field errors */
+.staff-field-error {
+    display: none;
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 0.2rem;
+}
+
 .btn-danger {
     background: #ef4444;
     color: white;
