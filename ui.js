@@ -257,11 +257,11 @@ function renderGallery() {
         const product = products.find(p => p.name === productName);
         const productCategory = product ? product.category : 'gallery';
 
-        // Map product category to filter category
+        // Map product category to gallery filter bucket (uses canonical DB names after migration)
         let filterCategory = 'party-decor';
-        if (productCategory === 'prints3d') filterCategory = '3d-prints';
-        else if (productCategory === 'engraving') filterCategory = 'engraving';
-        else if (['arches', 'columns', 'walls', 'centerpieces'].includes(productCategory)) filterCategory = 'party-decor';
+        if (productCategory === '3D Prints') filterCategory = '3d-prints';
+        else if (productCategory === 'Engraving') filterCategory = 'engraving';
+        else if (productCategory === 'Party Decor') filterCategory = 'party-decor';
 
         images.forEach(imageUrl => {
             allImages.push({

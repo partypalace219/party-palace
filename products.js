@@ -117,13 +117,20 @@ export function renderDynamicEngravingProducts() {
     const grid = document.getElementById('engravingGrid');
     if (!grid) return;
 
+    console.log('[renderDynamicEngravingProducts] called, products.length=', products.length,
+        'sample categories=', [...new Set(products.map(p => p.category))]);
+
     // Clear grid entirely -- all engraving products come from Supabase
     grid.innerHTML = '';
 
-    const engravingProducts = products.filter(p => p.category === 'Engraving' && p.slug);
+    // slug may be null in DB — generate from name as fallback so the && p.slug gate
+    // doesn't silently hide all products when the slug column is unpopulated.
+    const engravingProducts = products.filter(p => p.category === 'Engraving');
+
+    console.log('[renderDynamicEngravingProducts] matched=', engravingProducts.length);
 
     engravingProducts.forEach(product => {
-        const slug = product.slug;
+        const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🪵';
         const material = product.material || 'Wood';
@@ -171,13 +178,19 @@ export function renderDynamicPrints3dProducts() {
     const grid = document.getElementById('prints3dGrid');
     if (!grid) return;
 
+    console.log('[renderDynamicPrints3dProducts] called, products.length=', products.length,
+        'sample categories=', [...new Set(products.map(p => p.category))]);
+
     // Clear grid entirely -- all 3D prints products come from Supabase
     grid.innerHTML = '';
 
-    const prints3dProducts = products.filter(p => p.category === '3D Prints' && p.slug);
+    // slug may be null in DB — generate from name as fallback.
+    const prints3dProducts = products.filter(p => p.category === '3D Prints');
+
+    console.log('[renderDynamicPrints3dProducts] matched=', prints3dProducts.length);
 
     prints3dProducts.forEach(product => {
-        const slug = product.slug;
+        const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🖨️';
         const subcategory = product.material || 'Other';
@@ -335,7 +348,7 @@ function getCategoryPage(category) {
     if (category === 'Party Decor') return 'partydecor';
     if (category === 'Engraving') return 'engraving';
     if (category === '3D Prints') return 'prints3d';
-    if (category === 'Party Rentals') return 'rentals';
+    if (category === 'Party Rentals') return 'partyrentals';
     return 'home';
 }
 
@@ -353,6 +366,8 @@ export function renderProductDetail(product) {
         'partydecor': 'Party Decor',
         'services': 'Services',
         'engraving': 'Engraving',
+        'prints3d': '3D Prints',
+        'partyrentals': 'Party Rentals',
         'home': 'Home'
     };
     const backLabel = backLabels[backPage] || 'Home';
