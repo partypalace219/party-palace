@@ -613,15 +613,28 @@ export function filterEngravingProducts(material) {
         btn.classList.toggle('active', btn.dataset.material === material);
     });
 
-    // Show/hide products based on material
-    document.querySelectorAll('#engravingGrid .engraving-product').forEach(product => {
+    const grid = document.getElementById('engravingGrid');
+    if (!grid) return;
+
+    // Remove any pre-existing empty-state
+    const existing = grid.querySelector('.empty-state');
+    if (existing) existing.remove();
+
+    let visibleCount = 0;
+    grid.querySelectorAll('.engraving-product').forEach(product => {
         const productMaterials = product.dataset.material.split(',');
-        if (material === 'all' || productMaterials.includes(material)) {
-            product.style.display = 'flex';
-        } else {
-            product.style.display = 'none';
-        }
+        const visible = material === 'all' || productMaterials.includes(material);
+        product.style.display = visible ? 'flex' : 'none';
+        if (visible) visibleCount++;
     });
+
+    // Show empty-state when no products match
+    if (visibleCount === 0) {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'empty-state';
+        emptyEl.textContent = 'No items in this category yet';
+        grid.appendChild(emptyEl);
+    }
 }
 
 // Filter 3D Prints by Category
