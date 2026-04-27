@@ -82,13 +82,6 @@ function navigate(page, addToHistory = true, customHash = null) {
         renderDynamicProducts();
     }
 
-    // Reset "Did we make your day better" section when navigating to home
-    if (page === 'home') {
-        if (typeof window.resetLoveQuestionSection === 'function') {
-            window.resetLoveQuestionSection();
-        }
-    }
-
     // Hide cursor effect on staff portal
     const cursorCanvas = document.getElementById('cursor-canvas');
     if (cursorCanvas) {
