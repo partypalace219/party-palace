@@ -50,6 +50,7 @@ if (document.readyState === 'loading') {
 // ============================================
 
 function navigate(page, addToHistory = true, customHash = null) {
+    console.log('[navigate] called with page=', page, '| products.length=', (typeof products !== 'undefined' ? products.length : '(products not imported)'));
     // Hide all pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     // Show target page
@@ -72,13 +73,19 @@ function navigate(page, addToHistory = true, customHash = null) {
     window.scrollTo(0, 0);
 
     // Render content if needed
+    console.log('[navigate] page shown, about to call render for', page, '| products.length=', products.length);
+    if (products.length === 0) {
+        console.warn('[navigate] products not loaded yet for page=', page, '— render will fire once loadProducts completes');
+    }
     if (page === 'partydecor') {
+        console.log('[render-dispatch] calling renderCatalog because page=', page);
         renderCatalog();
     } else if (page === 'services') {
         renderServices();
     } else if (page === 'gallery') {
         renderGallery();
     } else if (page === 'prints3d' || page === 'engraving') {
+        console.log('[render-dispatch] calling renderDynamicProducts because page=', page);
         renderDynamicProducts();
     }
 
@@ -437,6 +444,7 @@ function openProductLightbox(index) {
 
 // Initialize app function (called after products are loaded from Supabase)
 function initializeApp() {
+    console.log('[bootstrap] initializeApp fired, products.length=', products.length);
     renderCatalog();
     renderServices();
     renderGallery();

@@ -114,11 +114,13 @@ export function renderDynamicProducts() {
 }
 
 export function renderDynamicEngravingProducts() {
-    const grid = document.getElementById('engravingGrid');
-    if (!grid) return;
-
     console.log('[renderDynamicEngravingProducts] called, products.length=', products.length,
         'sample categories=', [...new Set(products.map(p => p.category))]);
+    const grid = document.getElementById('engravingGrid');
+    if (!grid) {
+        console.warn('[renderDynamicEngravingProducts] #engravingGrid not found in DOM');
+        return;
+    }
 
     // Clear grid entirely -- all engraving products come from Supabase
     grid.innerHTML = '';
@@ -175,11 +177,13 @@ export function renderDynamicEngravingProducts() {
 }
 
 export function renderDynamicPrints3dProducts() {
-    const grid = document.getElementById('prints3dGrid');
-    if (!grid) return;
-
     console.log('[renderDynamicPrints3dProducts] called, products.length=', products.length,
         'sample categories=', [...new Set(products.map(p => p.category))]);
+    const grid = document.getElementById('prints3dGrid');
+    if (!grid) {
+        console.warn('[renderDynamicPrints3dProducts] #prints3dGrid not found in DOM');
+        return;
+    }
 
     // Clear grid entirely -- all 3D prints products come from Supabase
     grid.innerHTML = '';
