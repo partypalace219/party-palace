@@ -16,6 +16,10 @@ CREATE TABLE IF NOT EXISTS products (
     emoji TEXT,
     gradient TEXT,
     image_url TEXT,
+    image_urls TEXT[] DEFAULT '{}',
+    sizes TEXT[] DEFAULT '{}',
+    colors TEXT[] DEFAULT '{}',
+    sub_category TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -109,6 +113,7 @@ CREATE TABLE IF NOT EXISTS services (
 -- ============================================
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_featured ON products(featured);
+CREATE INDEX IF NOT EXISTS idx_products_sub_category ON products(sub_category);
 CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
 CREATE INDEX IF NOT EXISTS idx_bookings_event_date ON bookings(event_date);
 CREATE INDEX IF NOT EXISTS idx_contact_submissions_submitted_at ON contact_submissions(submitted_at);
