@@ -2229,34 +2229,6 @@
     <!-- Staff Toast Container -->
     <div class="staff-toast-container" id="staff-toast-container"></div>
 
-    <!-- Did We Make Your Day Better Section -->
-    <section class="love-question-section">
-        <div class="question-container container">
-            <video class="local-gif" src="https://media.giphy.com/media/KztT2c4u8mYYUiMKdJ/giphy.mp4" loop muted autoplay playsinline></video>
-            <h2 class="question">Did we make your day better?</h2>
-            <div class="button-container">
-                <button class="yes-btn btn js-yes-btn">Yes</button>
-                <button class="no-btn btn js-no-btn">No</button>
-            </div>
-        </div>
-        <div class="result-container container" style="display: none;">
-            <video class="gif-result" src="https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.mp4" autoplay loop muted playsinline></video>
-            <h2>I knew it! 💖</h2>
-        </div>
-        <div class="cssload-main" style="display: none;">
-            <div class="cssload-heart">
-                <span class="cssload-heartL"></span>
-                <span class="cssload-heartR"></span>
-                <span class="cssload-square"></span>
-            </div>
-            <div class="cssload-shadow"></div>
-        </div>
-        <div class="no-result-container container" style="display: none;">
-            <h2>😢 Okay... we'll try harder next time!</h2>
-            <button class="try-again-btn btn" onclick="location.reload()">Give us another chance?</button>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -2324,24 +2296,8 @@
     <script src="product_image_urls.js"></script>
     <script type="module" src="ui.js"></script>
 
-    <!-- Did We Make Your Day Better Script -->
+    <!-- Nav Search Handler -->
     <script>
-    // Global reset function for the love question section
-    function resetLoveQuestionSection() {
-        const questionContainer = document.querySelector('.love-question-section .question-container');
-        const resultContainer = document.querySelector('.love-question-section .result-container');
-        const noResultContainer = document.querySelector('.love-question-section .no-result-container');
-        const loadingHeart = document.querySelector('.love-question-section .cssload-main');
-        const noBtn = document.querySelector('.js-no-btn');
-
-        if (questionContainer) questionContainer.style.display = 'flex';
-        if (resultContainer) resultContainer.style.display = 'none';
-        if (noResultContainer) noResultContainer.style.display = 'none';
-        if (loadingHeart) loadingHeart.style.display = 'none';
-        if (noBtn) noBtn.style.transform = 'translate(0, 0)';
-    }
-
-    // Search function
     function handleSearch(event) {
         event.preventDefault();
         const searchInput = document.getElementById('navSearchInput');
@@ -2445,42 +2401,6 @@
         searchInput.value = '';
         searchInput.blur();
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const yesBtn = document.querySelector('.js-yes-btn');
-        const noBtn = document.querySelector('.js-no-btn');
-        const questionContainer = document.querySelector('.love-question-section .question-container');
-        const resultContainer = document.querySelector('.love-question-section .result-container');
-        const noResultContainer = document.querySelector('.love-question-section .no-result-container');
-        const loadingHeart = document.querySelector('.love-question-section .cssload-main');
-
-        if (yesBtn) {
-            yesBtn.addEventListener('click', function() {
-                questionContainer.style.display = 'none';
-                loadingHeart.style.display = 'block';
-
-                setTimeout(function() {
-                    loadingHeart.style.display = 'none';
-                    resultContainer.style.display = 'flex';
-                }, 1500);
-            });
-        }
-
-        if (noBtn) {
-            // Make the No button run away from cursor
-            noBtn.addEventListener('mouseover', function() {
-                const randomX = Math.random() * 200 - 100;
-                const randomY = Math.random() * 100 - 50;
-                this.style.transform = `translate(${randomX}px, ${randomY}px)`;
-            });
-
-            noBtn.addEventListener('click', function() {
-                // Show sad response
-                questionContainer.style.display = 'none';
-                noResultContainer.style.display = 'flex';
-            });
-        }
-    });
     </script>
 
     <!-- Glowing Cursor Effect -->
