@@ -114,13 +114,8 @@ export function renderDynamicProducts() {
 }
 
 export function renderDynamicEngravingProducts() {
-    console.log('[renderDynamicEngravingProducts] called, products.length=', products.length,
-        'sample categories=', [...new Set(products.map(p => p.category))]);
     const grid = document.getElementById('engravingGrid');
-    if (!grid) {
-        console.warn('[renderDynamicEngravingProducts] #engravingGrid not found in DOM');
-        return;
-    }
+    if (!grid) return;
 
     // Clear grid entirely -- all engraving products come from Supabase
     grid.innerHTML = '';
@@ -128,8 +123,6 @@ export function renderDynamicEngravingProducts() {
     // slug may be null in DB — generate from name as fallback so the && p.slug gate
     // doesn't silently hide all products when the slug column is unpopulated.
     const engravingProducts = products.filter(p => p.category === 'Engraving');
-
-    console.log('[renderDynamicEngravingProducts] matched=', engravingProducts.length);
 
     engravingProducts.forEach(product => {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -177,21 +170,14 @@ export function renderDynamicEngravingProducts() {
 }
 
 export function renderDynamicPrints3dProducts() {
-    console.log('[renderDynamicPrints3dProducts] called, products.length=', products.length,
-        'sample categories=', [...new Set(products.map(p => p.category))]);
     const grid = document.getElementById('prints3dGrid');
-    if (!grid) {
-        console.warn('[renderDynamicPrints3dProducts] #prints3dGrid not found in DOM');
-        return;
-    }
+    if (!grid) return;
 
     // Clear grid entirely -- all 3D prints products come from Supabase
     grid.innerHTML = '';
 
     // slug may be null in DB — generate from name as fallback.
     const prints3dProducts = products.filter(p => p.category === '3D Prints');
-
-    console.log('[renderDynamicPrints3dProducts] matched=', prints3dProducts.length);
 
     prints3dProducts.forEach(product => {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -550,21 +536,6 @@ function getEffectiveSubCategory(p) {
 }
 
 export function renderCatalog() {
-    // ---- DIAGNOSTIC BLOCK (temporary; remove after the bug is confirmed fixed and stable) ----
-    const allCategoryValues = Array.from(new Set(products.map(p => p.category)));
-    const decorishRows = products.filter(p => {
-        if (typeof p.category !== 'string') return false;
-        const c = p.category.toLowerCase();
-        return c.includes('decor') || c === 'arches' || c === 'columns' || c === 'walls' || c === 'centerpieces';
-    });
-    const decorSubCats = Array.from(new Set(decorishRows.map(p => p.sub_category)));
-    console.log('[renderCatalog] currentFilter =', currentFilter,
-        '| products.length =', products.length,
-        '| unique categories =', allCategoryValues,
-        '| decor-ish rows =', decorishRows.length,
-        '| their sub_category values =', decorSubCats);
-    // ---- END DIAGNOSTIC BLOCK ----
-
     let filtered;
     if (currentFilter === 'all') {
         filtered = products.filter(isPartyDecorRow);
@@ -574,8 +545,6 @@ export function renderCatalog() {
         filtered = products.filter(p => p.category === currentFilter);
     }
 
-    console.log('[renderCatalog] matched =', filtered.length, 'rows for filter', currentFilter);
-
     // Sort popular items first (by price high to low) when viewing all products
     if (currentFilter === 'all') {
         const popularItems = filtered.filter(p => p.popular).sort((a, b) => b.price - a.price);
@@ -584,10 +553,7 @@ export function renderCatalog() {
     }
 
     const productsGrid = document.getElementById('productsGrid');
-    if (!productsGrid) {
-        console.warn('[renderCatalog] #productsGrid not found in DOM');
-        return;
-    }
+    if (!productsGrid) return;
 
     // Defensive: build cards one at a time so one bad row cannot blank the entire grid
     const safeRows = [];
@@ -597,7 +563,7 @@ export function renderCatalog() {
             safeRows.push(p);
             return html;
         } catch (err) {
-            console.error('[renderCatalog] createProductCard failed for row',
+            console.error('renderCatalog: createProductCard failed for row',
                 { id: p && p.id, name: p && p.name, category: p && p.category, sub_category: p && p.sub_category },
                 err);
             return '';

@@ -1494,6 +1494,12 @@
             color: var(--gray-600);
             margin-bottom: 1rem;
             flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: calc(1.4em * 3);
         }
 
         /* Processing time for 3D Prints and Engraving products - shown only in product detail view */
