@@ -385,10 +385,10 @@
             <div class="container">
                 <div class="filter-buttons" id="catalogFilterButtons">
                     <button class="filter-btn active" data-category="all" onclick="filterProducts('all')">All</button>
-                    <button class="filter-btn" data-category="arches" onclick="filterProducts('arches')">Arches</button>
-                    <button class="filter-btn" data-category="columns" onclick="filterProducts('columns')">Columns</button>
-                    <button class="filter-btn" data-category="walls" onclick="filterProducts('walls')">Walls</button>
-                    <button class="filter-btn" data-category="centerpieces" onclick="filterProducts('centerpieces')">Centerpieces</button>
+                    <button class="filter-btn" data-sub-category="Arches" onclick="filterProducts('Arches')">Arches</button>
+                    <button class="filter-btn" data-sub-category="Columns" onclick="filterProducts('Columns')">Columns</button>
+                    <button class="filter-btn" data-sub-category="Walls" onclick="filterProducts('Walls')">Walls</button>
+                    <button class="filter-btn" data-sub-category="Centerpieces" onclick="filterProducts('Centerpieces')">Centerpieces</button>
                 </div>
             </div>
         </section>
@@ -2380,12 +2380,12 @@
 
                 // Determine which page the product belongs to
                 let targetPage = 'partydecor';
-                if (firstMatch.category === 'engraving' || firstMatch.category === 'Engraving') {
+                if (firstMatch.category === 'Engraving') {
                     targetPage = 'engraving';
-                } else if (firstMatch.category === '3d-prints' || firstMatch.category === '3D Prints' ||
-                           firstMatch.category === 'prints3d' || firstMatch.category === 'Lithophanes' ||
-                           firstMatch.category === 'Figurines' || firstMatch.category === 'Custom 3D Prints') {
+                } else if (firstMatch.category === '3D Prints') {
                     targetPage = 'prints3d';
+                } else if (firstMatch.category === 'Party Rentals') {
+                    targetPage = 'rentals';
                 }
 
                 navigate(targetPage);

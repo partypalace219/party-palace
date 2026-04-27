@@ -119,7 +119,7 @@ export function renderDynamicEngravingProducts() {
     // Clear grid entirely -- all engraving products come from Supabase
     grid.innerHTML = '';
 
-    const engravingProducts = products.filter(p => p.category === 'engraving' && p.slug);
+    const engravingProducts = products.filter(p => p.category === 'Engraving' && p.slug);
 
     engravingProducts.forEach(product => {
         const slug = product.slug;
@@ -173,7 +173,7 @@ export function renderDynamicPrints3dProducts() {
     // Clear grid entirely -- all 3D prints products come from Supabase
     grid.innerHTML = '';
 
-    const prints3dProducts = products.filter(p => p.category === 'prints3d' && p.slug);
+    const prints3dProducts = products.filter(p => p.category === '3D Prints' && p.slug);
 
     prints3dProducts.forEach(product => {
         const slug = product.slug;
@@ -205,22 +205,24 @@ export function renderDynamicPrints3dProducts() {
 }
 
 export const gradients = {
-    arches: 'linear-gradient(135deg, #667eea, #764ba2)',
-    columns: 'linear-gradient(135deg, #4facfe, #00f2fe)',
-    walls: 'linear-gradient(135deg, #fa709a, #fee140)',
-    centerpieces: 'linear-gradient(135deg, #f093fb, #f5576c)',
-    services: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-    engraving: 'linear-gradient(135deg, #8B4513, #D2691E)',
-    prints3d: 'linear-gradient(135deg, #00d2ff, #3a7bd5)'
+    'Party Decor': 'linear-gradient(135deg, #667eea, #764ba2)',
+    Arches: 'linear-gradient(135deg, #667eea, #764ba2)',
+    Columns: 'linear-gradient(135deg, #4facfe, #00f2fe)',
+    Walls: 'linear-gradient(135deg, #fa709a, #fee140)',
+    Centerpieces: 'linear-gradient(135deg, #f093fb, #f5576c)',
+    'Party Rentals': 'linear-gradient(135deg, #43e97b, #38f9d7)',
+    Engraving: 'linear-gradient(135deg, #8B4513, #D2691E)',
+    '3D Prints': 'linear-gradient(135deg, #00d2ff, #3a7bd5)'
 };
 export const categoryLabels = {
-    arches: 'Arches',
-    columns: 'Columns',
-    walls: 'Walls',
-    centerpieces: 'Centerpieces',
-    services: 'Services',
-    engraving: 'Engraving',
-    prints3d: '3D Prints'
+    'Party Decor': 'Party Decor',
+    Arches: 'Arches',
+    Columns: 'Columns',
+    Walls: 'Walls',
+    Centerpieces: 'Centerpieces',
+    'Party Rentals': 'Party Rentals',
+    Engraving: 'Engraving',
+    '3D Prints': '3D Prints'
 };
 
 let currentFilter = 'all';
@@ -238,7 +240,7 @@ export function createProductCard(product, isService = false) {
         : `<span>${product.icon}</span>`;
     const imageStyle = hasImages
         ? 'background: var(--gray-50);'
-        : `background: ${gradients[product.category]}`;
+        : `background: ${gradients[product.sub_category] || gradients[product.category] || 'linear-gradient(135deg, #667eea, #764ba2)'}`;
     const imageClass = hasSecondImage ? 'has-secondary' : '';
 
     return `
@@ -249,14 +251,14 @@ export function createProductCard(product, isService = false) {
                 ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
             </div>
             <div class="product-info">
-                <div class="product-category">${isService ? 'Service' : categoryLabels[product.category]}</div>
+                <div class="product-category">${isService ? 'Service' : (categoryLabels[product.sub_category] || categoryLabels[product.category] || product.category)}</div>
                 <div class="product-name" data-product-name></div>
                 <div class="product-description" data-product-desc></div>
                 <div class="product-price">
                     <span class="product-price-label">Starting at</span>
                     <span class="product-price-amount">$${product.price}</span>
                 </div>
-                ${['arches', 'columns', 'walls', 'centerpieces'].includes(product.category) ? `
+                ${(product.category === 'Party Decor' || ['Arches', 'Columns', 'Walls', 'Centerpieces'].includes(product.sub_category)) ? `
                 <button onclick="event.stopPropagation(); bookConsultation('${product.name}', ${product.price})" class="btn btn-primary" style="width: 100%">
                     Book Free Consultation
                 </button>
@@ -329,11 +331,10 @@ export function getProductBySlug(slug) {
 
 // Get category back link
 function getCategoryPage(category) {
-    const partyDecorCategories = ['arches', 'columns', 'walls', 'centerpieces'];
-    if (partyDecorCategories.includes(category)) return 'partydecor';
-    if (category === 'services') return 'services';
-    if (category === 'engraving') return 'engraving';
-    if (category === 'prints3d') return 'prints3d';
+    if (category === 'Party Decor') return 'partydecor';
+    if (category === 'Engraving') return 'engraving';
+    if (category === '3D Prints') return 'prints3d';
+    if (category === 'Party Rentals') return 'rentals';
     return 'home';
 }
 
@@ -343,7 +344,7 @@ export function renderProductDetail(product) {
     if (!container || !product) return;
 
     const hasImages = product.images && product.images.length > 0;
-    const gradient = gradients[product.category] || 'linear-gradient(135deg, #667eea, #764ba2)';
+    const gradient = gradients[product.sub_category] || gradients[product.category] || 'linear-gradient(135deg, #667eea, #764ba2)';
     const backPage = getCategoryPage(product.category);
 
     // Get back label based on category
@@ -364,7 +365,7 @@ export function renderProductDetail(product) {
     window.currentProductImages = hasImages ? product.images.map((img, idx) => ({
         url: img,
         title: product.name,
-        category: categoryLabels[product.category] || product.category
+        category: categoryLabels[product.sub_category] || categoryLabels[product.category] || product.category
     })) : [];
 
     // Generate thumbnails (also clickable)
@@ -398,20 +399,20 @@ export function renderProductDetail(product) {
             </div>
 
             <div class="product-detail-info">
-                <span class="product-detail-category">${categoryLabels[product.category] || product.category}</span>
+                <span class="product-detail-category">${categoryLabels[product.sub_category] || categoryLabels[product.category] || product.category}</span>
                 ${product.sale ? '<span style="display: inline-block; background: #059669; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem;">Sale</span>' : ''}
                 ${product.popular ? '<span style="display: inline-block; background: var(--red-accent); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; margin-left: 0.5rem;">Popular</span>' : ''}
                 <h1 class="product-detail-title"></h1>
                 <div class="product-detail-price">
-                    <span class="label">${product.category === 'engraving' ? 'Price' : 'Starting at'}</span>
+                    <span class="label">${product.category === 'Engraving' ? 'Price' : 'Starting at'}</span>
                     <span class="amount">$${product.price}</span>
                 </div>
                 <p class="product-detail-description"></p>
-                ${(product.category === 'prints3d' || product.category === 'engraving') ? '<span class="product-detail-processing">🕐 Processing: 3-10 business days</span>' : ''}
+                ${(product.category === '3D Prints' || product.category === 'Engraving') ? '<span class="product-detail-processing">🕐 Processing: 3-10 business days</span>' : ''}
 
                 ${features}
 
-                ${product.category === 'engraving' ? `
+                ${product.category === 'Engraving' ? `
                 <div class="product-detail-cta">
                     <div style="margin-bottom: 1rem;">
                         <label style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Material</label>
@@ -444,7 +445,7 @@ export function renderProductDetail(product) {
                         Add to Cart
                     </button>
                 </div>
-                ` : ['arches', 'columns', 'walls', 'centerpieces'].includes(product.category) ? `
+                ` : (product.category === 'Party Decor' || ['Arches', 'Columns', 'Walls', 'Centerpieces'].includes(product.sub_category)) ? `
                 <div class="product-detail-cta">
                     <button onclick="bookConsultation('${product.name}', ${product.price})" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
                         Book Free Consultation
@@ -486,16 +487,17 @@ export function changeProductImage(src, thumb, index) {
 // Get product features based on category
 function getProductFeatures(product) {
     const featuresByCategory = {
-        arches: ['Custom color combinations', 'Indoor or outdoor setup', 'Professional installation included', 'Same-day setup available'],
-        columns: ['Matching pairs available', 'Height customization', 'LED lighting options', 'Themed decorations'],
-        walls: ['Custom sizes available', 'Photo-ready backdrop', 'Delivery and setup included', 'Perfect for events of any size'],
-        centerpieces: ['Table-ready arrangements', 'Color matching available', 'Bulk discounts for large orders', 'Custom themes welcome'],
-        services: ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed'],
-        engraving: ['Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events'],
-        prints3d: ['High-quality 3D printed', 'Custom colors available', 'Ships within 3-10 business days', 'Perfect for home decor and gifts']
+        'Party Decor': ['Custom color combinations', 'Indoor or outdoor setup', 'Professional installation included', 'Same-day setup available'],
+        Arches: ['Custom color combinations', 'Indoor or outdoor setup', 'Professional installation included', 'Same-day setup available'],
+        Columns: ['Matching pairs available', 'Height customization', 'LED lighting options', 'Themed decorations'],
+        Walls: ['Custom sizes available', 'Photo-ready backdrop', 'Delivery and setup included', 'Perfect for events of any size'],
+        Centerpieces: ['Table-ready arrangements', 'Color matching available', 'Bulk discounts for large orders', 'Custom themes welcome'],
+        'Party Rentals': ['Professional consultation', 'Full setup and teardown', 'Custom design options', 'Satisfaction guaranteed'],
+        Engraving: ['Custom text and designs', 'Bulk order discounts available', 'Perfect for gifts and events'],
+        '3D Prints': ['High-quality 3D printed', 'Custom colors available', 'Ships within 3-10 business days', 'Perfect for home decor and gifts']
     };
 
-    const categoryFeatures = featuresByCategory[product.category] || featuresByCategory.services;
+    const categoryFeatures = featuresByCategory[product.sub_category] || featuresByCategory[product.category] || featuresByCategory['Party Rentals'];
 
     return `
         <div class="product-detail-features">
@@ -509,10 +511,14 @@ function getProductFeatures(product) {
 
 // Render Catalog
 export function renderCatalog() {
-    const partyDecorCategories = ['arches', 'columns', 'walls', 'centerpieces'];
-    let filtered = currentFilter === 'all'
-        ? products.filter(p => partyDecorCategories.includes(p.category))
-        : products.filter(p => p.category === currentFilter);
+    let filtered;
+    if (currentFilter === 'all') {
+        filtered = products.filter(p => p.category === 'Party Decor');
+    } else if (['Arches', 'Columns', 'Walls', 'Centerpieces'].includes(currentFilter)) {
+        filtered = products.filter(p => p.category === 'Party Decor' && p.sub_category === currentFilter);
+    } else {
+        filtered = products.filter(p => p.category === currentFilter);
+    }
 
     // Sort popular items first (by price high to low) when viewing all products
     if (currentFilter === 'all') {
@@ -532,25 +538,27 @@ export function renderCatalog() {
 }
 
 // Render Services
+// Note: services rows were migrated out of products into the services table.
+// This function is retained for compatibility but products table no longer contains service rows.
 export function renderServices() {
-    const services = products.filter(p => p.category === 'services');
     const servicesGrid = document.getElementById('servicesGrid');
-    servicesGrid.innerHTML = services.map(p => createProductCard(p, true)).join('');
-    servicesGrid.querySelectorAll('[data-product-name]').forEach((el, i) => {
-        el.textContent = services[i].name;
-    });
-    servicesGrid.querySelectorAll('[data-product-desc]').forEach((el, i) => {
-        el.textContent = services[i].description || '';
-    });
+    if (!servicesGrid) return;
+    // No service rows remain in the products array after DB migration.
+    // Services are now served from the services table via a separate fetch.
 }
 
 // Filter Products
-export function filterProducts(category) {
-    currentFilter = category;
+// Accepts either a top-level category name (data-category) or a Party Decor sub-category
+// name (data-sub-category). Buttons with data-sub-category trigger sub-category filtering
+// scoped to category === 'Party Decor'.
+export function filterProducts(filterValue) {
+    currentFilter = filterValue;
 
-    // Update filter buttons
+    // Update filter buttons — match against data-category or data-sub-category
     document.querySelectorAll('#catalogFilterButtons .filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.category === category);
+        const matchesCategory = btn.dataset.category === filterValue;
+        const matchesSubCategory = btn.dataset.subCategory === filterValue;
+        btn.classList.toggle('active', matchesCategory || matchesSubCategory);
     });
 
     renderCatalog();

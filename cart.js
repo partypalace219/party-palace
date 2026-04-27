@@ -17,7 +17,7 @@ export function saveCart() {
 
 // Check if cart has shippable products (3D prints or engraving)
 export function cartHasProducts() {
-    return cart.some(item => item.category === 'prints3d' || item.category === 'engraving');
+    return cart.some(item => item.category === '3D Prints' || item.category === 'Engraving');
 }
 
 // Check if cart has services only (party decor)
@@ -28,14 +28,14 @@ export function cartHasServicesOnly() {
 // Get subtotal of products only (3D prints, engraving)
 export function getProductSubtotal() {
     return cart
-        .filter(item => item.category === 'prints3d' || item.category === 'engraving')
+        .filter(item => item.category === '3D Prints' || item.category === 'Engraving')
         .reduce((sum, item) => sum + item.price, 0);
 }
 
 // Get subtotal of services only (party decor)
 export function getServiceSubtotal() {
     return cart
-        .filter(item => item.category !== 'prints3d' && item.category !== 'engraving')
+        .filter(item => item.category !== '3D Prints' && item.category !== 'Engraving')
         .reduce((sum, item) => sum + item.price, 0);
 }
 
@@ -182,7 +182,7 @@ export function addToCart(productNameOrObj) {
             id: productNameOrObj.id || null,
             name: productNameOrObj.name,
             price: productNameOrObj.price,
-            category: productNameOrObj.category || 'prints3d',
+            category: productNameOrObj.category || '3D Prints',
             image: productNameOrObj.image || null
         };
     } else {
@@ -237,7 +237,7 @@ export function addEngravingToCart(productName, basePrice, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty
@@ -248,7 +248,7 @@ export function addEngravingToCart(productName, basePrice, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty
@@ -312,7 +312,7 @@ export function addEngravingToCartFromDetail(productName, basePrice, productSlug
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty
@@ -323,7 +323,7 @@ export function addEngravingToCartFromDetail(productName, basePrice, productSlug
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty
@@ -379,7 +379,7 @@ export function addTieredEngravingToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -390,7 +390,7 @@ export function addTieredEngravingToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -446,7 +446,7 @@ export function addTieredKeychainToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -457,7 +457,7 @@ export function addTieredKeychainToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -512,7 +512,7 @@ export function addCustomKeychainToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -523,7 +523,7 @@ export function addCustomKeychainToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -554,7 +554,7 @@ export function addCustomizableKeychainToCart() {
         name: itemName,
         price: 4.99,
         image: 'https://nsedpvrqhxcikhlieize.supabase.co/storage/v1/object/public/product-images/customizable-keychains/keychain1.jpeg',
-        category: 'prints3d',
+        category: '3D Prints',
         customText: customText
     };
 
@@ -605,7 +605,7 @@ export function addTieredAcrylicToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -616,7 +616,7 @@ export function addTieredAcrylicToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -671,7 +671,7 @@ export function addTieredWoodRoundsToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -682,7 +682,7 @@ export function addTieredWoodRoundsToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -737,7 +737,7 @@ export function addTieredCoasterToCart(productName, productId) {
         cart[existingIndex] = {
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
@@ -748,7 +748,7 @@ export function addTieredCoasterToCart(productName, productId) {
         cart.push({
             name: itemName,
             price: totalPrice,
-            category: 'engraving',
+            category: 'Engraving',
             material: material,
             instructions: instructions,
             quantity: qty,
