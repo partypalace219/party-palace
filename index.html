@@ -479,17 +479,25 @@
                 <p class="hero-subtitle">Tables, chairs, tents, and more for your event</p>
             </div>
         </section>
+        <section class="catalog-filters">
+            <div class="container">
+                <div class="filter-buttons" id="partyRentalsFilterButtons">
+                    <button class="filter-btn active" data-sub-category="all" onclick="filterPartyRentalsProducts('all')">All</button>
+                    <button class="filter-btn" data-sub-category="Tables" onclick="filterPartyRentalsProducts('Tables')">Tables</button>
+                    <button class="filter-btn" data-sub-category="Chairs" onclick="filterPartyRentalsProducts('Chairs')">Chairs</button>
+                    <button class="filter-btn" data-sub-category="Tents" onclick="filterPartyRentalsProducts('Tents')">Tents</button>
+                    <button class="filter-btn" data-sub-category="Games" onclick="filterPartyRentalsProducts('Games')">Games</button>
+                    <button class="filter-btn" data-sub-category="Concessions" onclick="filterPartyRentalsProducts('Concessions')">Concessions</button>
+                </div>
+            </div>
+        </section>
         <section class="section">
             <div class="container">
-                <div class="coming-soon-page" style="text-align: center; padding: 2rem 2rem;">
-                    <span style="font-size: 5rem;">🎪</span>
-                    <h2 style="margin-top: 1.5rem; margin-bottom: 1rem;">Coming Soon!</h2>
-                    <p style="max-width: 500px; margin: 0 auto 2rem;">We're expanding our services to include party rentals. Soon you'll be able to rent tables, chairs, tents, linens, and more!</p>
-                    <div style="background: var(--gray-50); border-radius: 12px; padding: 2rem; max-width: 400px; margin: 0 auto;">
-                        <h3 style="margin-bottom: 1rem;">Get Notified</h3>
-                        <p style="margin-bottom: 1rem;">Want to know when Party Rentals launches?</p>
-                        <button onclick="navigate('contact')" class="btn btn-primary">Contact Us</button>
-                    </div>
+                <div class="section-header">
+                    <h2>Available Rentals</h2>
+                    <p>Tables, chairs, tents, games, and concession equipment for your event</p>
+                </div>
+                <div class="products-grid" id="partyRentalsGrid">
                 </div>
             </div>
         </section>

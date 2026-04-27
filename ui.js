@@ -1,7 +1,7 @@
 // ui.js — Navigation, gallery, hero slideshow, app bootstrap
 // Root ES module entry point — imported by index.html
 
-import { loadProducts, products, categoryLabels, renderCatalog, renderServices, renderDynamicProducts, createProductCard, navigateToProduct, renderProductDetail, filterProducts, getProductBySlug, filterEngravingProducts, filter3DProducts } from './products.js';
+import { loadProducts, products, categoryLabels, renderCatalog, renderServices, renderDynamicProducts, createProductCard, navigateToProduct, renderProductDetail, filterProducts, getProductBySlug, filterEngravingProducts, filter3DProducts, filterPartyRentalsProducts, renderDynamicPartyRentalsProducts } from './products.js';
 import { cart, updateCartCount, renderCartItems, toggleCart } from './cart.js';
 import { WaiverModal, ContractModal, NoRefundModal, BookingGate, ColorPalette, initPaymentOptions, renderCheckoutItems, showNotification, applyCoupon, removeCoupon, displaySuccessOrderSummary, createOrderInSupabase } from './checkout.js';
 import { clearCart } from './cart.js';
@@ -80,6 +80,9 @@ function navigate(page, addToHistory = true, customHash = null) {
         renderGallery();
     } else if (page === 'prints3d' || page === 'engraving') {
         renderDynamicProducts();
+    } else if (page === 'partyrentals') {
+        renderDynamicProducts();
+        filterPartyRentalsProducts('all');
     }
 
     // Hide cursor effect on staff portal

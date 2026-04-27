@@ -111,6 +111,7 @@ async function loadProductImages() {
 export function renderDynamicProducts() {
     renderDynamicEngravingProducts();
     renderDynamicPrints3dProducts();
+    renderDynamicPartyRentalsProducts();
 }
 
 export function renderDynamicEngravingProducts() {
@@ -204,6 +205,42 @@ export function renderDynamicPrints3dProducts() {
         card.querySelector('.product-description').textContent = product.description || '';
         const imgEl2 = card.querySelector('.product-image img');
         if (imgEl2) { imgEl2.src = image; imgEl2.alt = product.name; }
+        grid.appendChild(card);
+    });
+}
+
+export function renderDynamicPartyRentalsProducts() {
+    const grid = document.getElementById('partyRentalsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    const partyRentalsProducts = products.filter(p => p.category === 'Party Rentals');
+
+    partyRentalsProducts.forEach(product => {
+        const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        const image = product.images ? product.images[0] : '';
+        const icon = product.icon || '🎪';
+        const subCategory = product.sub_category || '';
+
+        const card = document.createElement('div');
+        card.className = 'product-card partyrentals-product';
+        card.dataset.subCategory = subCategory;
+        card.innerHTML = `
+            <div class="product-image product-image-clickable" onclick="navigateToProduct('${slug}')">
+                ${image ? `<img src="" alt="" loading="lazy" class="product-img-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${icon}</span>';">` : `<span>${icon}</span>`}
+                ${product.sale ? '<div class="product-badge sale-badge">Sale</div>' : ''}
+                ${product.popular ? '<div class="product-badge popular-badge">Popular</div>' : ''}
+            </div>
+            <div class="product-info">
+                <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
+                <div class="product-description"></div>
+                <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
+                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>
+            </div>`;
+        card.querySelector('.product-name').textContent = product.name;
+        card.querySelector('.product-description').textContent = product.description || '';
+        const imgEl = card.querySelector('.product-image img');
+        if (imgEl) { imgEl.src = image; imgEl.alt = product.name; }
         grid.appendChild(card);
     });
 }
@@ -680,6 +717,42 @@ export function filter3DProducts(category) {
     }
 }
 
+// Filter Party Rentals by Sub-Category
+export function filterPartyRentalsProducts(subCategory) {
+    document.querySelectorAll('#partyRentalsFilterButtons .filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.subCategory === subCategory);
+    });
+
+    const grid = document.getElementById('partyRentalsGrid');
+    if (!grid) return;
+
+    if (subCategory === 'all') {
+        grid.querySelectorAll('.partyrentals-product').forEach(card => {
+            card.style.display = '';
+        });
+        const existing = grid.querySelector('.empty-state');
+        if (existing) existing.remove();
+        return;
+    }
+
+    let visibleCount = 0;
+    grid.querySelectorAll('.partyrentals-product').forEach(product => {
+        const visible = product.dataset.subCategory === subCategory;
+        product.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+    });
+
+    const existing = grid.querySelector('.empty-state');
+    if (existing) existing.remove();
+
+    if (visibleCount === 0) {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'empty-state';
+        emptyEl.textContent = 'No items in this category yet';
+        grid.appendChild(emptyEl);
+    }
+}
+
 // Inquire Product
 function inquireProduct(productName) {
     window.navigate('contact');
@@ -826,6 +899,7 @@ window.changeProductImage = changeProductImage;
 window.filterProducts = filterProducts;
 window.filterEngravingProducts = filterEngravingProducts;
 window.filter3DProducts = filter3DProducts;
+window.filterPartyRentalsProducts = filterPartyRentalsProducts;
 window.inquireProduct = inquireProduct;
 window.formatPhone = formatPhone;
 window.selectContactService = selectContactService;
