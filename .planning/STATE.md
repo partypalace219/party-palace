@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-04-27 - Completed quick task 8: Removed "Did we make your day better?" section from index.html, ui.js, styles.css; handleSearch and initTubesCursor preserved
+Last activity: 2026-04-27 - Completed quick task 9: Specialty Materials engraving filter + empty-state; Party Rentals rebuilt as filterable catalog; Gallery routing confirmed canonical
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -47,17 +47,14 @@ None.
 | 6 | Engraving filter investigation (PARTIAL MATCH); 3D Prints Miscellaneous filter + empty-state; description clamp; diagnostic log cleanup | 2026-04-27 | 3b0e2a9 | [6-fix-card-description-clamp-3d-prints-fil](./quick/6-fix-card-description-clamp-3d-prints-fil/) |
 | 7 | Add ?v=2026-04 cache-busting to favicon link tags in index.html; add 180x180 apple-touch-icon pointing to favicon-192x192.png | 2026-04-27 | 3588b7c | [7-add-cache-busting-query-strings-to-favic](./quick/7-add-cache-busting-query-strings-to-favic/) |
 | 8 | Remove "Did we make your day better?" section: markup from index.html, handlers from inline script, resetLoveQuestionSection from ui.js, all CSS from styles.css | 2026-04-27 | 2f51e53 | [8-remove-did-we-make-your-day-better-foote](./quick/8-remove-did-we-make-your-day-better-foote/) |
+| 9 | Specialty Materials engraving filter + empty-state for all Engraving filters; Party Rentals rebuilt as filterable catalog (sub_category); Gallery routing confirmed canonical | 2026-04-27 | 920ab24 | [9-add-specialty-materials-filter-to-engrav](./quick/9-add-specialty-materials-filter-to-engrav/) |
 
 ## Engraving Follow-up Decision Needed
 
-Engraving investigation (quick-6 Task 1) found:
-- Filter reads `product.material` — correct field
-- Leather filter button has NO matching DB rows — this causes a blank result (not a bug)
-- 2 rows (Custom Engraved Tumbler, Charcuterie Board) have `material=null`, fall back to 'Wood'
-- Options: A) add empty-state feedback to Engraving filter (no DB changes), B) remove Leather button + fix null-material rows in DB
+RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Option A selected). Leather shows "No items in this category yet" instead of blank grid. The 2 null-material rows still fall back to 'Wood' — a DB fix remains optional.
 
 ## Session Continuity
 
 Last session: 2026-04-27
-Stopped at: Completed quick task 8 — removed love-question-section markup, handlers, and CSS; handleSearch preserved in its own script block
+Stopped at: Completed quick task 9 — Specialty Materials filter + empty-state for Engraving; Party Rentals catalog UI; Gallery routing audit (no changes needed)
 Resume file: None
