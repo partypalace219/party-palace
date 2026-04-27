@@ -13,7 +13,7 @@ const DB_FETCH_HEADERS = { 'apikey': DB_ANON_KEY, 'Authorization': 'Bearer ' + D
 
 export async function loadProducts(skipInit) {
     try {
-        const cols = 'id,name,slug,category,price,sale,emoji,featured,price_label,description,size,material,image_url';
+        const cols = 'id,name,slug,category,sub_category,price,sale,emoji,featured,price_label,description,size,material,image_url';
         const response = await fetch(`${DB_PRODUCTS_URL}?select=${cols}&limit=500`, { headers: DB_FETCH_HEADERS });
 
         if (!response.ok) throw new Error('Supabase error: ' + response.status);
@@ -27,6 +27,7 @@ export async function loadProducts(skipInit) {
             name: p.name,
             slug: p.slug,
             category: p.category,
+            sub_category: p.sub_category,
             price: p.price,
             priceLabel: p.price_label,
             description: p.description,
