@@ -511,15 +511,51 @@ function getProductFeatures(product) {
 }
 
 // Render Catalog
+const PARTY_DECOR_LEGACY_CATEGORIES = ['arches', 'columns', 'walls', 'centerpieces'];
+const PARTY_DECOR_SUB_CATEGORIES = ['Arches', 'Columns', 'Walls', 'Centerpieces'];
+
+function isPartyDecorRow(p) {
+    if (p.category === 'Party Decor') return true;
+    if (typeof p.category === 'string' && PARTY_DECOR_LEGACY_CATEGORIES.includes(p.category.toLowerCase())) return true;
+    return false;
+}
+
+function getEffectiveSubCategory(p) {
+    if (p.sub_category) return p.sub_category;
+    // Fallback: if row is stored under legacy lowercase category, treat that as the sub-category
+    if (typeof p.category === 'string' && PARTY_DECOR_LEGACY_CATEGORIES.includes(p.category.toLowerCase())) {
+        const lc = p.category.toLowerCase();
+        return lc.charAt(0).toUpperCase() + lc.slice(1); // 'arches' -> 'Arches'
+    }
+    return null;
+}
+
 export function renderCatalog() {
+    // ---- DIAGNOSTIC BLOCK (temporary; remove after the bug is confirmed fixed and stable) ----
+    const allCategoryValues = Array.from(new Set(products.map(p => p.category)));
+    const decorishRows = products.filter(p => {
+        if (typeof p.category !== 'string') return false;
+        const c = p.category.toLowerCase();
+        return c.includes('decor') || c === 'arches' || c === 'columns' || c === 'walls' || c === 'centerpieces';
+    });
+    const decorSubCats = Array.from(new Set(decorishRows.map(p => p.sub_category)));
+    console.log('[renderCatalog] currentFilter =', currentFilter,
+        '| products.length =', products.length,
+        '| unique categories =', allCategoryValues,
+        '| decor-ish rows =', decorishRows.length,
+        '| their sub_category values =', decorSubCats);
+    // ---- END DIAGNOSTIC BLOCK ----
+
     let filtered;
     if (currentFilter === 'all') {
-        filtered = products.filter(p => p.category === 'Party Decor');
-    } else if (['Arches', 'Columns', 'Walls', 'Centerpieces'].includes(currentFilter)) {
-        filtered = products.filter(p => p.category === 'Party Decor' && p.sub_category === currentFilter);
+        filtered = products.filter(isPartyDecorRow);
+    } else if (PARTY_DECOR_SUB_CATEGORIES.includes(currentFilter)) {
+        filtered = products.filter(p => isPartyDecorRow(p) && getEffectiveSubCategory(p) === currentFilter);
     } else {
         filtered = products.filter(p => p.category === currentFilter);
     }
+
+    console.log('[renderCatalog] matched =', filtered.length, 'rows for filter', currentFilter);
 
     // Sort popular items first (by price high to low) when viewing all products
     if (currentFilter === 'all') {
@@ -529,12 +565,32 @@ export function renderCatalog() {
     }
 
     const productsGrid = document.getElementById('productsGrid');
-    productsGrid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+    if (!productsGrid) {
+        console.warn('[renderCatalog] #productsGrid not found in DOM');
+        return;
+    }
+
+    // Defensive: build cards one at a time so one bad row cannot blank the entire grid
+    const safeRows = [];
+    const cardsHtml = filtered.map(p => {
+        try {
+            const html = createProductCard(p);
+            safeRows.push(p);
+            return html;
+        } catch (err) {
+            console.error('[renderCatalog] createProductCard failed for row',
+                { id: p && p.id, name: p && p.name, category: p && p.category, sub_category: p && p.sub_category },
+                err);
+            return '';
+        }
+    }).join('');
+
+    productsGrid.innerHTML = cardsHtml;
     productsGrid.querySelectorAll('[data-product-name]').forEach((el, i) => {
-        el.textContent = filtered[i].name;
+        if (safeRows[i]) el.textContent = safeRows[i].name;
     });
     productsGrid.querySelectorAll('[data-product-desc]').forEach((el, i) => {
-        el.textContent = filtered[i].description || '';
+        if (safeRows[i]) el.textContent = safeRows[i].description || '';
     });
 }
 
