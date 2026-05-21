@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-05-21 - Completed quick task 13: Add multi-select color picker for 3D Prints + public card swatches
+Last activity: 2026-05-21 - Completed quick task 14: Chair rental quantity dropdown (15-100) + cart enforcement
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -52,6 +52,7 @@ None.
 | 11 | Replace incorrect header logo with correct Party Palace logo and remove black oval artifact | 2026-05-21 | 0be80f3 | [11-replace-incorrect-header-logo-with-corre](./quick/11-replace-incorrect-header-logo-with-corre/) |
 | 12 | Diagnose and fix 3D Prints sub-category visibility issue | 2026-05-21 | bd33733 | [12-diagnose-and-fix-3d-prints-sub-category-](./quick/12-diagnose-and-fix-3d-prints-sub-category-/) |
 | 13 | Add multi-select color picker for 3D Prints + public card swatches | 2026-05-21 | 9c1bc39 | [13-add-multi-select-color-picker-for-3d-pri](./quick/13-add-multi-select-color-picker-for-3d-pri/) |
+| 14 | Chair rental quantity dropdown (15-100) + cart enforcement (min/max clamp, +/- controls, typed input) | 2026-05-21 | 94b6991 | [14-add-quantity-dropdown-15-100-to-chairs-r](./quick/14-add-quantity-dropdown-15-100-to-chairs-r/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -59,6 +60,6 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 
 ## Session Continuity
 
-Last session: 2026-04-27
-Stopped at: Completed quick task 9 — Specialty Materials filter + empty-state for Engraving; Party Rentals catalog UI; Gallery routing audit (no changes needed)
+Last session: 2026-05-21
+Stopped at: Completed quick task 14 — Chair rental quantity dropdown (15-100) + cart enforcement
 Resume file: None
