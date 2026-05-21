@@ -184,7 +184,7 @@ export function renderDynamicPrints3dProducts() {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🖨️';
-        const subcategory = product.material || 'Other';
+        const subcategory = product.sub_category || 'Other';
 
         const card = document.createElement('div');
         card.className = 'product-card prints3d-product';
