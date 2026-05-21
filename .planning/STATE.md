@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-04-27 - Completed quick task 10: Rebuilt staff portal Add/Edit form with multi-image upload, sizes, colors, category/sub-category
+Last activity: 2026-05-21 - Completed quick task 11: Replace incorrect header logo with correct Party Palace logo and remove black oval artifact
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -49,6 +49,7 @@ None.
 | 8 | Remove "Did we make your day better?" section: markup from index.html, handlers from inline script, resetLoveQuestionSection from ui.js, all CSS from styles.css | 2026-04-27 | 2f51e53 | [8-remove-did-we-make-your-day-better-foote](./quick/8-remove-did-we-make-your-day-better-foote/) |
 | 9 | Specialty Materials engraving filter + empty-state for all Engraving filters; Party Rentals rebuilt as filterable catalog (sub_category); Gallery routing confirmed canonical | 2026-04-27 | 920ab24 | [9-add-specialty-materials-filter-to-engrav](./quick/9-add-specialty-materials-filter-to-engrav/) |
 | 10 | Rebuild staff portal Add/Edit Item form: multi-image upload, sizes, colors, category/sub-category | 2026-04-27 | 1d9031c | [10-rebuild-staff-portal-add-edit-item-form-](./quick/10-rebuild-staff-portal-add-edit-item-form-/) |
+| 11 | Replace incorrect header logo with correct Party Palace logo and remove black oval artifact | 2026-05-21 | 0be80f3 | [11-replace-incorrect-header-logo-with-corre](./quick/11-replace-incorrect-header-logo-with-corre/) |
 
 ## Engraving Follow-up Decision Needed
 
