@@ -186,6 +186,19 @@ export function renderDynamicPrints3dProducts() {
         const icon = product.icon || '🖨️';
         const subcategory = product.sub_category || 'Other';
 
+        // Build color swatches row (3D Prints only; empty array → no row)
+        const PRINT_COLOR_HEX = {
+            'Black': '#000000', 'White': '#FFFFFF', 'Gray': '#808080', 'Brown': '#8B4513',
+            'Gold': '#FFD700', 'Red': '#FF0000', 'Orange': '#FFA500', 'Yellow': '#FFFF00',
+            'Green': '#00CC00', 'Blue': '#0066FF', 'Violet': '#8B00FF'
+        };
+        const productColors = Array.isArray(product.colors) ? product.colors : [];
+        const knownColors = productColors.filter(c => PRINT_COLOR_HEX[c]);
+        const swatchesHTML = knownColors.length === 0 ? '' : `
+            <div class="product-color-swatches" aria-label="Available colors">
+                ${knownColors.map(c => `<span class="product-color-swatch${c === 'White' ? ' product-color-swatch--white' : ''}" style="background:${PRINT_COLOR_HEX[c]}" title="${c}"></span>`).join('')}
+            </div>`;
+
         const card = document.createElement('div');
         card.className = 'product-card prints3d-product';
         card.dataset.category = subcategory;
@@ -198,6 +211,7 @@ export function renderDynamicPrints3dProducts() {
             <div class="product-info">
                 <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
+                ${swatchesHTML}
                 <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
                 <button onclick="navigateToProduct('${slug}')" class="btn btn-primary add-to-cart-btn btn-block">View Details</button>
             </div>`;

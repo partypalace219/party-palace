@@ -4735,3 +4735,58 @@
     justify-content: center;
     gap: 0.5rem;
 }
+
+/* 3D Prints color picker (staff portal) */
+.staff-3dprint-color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+.staff-3dprint-color-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    background: #fff;
+    transition: background 0.15s ease;
+}
+.staff-3dprint-color-check:hover {
+    background: #f9fafb;
+}
+.staff-3dprint-color-check input[type="checkbox"] {
+    margin: 0;
+}
+.staff-3dprint-color-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.staff-3dprint-color-name {
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+/* Public product card color swatches (3D Prints) */
+.product-color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0.4rem 0;
+}
+.product-color-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: default;
+}
+.product-color-swatch--white {
+    border: 1px solid #d1d5db;
+}

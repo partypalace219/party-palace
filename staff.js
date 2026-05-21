@@ -1234,6 +1234,9 @@ function openStaffProductModal(product = null) {
     // Reset image/color state
     staffProductImages = [];
     staffProductColors = [];
+    if (document.getElementById('staff-3dprint-color-grid')) {
+        render3DPrintColorGrid([]);
+    }
 
     if (product) {
         title.textContent = 'Edit Product';
@@ -1267,6 +1270,7 @@ function openStaffProductModal(product = null) {
 
         // Colors
         staffProductColors = [...(product.colors || [])];
+        // Category change UI toggle is handled at renderColorChips/toggle below
     } else {
         title.textContent = 'Add New Product';
         staffEditingProductId = null;
@@ -1278,7 +1282,14 @@ function openStaffProductModal(product = null) {
     }
 
     renderStaffImageThumbnails();
-    renderColorChips();
+    // Determine the current category (set above in the product branch, or '' for new)
+    const currentCategoryForModal = (document.getElementById('staff-product-category') || {}).value || '';
+    toggle3DPrintColorUI(currentCategoryForModal);
+    if (currentCategoryForModal === '3D Prints') {
+        setSelected3DPrintColors(product ? (product.colors || []) : []);
+    } else {
+        renderColorChips();
+    }
     toggleDiscountField();
     openStaffModal('staff-product-modal');
 }
@@ -1367,7 +1378,7 @@ async function handleStaffProductSubmit(e) {
             image_url: imageUrls[0] || null,
             image_urls: imageUrls,
             sizes,
-            colors: [...staffProductColors]
+            colors: (category === '3D Prints') ? getSelected3DPrintColors() : [...staffProductColors]
         };
 
         if (isEditing) {
@@ -1574,6 +1585,7 @@ async function uploadAllNewImages(productSlug) {
 
 function staffOnCategoryChange(cat) {
     populateSubCategoryOptions(cat, '');
+    toggle3DPrintColorUI(cat);
 }
 window.staffOnCategoryChange = staffOnCategoryChange;
 
@@ -1628,6 +1640,77 @@ function handleColorChipKeydown(event) {
     }
 }
 window.handleColorChipKeydown = handleColorChipKeydown;
+
+// ============================================
+// 3D PRINT COLOR PICKER (predefined, multi-select)
+// ============================================
+
+const PRINT_COLORS = [
+    { name: 'Black',  hex: '#000000' },
+    { name: 'White',  hex: '#FFFFFF' },
+    { name: 'Gray',   hex: '#808080' },
+    { name: 'Brown',  hex: '#8B4513' },
+    { name: 'Gold',   hex: '#FFD700' },
+    { name: 'Red',    hex: '#FF0000' },
+    { name: 'Orange', hex: '#FFA500' },
+    { name: 'Yellow', hex: '#FFFF00' },
+    { name: 'Green',  hex: '#00CC00' },
+    { name: 'Blue',   hex: '#0066FF' },
+    { name: 'Violet', hex: '#8B00FF' }
+];
+window.PRINT_COLORS = PRINT_COLORS;
+
+function render3DPrintColorGrid(selected = []) {
+    const grid = document.getElementById('staff-3dprint-color-grid');
+    if (!grid) return;
+    const selectedSet = new Set((selected || []).map(s => String(s)));
+    grid.innerHTML = PRINT_COLORS.map(c => `
+        <label class="staff-3dprint-color-check" title="${c.name}">
+            <input type="checkbox" name="staff-3dprint-color" value="${c.name}" ${selectedSet.has(c.name) ? 'checked' : ''}>
+            <span class="staff-3dprint-color-swatch" style="background:${c.hex};${c.hex.toUpperCase() === '#FFFFFF' ? 'border:1px solid #ccc;' : ''}"></span>
+            <span class="staff-3dprint-color-name">${c.name}</span>
+        </label>
+    `).join('');
+}
+window.render3DPrintColorGrid = render3DPrintColorGrid;
+
+function getSelected3DPrintColors() {
+    return Array.from(document.querySelectorAll('#staff-3dprint-color-grid input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+}
+window.getSelected3DPrintColors = getSelected3DPrintColors;
+
+function setSelected3DPrintColors(colors) {
+    const known = new Set(PRINT_COLORS.map(c => c.name));
+    const safe = [];
+    (colors || []).forEach(name => {
+        if (known.has(name)) {
+            safe.push(name);
+        } else {
+            console.warn(`[staff] Ignoring unknown 3D Print color from DB: "${name}"`);
+        }
+    });
+    render3DPrintColorGrid(safe);
+}
+window.setSelected3DPrintColors = setSelected3DPrintColors;
+
+function toggle3DPrintColorUI(category) {
+    const chipWrap = document.getElementById('staff-color-chip-wrapper');
+    const gridWrap = document.getElementById('staff-3dprint-color-wrapper');
+    if (!chipWrap || !gridWrap) return;
+    if (category === '3D Prints') {
+        chipWrap.style.display = 'none';
+        gridWrap.style.display = '';
+        // If grid was never rendered (e.g., first time switching to 3D Prints on a fresh form), render empty.
+        if (!document.querySelector('#staff-3dprint-color-grid label')) {
+            render3DPrintColorGrid([]);
+        }
+    } else {
+        chipWrap.style.display = '';
+        gridWrap.style.display = 'none';
+    }
+}
+window.toggle3DPrintColorUI = toggle3DPrintColorUI;
 
 // ============================================
 // INLINE VALIDATION HELPERS
