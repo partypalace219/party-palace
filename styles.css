@@ -253,10 +253,20 @@
         }
 
         .logo-img {
-            height: 85px;
+            height: 56px;
             width: auto;
             display: block;
-            mix-blend-mode: multiply;
+            object-fit: contain;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        @media (max-width: 767px) {
+            .logo-img {
+                height: 44px;
+            }
         }
 
         /* Right navigation and actions */
