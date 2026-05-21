@@ -3,14 +3,19 @@ import { products } from './products.js';
 
 export const cart = JSON.parse(localStorage.getItem('partyPalaceCart')) || [];
 
-// Chair rental quantity constants (mirrored from products.js — business rule: min 15, max 100)
-const CHAIR_MIN_QTY = 15;
-const CHAIR_MAX_QTY = 100;
+// Rental quantity rules keyed by product slug
+const RENTAL_QTY_CONFIG = {
+    'chair-rental':        { min: 15, max: 100 },
+    '4-foot-table-rental': { min: 1,  max: 2   },
+    '6-foot-table-rental': { min: 1,  max: 12  },
+    '8-foot-table-rental': { min: 1,  max: 3   },
+};
 
-// Returns true when a cart item is the chair rental (matched by sub_category)
-function isChairCartItem(item) {
-    return item.sub_category === 'Chairs';
+function getRentalConfig(slug) {
+    return RENTAL_QTY_CONFIG[slug] || null;
 }
+
+function isChairCartItem(item) { return item.sub_category === 'Chairs'; }
 
 // Constants for shipping and tax
 const SHIPPING_RATE = 5.99;
@@ -210,24 +215,28 @@ export function addToCart(productNameOrObj) {
     showNotification(`${itemToAdd.name} added to cart!`, 'success');
 }
 
-// Add chair rental to cart with quantity validation (min 15, max 100)
-export function addChairToCart(product, qty) {
-    const clampedQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, parseInt(qty, 10) || CHAIR_MIN_QTY));
+// Add a rental product (Chairs, Tables, …) to cart with quantity validation
+export function addRentalToCart(product, qty) {
+    const config = getRentalConfig(product.slug);
+    if (!config) return;
+    const { min, max } = config;
+    const clampedQty = Math.max(min, Math.min(max, parseInt(qty, 10) || min));
     const unitPrice = product.price || 0;
     const totalPrice = Math.round(unitPrice * clampedQty * 100) / 100;
 
-    // Check if chair already in cart — update quantity instead of duplicating
-    const existingIdx = cart.findIndex(item => isChairCartItem(item));
+    // Match by product id so each table size is a separate cart line
+    const existingIdx = cart.findIndex(item => item.id === product.id);
     if (existingIdx !== -1) {
         cart[existingIdx].quantity = clampedQty;
         cart[existingIdx].price = Math.round(unitPrice * clampedQty * 100) / 100;
-        showNotification(`Chair Rental updated to ${clampedQty} chairs!`, 'success');
+        showNotification(`${product.name} updated to ${clampedQty}!`, 'success');
         saveCart();
         return;
     }
 
     cart.push({
         id: product.id,
+        slug: product.slug,
         name: product.name,
         price: totalPrice,
         unitPrice: unitPrice,
@@ -238,30 +247,49 @@ export function addChairToCart(product, qty) {
     });
 
     saveCart();
-    showNotification(`${clampedQty} chairs added to cart!`, 'success');
+    showNotification(`${clampedQty}× ${product.name} added to cart!`, 'success');
 }
 
-// Adjust chair cart item quantity with clamp enforcement
+// Backwards-compat alias used by legacy callers
+export function addChairToCart(product, qty) { addRentalToCart(product, qty); }
+
+// Adjust a rental cart item quantity by product id
+export function adjustRentalQty(productId, delta) {
+    const idx = cart.findIndex(item => item.id === productId);
+    if (idx === -1) return;
+    const item = cart[idx];
+    const config = getRentalConfig(item.slug);
+    if (!config) return;
+    const { min, max } = config;
+    const newQty = Math.max(min, Math.min(max, (item.quantity || min) + delta));
+    item.quantity = newQty;
+    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
+    saveCart();
+}
+
+// Set a rental cart item quantity directly (from typed input)
+export function setRentalQty(productId, rawVal) {
+    const idx = cart.findIndex(item => item.id === productId);
+    if (idx === -1) return;
+    const item = cart[idx];
+    const config = getRentalConfig(item.slug);
+    if (!config) return;
+    const { min, max } = config;
+    const parsed = parseInt(rawVal, 10);
+    const newQty = Math.max(min, Math.min(max, isNaN(parsed) ? min : parsed));
+    item.quantity = newQty;
+    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
+    saveCart();
+}
+
+// Thin wrappers kept for any external code still calling the old chair-specific names
 export function adjustChairQty(delta) {
     const idx = cart.findIndex(item => isChairCartItem(item));
-    if (idx === -1) return;
-    const item = cart[idx];
-    const newQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, (item.quantity || CHAIR_MIN_QTY) + delta));
-    item.quantity = newQty;
-    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
-    saveCart();
+    if (idx !== -1) adjustRentalQty(cart[idx].id, delta);
 }
-
-// Set chair cart item quantity directly (from typed input), with clamp
 export function setChairQty(rawVal) {
     const idx = cart.findIndex(item => isChairCartItem(item));
-    if (idx === -1) return;
-    const item = cart[idx];
-    const parsed = parseInt(rawVal, 10);
-    const newQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, isNaN(parsed) ? CHAIR_MIN_QTY : parsed));
-    item.quantity = newQty;
-    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
-    saveCart();
+    if (idx !== -1) setRentalQty(cart[idx].id, rawVal);
 }
 
 // Get selected engraving material from filter buttons
@@ -1045,23 +1073,25 @@ export function renderCartItems() {
     if (footer) footer.style.display = 'block';
 
     container.innerHTML = cart.map(item => {
-        const isChair = isChairCartItem(item);
+        const config = getRentalConfig(item.slug);
+        const isRental = !!config;
         const qty = item.quantity || 1;
-        const atMin = qty <= CHAIR_MIN_QTY;
-        const atMax = qty >= CHAIR_MAX_QTY;
+        const atMin = isRental && qty <= config.min;
+        const atMax = isRental && qty >= config.max;
+        const pid = item.id || '';
 
-        const qtyControls = isChair ? `
+        const qtyControls = isRental ? `
             <div class="chair-cart-qty">
-                <button class="chair-qty-btn" onclick="adjustChairQty(-1)" aria-label="Decrease quantity"${atMin ? ' disabled' : ''}>−</button>
-                <input class="chair-qty-input" type="number" value="${qty}" min="${CHAIR_MIN_QTY}" max="${CHAIR_MAX_QTY}"
-                    aria-label="Chair quantity"
-                    onblur="setChairQty(this.value)"
+                <button class="chair-qty-btn" onclick="adjustRentalQty('${pid}', -1)" aria-label="Decrease quantity"${atMin ? ' disabled' : ''}>−</button>
+                <input class="chair-qty-input" type="number" value="${qty}" min="${config.min}" max="${config.max}"
+                    aria-label="Quantity"
+                    onblur="setRentalQty('${pid}', this.value)"
                     onkeydown="if(event.key==='Enter') this.blur()">
-                <button class="chair-qty-btn" onclick="adjustChairQty(1)" aria-label="Increase quantity"${atMax ? ' disabled' : ''}>+</button>
+                <button class="chair-qty-btn" onclick="adjustRentalQty('${pid}', 1)" aria-label="Increase quantity"${atMax ? ' disabled' : ''}>+</button>
             </div>
-            <span class="qty-hint">Min ${CHAIR_MIN_QTY} / Max ${CHAIR_MAX_QTY}</span>` : '';
+            <span class="qty-hint">Min ${config.min} / Max ${config.max}</span>` : '';
 
-        const priceDisplay = isChair
+        const priceDisplay = isRental
             ? `$${(item.price || 0).toFixed(2)} <span class="chair-unit-price">($${(item.unitPrice || 0).toFixed(2)}/ea)</span>`
             : `$${item.price}`;
 
@@ -1069,7 +1099,7 @@ export function renderCartItems() {
         <div class="cart-item">
             <div class="cart-item-image" style="background-image: url('${item.image || ''}'); background-color: #f0f0f0"></div>
             <div class="cart-item-details">
-                <div class="cart-item-name">${item.name}${isChair ? ` (x${qty})` : ''}</div>
+                <div class="cart-item-name">${item.name}${isRental ? ` (x${qty})` : ''}</div>
                 <div class="cart-item-price">${priceDisplay}</div>
                 ${qtyControls}
             </div>
@@ -1118,7 +1148,10 @@ function showNotification(message, type = 'info') {
 
 // Global window exports for onclick handlers
 window.addToCart = addToCart;
+window.addRentalToCart = addRentalToCart;
 window.addChairToCart = addChairToCart;
+window.adjustRentalQty = adjustRentalQty;
+window.setRentalQty = setRentalQty;
 window.adjustChairQty = adjustChairQty;
 window.setChairQty = setChairQty;
 window.removeFromCart = removeFromCart;
