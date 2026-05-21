@@ -4790,3 +4790,113 @@
 .product-color-swatch--white {
     border: 1px solid #d1d5db;
 }
+
+/* ===== Chair Rental Quantity Controls ===== */
+
+/* Product card: quantity selector wrapper */
+.chair-qty-wrapper {
+    margin-bottom: 0.75rem;
+}
+
+.chair-qty-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.35rem;
+}
+
+.chair-qty-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    background-color: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.chair-qty-select:focus {
+    outline: none;
+    border-color: var(--primary, #667eea);
+}
+
+/* Cart sidebar: chair quantity controls */
+.chair-cart-qty {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+.chair-qty-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+}
+
+.chair-qty-btn:hover:not(:disabled) {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+}
+
+.chair-qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.chair-qty-input {
+    width: 52px;
+    text-align: center;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.25rem 0.35rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    color: #374151;
+}
+
+.chair-qty-input:focus {
+    outline: none;
+    border-color: var(--primary, #667eea);
+}
+
+/* Remove spin buttons on number input */
+.chair-qty-input::-webkit-inner-spin-button,
+.chair-qty-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.chair-qty-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Min/Max hint below chair cart controls */
+.qty-hint {
+    display: block;
+    font-size: 0.72rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+/* Unit price display in cart */
+.chair-unit-price {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 400;
+}

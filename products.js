@@ -1,5 +1,14 @@
 // products.js — Product data loading, rendering, filtering, navigation, catalog
-import { cart, addToCart, saveCart, updateCartCount } from './cart.js';
+import { cart, addToCart, addChairToCart, saveCart, updateCartCount } from './cart.js';
+
+// Chair rental quantity constants (business rule: min 15, max 100)
+const CHAIR_MIN_QTY = 15;
+const CHAIR_MAX_QTY = 100;
+
+// Returns true when a product is the chair rental (matched by sub_category, not uuid)
+function isChairProduct(product) {
+    return product.sub_category === 'Chairs';
+}
 
 // Product Data
 // Products will be loaded from Supabase — exported as mutable const array (never reassigned)
@@ -236,6 +245,24 @@ export function renderDynamicPartyRentalsProducts() {
         const icon = product.icon || '🎪';
         const subCategory = product.sub_category || '';
 
+        const isChair = isChairProduct(product);
+
+        // Build chair quantity dropdown options (15–100)
+        let chairQtyHtml = '';
+        if (isChair) {
+            const options = [];
+            for (let i = CHAIR_MIN_QTY; i <= CHAIR_MAX_QTY; i++) {
+                options.push(`<option value="${i}"${i === CHAIR_MIN_QTY ? ' selected' : ''}>${i}</option>`);
+            }
+            chairQtyHtml = `
+                <div class="chair-qty-wrapper">
+                    <label class="chair-qty-label">Quantity (${CHAIR_MIN_QTY}–${CHAIR_MAX_QTY})</label>
+                    <select class="chair-qty-select" data-chair-qty="${product.id}" aria-label="Chair quantity">
+                        ${options.join('')}
+                    </select>
+                </div>`;
+        }
+
         const card = document.createElement('div');
         card.className = 'product-card partyrentals-product';
         card.dataset.subCategory = subCategory;
@@ -249,12 +276,30 @@ export function renderDynamicPartyRentalsProducts() {
                 <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
                 <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
-                <button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>
+                ${chairQtyHtml}
+                ${isChair
+                    ? `<button class="btn btn-primary btn-block chair-add-to-cart-btn">Add to Cart</button>`
+                    : `<button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>`
+                }
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';
         const imgEl = card.querySelector('.product-image img');
         if (imgEl) { imgEl.src = image; imgEl.alt = product.name; }
+
+        // Wire up chair Add to Cart button using captured product reference
+        if (isChair) {
+            const addBtn = card.querySelector('.chair-add-to-cart-btn');
+            const qtySelect = card.querySelector('.chair-qty-select');
+            if (addBtn && qtySelect) {
+                addBtn.addEventListener('click', () => {
+                    const rawVal = parseInt(qtySelect.value, 10);
+                    const qty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, isNaN(rawVal) ? CHAIR_MIN_QTY : rawVal));
+                    addChairToCart(product, qty);
+                });
+            }
+        }
+
         grid.appendChild(card);
     });
 }

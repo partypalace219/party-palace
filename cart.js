@@ -3,6 +3,15 @@ import { products } from './products.js';
 
 export const cart = JSON.parse(localStorage.getItem('partyPalaceCart')) || [];
 
+// Chair rental quantity constants (mirrored from products.js — business rule: min 15, max 100)
+const CHAIR_MIN_QTY = 15;
+const CHAIR_MAX_QTY = 100;
+
+// Returns true when a cart item is the chair rental (matched by sub_category)
+function isChairCartItem(item) {
+    return item.sub_category === 'Chairs';
+}
+
 // Constants for shipping and tax
 const SHIPPING_RATE = 5.99;
 const FREE_SHIPPING_THRESHOLD = 49;
@@ -199,6 +208,60 @@ export function addToCart(productNameOrObj) {
 
     saveCart();
     showNotification(`${itemToAdd.name} added to cart!`, 'success');
+}
+
+// Add chair rental to cart with quantity validation (min 15, max 100)
+export function addChairToCart(product, qty) {
+    const clampedQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, parseInt(qty, 10) || CHAIR_MIN_QTY));
+    const unitPrice = product.price || 0;
+    const totalPrice = Math.round(unitPrice * clampedQty * 100) / 100;
+
+    // Check if chair already in cart — update quantity instead of duplicating
+    const existingIdx = cart.findIndex(item => isChairCartItem(item));
+    if (existingIdx !== -1) {
+        cart[existingIdx].quantity = clampedQty;
+        cart[existingIdx].price = Math.round(unitPrice * clampedQty * 100) / 100;
+        showNotification(`Chair Rental updated to ${clampedQty} chairs!`, 'success');
+        saveCart();
+        return;
+    }
+
+    cart.push({
+        id: product.id,
+        name: product.name,
+        price: totalPrice,
+        unitPrice: unitPrice,
+        quantity: clampedQty,
+        category: product.category,
+        sub_category: product.sub_category,
+        image: product.images ? product.images[0] : null
+    });
+
+    saveCart();
+    showNotification(`${clampedQty} chairs added to cart!`, 'success');
+}
+
+// Adjust chair cart item quantity with clamp enforcement
+export function adjustChairQty(delta) {
+    const idx = cart.findIndex(item => isChairCartItem(item));
+    if (idx === -1) return;
+    const item = cart[idx];
+    const newQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, (item.quantity || CHAIR_MIN_QTY) + delta));
+    item.quantity = newQty;
+    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
+    saveCart();
+}
+
+// Set chair cart item quantity directly (from typed input), with clamp
+export function setChairQty(rawVal) {
+    const idx = cart.findIndex(item => isChairCartItem(item));
+    if (idx === -1) return;
+    const item = cart[idx];
+    const parsed = parseInt(rawVal, 10);
+    const newQty = Math.max(CHAIR_MIN_QTY, Math.min(CHAIR_MAX_QTY, isNaN(parsed) ? CHAIR_MIN_QTY : parsed));
+    item.quantity = newQty;
+    item.price = Math.round((item.unitPrice || 0) * newQty * 100) / 100;
+    saveCart();
 }
 
 // Get selected engraving material from filter buttons
@@ -981,19 +1044,41 @@ export function renderCartItems() {
 
     if (footer) footer.style.display = 'block';
 
-    container.innerHTML = cart.map(item => `
+    container.innerHTML = cart.map(item => {
+        const isChair = isChairCartItem(item);
+        const qty = item.quantity || 1;
+        const atMin = qty <= CHAIR_MIN_QTY;
+        const atMax = qty >= CHAIR_MAX_QTY;
+
+        const qtyControls = isChair ? `
+            <div class="chair-cart-qty">
+                <button class="chair-qty-btn" onclick="adjustChairQty(-1)" aria-label="Decrease quantity"${atMin ? ' disabled' : ''}>−</button>
+                <input class="chair-qty-input" type="number" value="${qty}" min="${CHAIR_MIN_QTY}" max="${CHAIR_MAX_QTY}"
+                    aria-label="Chair quantity"
+                    onblur="setChairQty(this.value)"
+                    onkeydown="if(event.key==='Enter') this.blur()">
+                <button class="chair-qty-btn" onclick="adjustChairQty(1)" aria-label="Increase quantity"${atMax ? ' disabled' : ''}>+</button>
+            </div>
+            <span class="qty-hint">Min ${CHAIR_MIN_QTY} / Max ${CHAIR_MAX_QTY}</span>` : '';
+
+        const priceDisplay = isChair
+            ? `$${(item.price || 0).toFixed(2)} <span class="chair-unit-price">($${(item.unitPrice || 0).toFixed(2)}/ea)</span>`
+            : `$${item.price}`;
+
+        return `
         <div class="cart-item">
             <div class="cart-item-image" style="background-image: url('${item.image || ''}'); background-color: #f0f0f0"></div>
             <div class="cart-item-details">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-price">$${item.price}</div>
+                <div class="cart-item-name">${item.name}${isChair ? ` (x${qty})` : ''}</div>
+                <div class="cart-item-price">${priceDisplay}</div>
+                ${qtyControls}
             </div>
             <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">&times;</button>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 
     if (totalEl) {
-        totalEl.textContent = '$' + getCartTotal();
+        totalEl.textContent = '$' + getCartTotal().toFixed(2);
     }
 }
 
@@ -1033,6 +1118,9 @@ function showNotification(message, type = 'info') {
 
 // Global window exports for onclick handlers
 window.addToCart = addToCart;
+window.addChairToCart = addChairToCart;
+window.adjustChairQty = adjustChairQty;
+window.setChairQty = setChairQty;
 window.removeFromCart = removeFromCart;
 window.clearCart = clearCart;
 window.toggleCart = toggleCart;
