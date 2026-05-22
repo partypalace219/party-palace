@@ -1,14 +1,16 @@
 // products.js — Product data loading, rendering, filtering, navigation, catalog
-import { cart, addToCart, addRentalToCart, saveCart, updateCartCount } from './cart.js';
+import { cart, addToCart, addRentalToCart, saveCart, updateCartCount, hasTentInCart, isPanelProduct } from './cart.js';
 
 // Rental quantity rules — must mirror cart.js RENTAL_QTY_CONFIG
 const RENTAL_QTY_CONFIG = {
-    'chair-rental':        { min: 15, max: 100 },
-    '4-foot-table-rental': { min: 1,  max: 2   },
-    '6-foot-table-rental': { min: 1,  max: 12  },
-    '8-foot-table-rental': { min: 1,  max: 3   },
-    '10x10-tent-rental':   { min: 1,  max: 2   },
-    '10x20-tent-rental':   { min: 1,  max: 2   },
+    'chair-rental':             { min: 15, max: 100 },
+    '4-foot-table-rental':      { min: 1,  max: 2   },
+    '6-foot-table-rental':      { min: 1,  max: 12  },
+    '8-foot-table-rental':      { min: 1,  max: 3   },
+    '10x10-tent-rental':        { min: 1,  max: 2   },
+    '10x20-tent-rental':        { min: 1,  max: 2   },
+    'white-solid-panel-rental': { min: 1,  max: 16  },
+    'window-panel-rental':      { min: 1,  max: 8   },
 };
 
 function getRentalQtyConfig(product) {
@@ -248,7 +250,10 @@ export function renderDynamicPartyRentalsProducts() {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🎪';
-        const subCategory = product.sub_category || '';
+
+        // Panels are stored in Supabase with sub_category=null (constraint limitation),
+        // but identified by slug. Override sub_category to 'Panels' so filtering works.
+        const subCategory = isPanelProduct(product) ? 'Panels' : (product.sub_category || '');
 
         const rentalConfig = getRentalQtyConfig(product);
 
@@ -269,6 +274,22 @@ export function renderDynamicPartyRentalsProducts() {
                 </div>`;
         }
 
+        // Build CTA — panel products are gated on tent presence in cart
+        let ctaHtml;
+        if (rentalConfig) {
+            const productIsPanel = isPanelProduct(product);
+            const tentPresent = hasTentInCart();
+            if (productIsPanel && !tentPresent) {
+                ctaHtml = `
+                    <button class="btn btn-primary btn-block rental-add-to-cart-btn" disabled aria-disabled="true">Add to Cart</button>
+                    <div class="panel-dependency-note" style="margin-top:6px;font-size:0.85em;color:#888;text-align:center;">Add a tent to rent panels</div>`;
+            } else {
+                ctaHtml = `<button class="btn btn-primary btn-block rental-add-to-cart-btn">Add to Cart</button>`;
+            }
+        } else {
+            ctaHtml = `<button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>`;
+        }
+
         const card = document.createElement('div');
         card.className = 'product-card partyrentals-product';
         card.dataset.subCategory = subCategory;
@@ -283,21 +304,18 @@ export function renderDynamicPartyRentalsProducts() {
                 <div class="product-description"></div>
                 <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
                 ${rentalQtyHtml}
-                ${rentalConfig
-                    ? `<button class="btn btn-primary btn-block rental-add-to-cart-btn">Add to Cart</button>`
-                    : `<button onclick="navigateToProduct('${slug}')" class="btn btn-primary btn-block">View Details</button>`
-                }
+                ${ctaHtml}
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
         card.querySelector('.product-description').textContent = product.description || '';
         const imgEl = card.querySelector('.product-image img');
         if (imgEl) { imgEl.src = image; imgEl.alt = product.name; }
 
-        // Wire up Add to Cart for any rental product with a qty config
+        // Wire up Add to Cart for any rental product with a qty config (skip if disabled)
         if (rentalConfig) {
             const addBtn = card.querySelector('.rental-add-to-cart-btn');
             const qtySelect = card.querySelector('.chair-qty-select');
-            if (addBtn && qtySelect) {
+            if (addBtn && qtySelect && !addBtn.disabled) {
                 addBtn.addEventListener('click', () => {
                     const { min, max } = rentalConfig;
                     const rawVal = parseInt(qtySelect.value, 10);

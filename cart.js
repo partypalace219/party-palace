@@ -5,16 +5,32 @@ export const cart = JSON.parse(localStorage.getItem('partyPalaceCart')) || [];
 
 // Rental quantity rules keyed by product slug
 const RENTAL_QTY_CONFIG = {
-    'chair-rental':        { min: 15, max: 100 },
-    '4-foot-table-rental': { min: 1,  max: 2   },
-    '6-foot-table-rental': { min: 1,  max: 12  },
-    '8-foot-table-rental': { min: 1,  max: 3   },
-    '10x10-tent-rental':   { min: 1,  max: 2   },
-    '10x20-tent-rental':   { min: 1,  max: 2   },
+    'chair-rental':             { min: 15, max: 100 },
+    '4-foot-table-rental':      { min: 1,  max: 2   },
+    '6-foot-table-rental':      { min: 1,  max: 12  },
+    '8-foot-table-rental':      { min: 1,  max: 3   },
+    '10x10-tent-rental':        { min: 1,  max: 2   },
+    '10x20-tent-rental':        { min: 1,  max: 2   },
+    'white-solid-panel-rental': { min: 1,  max: 16  },
+    'window-panel-rental':      { min: 1,  max: 8   },
 };
 
 function getRentalConfig(slug) {
     return RENTAL_QTY_CONFIG[slug] || null;
+}
+
+// Slug sets for tent/panel dependency logic
+const TENT_SLUGS = new Set(['10x10-tent-rental', '10x20-tent-rental']);
+const PANEL_SLUGS = new Set(['white-solid-panel-rental', 'window-panel-rental']);
+
+// Returns true if the cart contains at least one tent rental
+export function hasTentInCart() {
+    return cart.some(item => item.slug && TENT_SLUGS.has(item.slug));
+}
+
+// Returns true if the given product is a panel
+export function isPanelProduct(product) {
+    return !!(product && product.slug && PANEL_SLUGS.has(product.slug));
 }
 
 function isChairCartItem(item) { return item.sub_category === 'Chairs'; }
@@ -217,7 +233,17 @@ export function addToCart(productNameOrObj) {
     showNotification(`${itemToAdd.name} added to cart!`, 'success');
 }
 
-// Add a rental product (Chairs, Tables, …) to cart with quantity validation
+// Re-render Party Rentals grid so panel CTAs refresh enabled/disabled state.
+// Dynamic import avoids a hard circular dependency (cart.js ← products.js).
+function refreshPartyRentalsGrid() {
+    import('./products.js').then(mod => {
+        if (typeof mod.renderDynamicPartyRentalsProducts === 'function') {
+            mod.renderDynamicPartyRentalsProducts();
+        }
+    }).catch(() => { /* products.js may not be loaded yet on early calls */ });
+}
+
+// Add a rental product (Chairs, Tables, Panels, …) to cart with quantity validation
 export function addRentalToCart(product, qty) {
     const config = getRentalConfig(product.slug);
     if (!config) return;
@@ -233,6 +259,7 @@ export function addRentalToCart(product, qty) {
         cart[existingIdx].price = Math.round(unitPrice * clampedQty * 100) / 100;
         showNotification(`${product.name} updated to ${clampedQty}!`, 'success');
         saveCart();
+        refreshPartyRentalsGrid();
         return;
     }
 
@@ -250,6 +277,7 @@ export function addRentalToCart(product, qty) {
 
     saveCart();
     showNotification(`${clampedQty}× ${product.name} added to cart!`, 'success');
+    refreshPartyRentalsGrid();
 }
 
 // Backwards-compat alias used by legacy callers
@@ -1036,8 +1064,32 @@ export function addTwistyLizardToCart() {
 
 export function removeFromCart(productName) {
     const idx = cart.findIndex(item => item.name === productName);
-    if (idx !== -1) cart.splice(idx, 1);
+    if (idx === -1) return;
+
+    const wasTent = !!(cart[idx].slug && TENT_SLUGS.has(cart[idx].slug));
+    cart.splice(idx, 1);
+
+    // If the LAST tent was just removed and panels remain, auto-eject panels
+    if (wasTent && !hasTentInCart()) {
+        const ejectedPanelNames = [];
+        for (let i = cart.length - 1; i >= 0; i--) {
+            if (cart[i].slug && PANEL_SLUGS.has(cart[i].slug)) {
+                ejectedPanelNames.push(cart[i].name);
+                cart.splice(i, 1);
+            }
+        }
+        if (ejectedPanelNames.length > 0) {
+            const msg = ejectedPanelNames.length === 1
+                ? `${ejectedPanelNames[0]} removed — panels require a tent.`
+                : `Removed ${ejectedPanelNames.length} panels — panels require a tent.`;
+            showNotification(msg, 'info');
+        }
+    }
+
     saveCart();
+
+    // Re-render Party Rentals grid so panel CTAs refresh enabled/disabled state.
+    refreshPartyRentalsGrid();
 }
 
 export function clearCart() {
@@ -1149,6 +1201,8 @@ function showNotification(message, type = 'info') {
 }
 
 // Global window exports for onclick handlers
+window.hasTentInCart = hasTentInCart;
+window.isPanelProduct = isPanelProduct;
 window.addToCart = addToCart;
 window.addRentalToCart = addRentalToCart;
 window.addChairToCart = addChairToCart;
