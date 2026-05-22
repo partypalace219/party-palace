@@ -9,6 +9,8 @@ const RENTAL_QTY_CONFIG = {
     '4-foot-table-rental': { min: 1,  max: 2   },
     '6-foot-table-rental': { min: 1,  max: 12  },
     '8-foot-table-rental': { min: 1,  max: 3   },
+    '10x10-tent-rental':   { min: 1,  max: 2   },
+    '10x20-tent-rental':   { min: 1,  max: 2   },
 };
 
 function getRentalConfig(slug) {
