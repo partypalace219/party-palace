@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-05-22 - Completed quick task 16: Update header logo from JPEG to PNG with transparent background (v4 cache-bust)
+Last activity: 2026-05-22 - Completed quick task 17: Add 10x10 and 10x20 tent rental products to Party Rentals catalog
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -55,6 +55,7 @@ None.
 | 14 | Chair rental quantity dropdown (15-100) + cart enforcement (min/max clamp, +/- controls, typed input) | 2026-05-21 | 94b6991 | [14-add-quantity-dropdown-15-100-to-chairs-r](./quick/14-add-quantity-dropdown-15-100-to-chairs-r/) |
 | 15 | Fix broken header logo: commit missing party-palace-logo.jpeg to git and bump cache-bust from ?v=2 to ?v=3 | 2026-05-21 | b3fc262 | [15-diagnose-and-fix-broken-header-logo-on-l](./quick/15-diagnose-and-fix-broken-header-logo-on-l/) |
 | 16 | Update header logo from JPEG to PNG with transparent background (v4 cache-bust) | 2026-05-22 | c0d669f | [16-update-header-logo-from-jpeg-to-png-with](./quick/16-update-header-logo-from-jpeg-to-png-with/) |
+| 17 | Add 10x10 and 10x20 tent rental products to Party Rentals catalog (Supabase insert + RENTAL_QTY_CONFIG + cache-bust v17) | 2026-05-22 | e926736 | [17-add-10x10-and-10x20-tent-rental-products](./quick/17-add-10x10-and-10x20-tent-rental-products/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -62,6 +63,6 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 
 ## Session Continuity
 
-Last session: 2026-05-21
-Stopped at: Completed quick task 15 — Fix broken header logo (commit missing file + cache-bust v3)
+Last session: 2026-05-22
+Stopped at: Completed quick task 17 — Add 10x10 and 10x20 tent rental products
 Resume file: None
