@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-05-22 - Completed quick task 17: Add 10x10 and 10x20 tent rental products to Party Rentals catalog
+Last activity: 2026-05-22 - Completed quick task 18: Add White Solid Panel and Window Panel products with tent dependency enforcement
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -20,6 +20,8 @@ Progress: [██████████] 100% (v1.0 complete)
 ### Decisions
 
 All decisions logged in PROJECT.md Key Decisions table (16 decisions across 4 phases).
+
+Quick-18 follow-up: Update products_sub_category_check constraint in Supabase to add 'Panels' to Party Rentals list, then UPDATE panel rows to set sub_category='Panels'. Currently stored as NULL; JS compensates via slug-based isPanelProduct() check.
 
 Notable for next milestone:
 - save-signed-document email still uses Gmail SMTP — deferred to future milestone
@@ -56,6 +58,7 @@ None.
 | 15 | Fix broken header logo: commit missing party-palace-logo.jpeg to git and bump cache-bust from ?v=2 to ?v=3 | 2026-05-21 | b3fc262 | [15-diagnose-and-fix-broken-header-logo-on-l](./quick/15-diagnose-and-fix-broken-header-logo-on-l/) |
 | 16 | Update header logo from JPEG to PNG with transparent background (v4 cache-bust) | 2026-05-22 | c0d669f | [16-update-header-logo-from-jpeg-to-png-with](./quick/16-update-header-logo-from-jpeg-to-png-with/) |
 | 17 | Add 10x10 and 10x20 tent rental products to Party Rentals catalog (Supabase insert + RENTAL_QTY_CONFIG + cache-bust v17) | 2026-05-22 | e926736 | [17-add-10x10-and-10x20-tent-rental-products](./quick/17-add-10x10-and-10x20-tent-rental-products/) |
+| 18 | Add White Solid Panel ($25, 1-16) and Window Panel ($35, 1-8) with tent dependency: disabled CTA when no tent in cart, auto-eject on last tent removal | 2026-05-22 | 1d64268 | [18-add-white-solid-panels-and-window-panels](./quick/18-add-white-solid-panels-and-window-panels/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -64,5 +67,5 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 ## Session Continuity
 
 Last session: 2026-05-22
-Stopped at: Completed quick task 17 — Add 10x10 and 10x20 tent rental products
+Stopped at: Completed quick task 18 — Add White Solid Panel and Window Panel rental products with tent dependency
 Resume file: None
