@@ -60,7 +60,7 @@ None.
 | 17 | Add 10x10 and 10x20 tent rental products to Party Rentals catalog (Supabase insert + RENTAL_QTY_CONFIG + cache-bust v17) | 2026-05-22 | e926736 | [17-add-10x10-and-10x20-tent-rental-products](./quick/17-add-10x10-and-10x20-tent-rental-products/) |
 | 18 | Add White Solid Panel ($25, 1-16) and Window Panel ($35, 1-8) with tent dependency: disabled CTA when no tent in cart, auto-eject on last tent removal | 2026-05-22 | 1d64268 | [18-add-white-solid-panels-and-window-panels](./quick/18-add-white-solid-panels-and-window-panels/) |
 | 20 | Add pickup/delivery fulfillment selector in cart sidebar for rental orders: Pickup free, Delivery $25 flat, localStorage persistence, checkout gate when unselected, auto-reset on last rental removal | 2026-05-25 | ea8cc2b | [20-add-pickup-delivery-option-in-cart-with-](./quick/20-add-pickup-delivery-option-in-cart-with-/) |
-| 21 | Playwright automated verification of quick task 20 — 11/11 checks PASS on live site, no feature bugs found | 2026-05-25 | TBD | [21-playwright-automated-verification-of-qui](./quick/21-playwright-automated-verification-of-qui/) |
+| 21 | Playwright automated verification of quick task 20 — 11/11 checks PASS on live site, no feature bugs found | 2026-05-25 | 9d7abd5 | [21-playwright-automated-verification-of-qui](./quick/21-playwright-automated-verification-of-qui/) |
 
 ## Engraving Follow-up Decision Needed
 
