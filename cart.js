@@ -279,6 +279,25 @@ export function addToCart(productNameOrObj) {
     showNotification(`${itemToAdd.name} added to cart!`, 'success');
 }
 
+// Add a 3D Print product with a selected size variant to the cart.
+// Cart identity stays name-based — variant becomes part of the name.
+// e.g., addSizedPrintToCart({name:'Mini Vase',...}, '4x4', 8) → cart item name 'Mini Vase (4x4)' at $8.
+// Calls existing addToCart() object overload (no refactor of cart identity model).
+export function addSizedPrintToCart(product, sizeLabel, price) {
+    if (!product || !sizeLabel || typeof price !== 'number') {
+        console.warn('[cart] addSizedPrintToCart: missing/invalid args', { product, sizeLabel, price });
+        return;
+    }
+    const itemObj = {
+        id: product.id || null,
+        name: `${product.name} (${sizeLabel})`,
+        price: price,
+        category: product.category || '3D Prints',
+        image: (product.images && product.images[0]) || product.image_url || null
+    };
+    addToCart(itemObj);
+}
+
 // Re-render Party Rentals grid so panel CTAs refresh enabled/disabled state.
 // Dynamic import avoids a hard circular dependency (cart.js ← products.js).
 function refreshPartyRentalsGrid() {
@@ -1331,6 +1350,7 @@ window.hasTentInCart = hasTentInCart;
 window.isPanelProduct = isPanelProduct;
 window.addToCart = addToCart;
 window.addRentalToCart = addRentalToCart;
+window.addSizedPrintToCart = addSizedPrintToCart;
 window.addChairToCart = addChairToCart;
 window.adjustRentalQty = adjustRentalQty;
 window.setRentalQty = setRentalQty;
