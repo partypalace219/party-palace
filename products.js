@@ -216,6 +216,13 @@ export function renderDynamicPrints3dProducts() {
                 ${knownColors.map(c => `<span class="product-color-swatch${c === 'White' ? ' product-color-swatch--white' : ''}" style="background:${PRINT_COLOR_HEX[c]}" title="${c}"></span>`).join('')}
             </div>`;
 
+        // Price display: prefer "Starting at $X" using lowest variant when size_variants is non-empty
+        const sv = Array.isArray(product.size_variants) ? product.size_variants : [];
+        const validSv = sv.filter(v => v && typeof v.price === 'number' && v.price > 0);
+        const priceDisplayHTML = validSv.length > 0
+            ? `<div class="product-price product-price-bottom">Starting at $${Math.min(...validSv.map(v => v.price)).toFixed(2)}</div>`
+            : `<div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>`;
+
         const card = document.createElement('div');
         card.className = 'product-card prints3d-product';
         card.dataset.category = subcategory;
@@ -229,7 +236,7 @@ export function renderDynamicPrints3dProducts() {
                 <div class="product-name product-name-clickable" onclick="navigateToProduct('${slug}')"></div>
                 <div class="product-description"></div>
                 ${swatchesHTML}
-                <div class="product-price product-price-bottom">$${(product.price || 0).toFixed(2)}</div>
+                ${priceDisplayHTML}
                 <button onclick="navigateToProduct('${slug}')" class="btn btn-primary add-to-cart-btn btn-block">View Details</button>
             </div>`;
         card.querySelector('.product-name').textContent = product.name;
@@ -509,6 +516,26 @@ export function renderProductDetail(product) {
     // Generate features based on category
     const features = getProductFeatures(product);
 
+    // Size variant CTA (3D Prints with size_variants non-empty)
+    const detailSv = Array.isArray(product.size_variants) ? product.size_variants : [];
+    const detailValidSv = detailSv.filter(v => v && typeof v.price === 'number' && v.price > 0 && v.label);
+    const hasSizeVariants = detailValidSv.length > 0;
+    const sizeVariantCtaHTML = hasSizeVariants ? `
+                <div class="product-detail-cta">
+                    <div style="margin-bottom: 1rem;">
+                        <label for="detailSizeVariantSelect" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #374151;">Choose a size</label>
+                        <select id="detailSizeVariantSelect" onchange="onSizeVariantDetailChange()" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; background-color: #fff;">
+                            <option value="" disabled selected>-- Select a size --</option>
+                            ${detailValidSv.map((v, i) => `<option value="${i}" data-label="${String(v.label).replace(/"/g, '&quot;')}" data-price="${v.price}">${String(v.label)} — $${v.price.toFixed(2)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <button id="detailSizeVariantAddBtn" disabled onclick="addSelectedSizedPrint('${product.slug || ''}')" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; opacity: 0.5; cursor: not-allowed;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        Add to Cart
+                    </button>
+                </div>
+            ` : null;
+
     container.innerHTML = `
         <div class="product-detail-header">
             <button class="product-detail-back" onclick="navigate('${backPage}')">
@@ -577,7 +604,7 @@ export function renderProductDetail(product) {
                         Book Free Consultation
                     </button>
                 </div>
-                ` : `
+                ` : hasSizeVariants ? sizeVariantCtaHTML : `
                 <div class="product-detail-cta">
                     <button onclick="addToCart('${product.name}')" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -596,6 +623,38 @@ export function renderProductDetail(product) {
     const detailImg = container.querySelector('#productMainImage');
     if (detailImg) detailImg.alt = product.name;
 }
+
+// Size variant detail page: enable/disable Add to Cart based on selection
+export function onSizeVariantDetailChange() {
+    const sel = document.getElementById('detailSizeVariantSelect');
+    const btn = document.getElementById('detailSizeVariantAddBtn');
+    if (!sel || !btn) return;
+    const hasSelection = sel.value !== '';
+    btn.disabled = !hasSelection;
+    btn.style.opacity = hasSelection ? '1' : '0.5';
+    btn.style.cursor = hasSelection ? 'pointer' : 'not-allowed';
+}
+window.onSizeVariantDetailChange = onSizeVariantDetailChange;
+
+// Size variant detail page: read selected option and call addSizedPrintToCart
+export function addSelectedSizedPrint(slug) {
+    const sel = document.getElementById('detailSizeVariantSelect');
+    if (!sel || sel.value === '') return;
+    const opt = sel.options[sel.selectedIndex];
+    const label = opt.getAttribute('data-label');
+    const price = parseFloat(opt.getAttribute('data-price'));
+    const product = products.find(p => (p.slug || '') === slug || p.name === slug);
+    if (!product || !label || isNaN(price)) {
+        console.warn('[products] addSelectedSizedPrint: missing data', { slug, label, price, product });
+        return;
+    }
+    if (typeof window.addSizedPrintToCart === 'function') {
+        window.addSizedPrintToCart(product, label, price);
+    } else {
+        console.warn('[products] addSizedPrintToCart not on window');
+    }
+}
+window.addSelectedSizedPrint = addSelectedSizedPrint;
 
 // Change main product image (for thumbnail clicks)
 export function changeProductImage(src, thumb, index) {
