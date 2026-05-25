@@ -240,7 +240,7 @@ async function loadStaffProducts() {
     try {
         const { data: dbProducts, error } = await window.supabaseClient
             .from('products')
-            .select('id,name,slug,category,sub_category,price,price_label,cost,sale,discount_percent,description,emoji,featured,image_url,image_urls,sizes,colors');
+            .select('id,name,slug,category,sub_category,price,price_label,cost,sale,discount_percent,description,emoji,featured,image_url,image_urls,sizes,colors,size_variants');
 
         if (error) throw error;
 
@@ -268,7 +268,8 @@ async function loadStaffProducts() {
                 image_url: p.image_url || null,
                 image_urls: p.image_urls || [],
                 sizes: p.sizes || [],
-                colors: p.colors || []
+                colors: p.colors || [],
+                size_variants: p.size_variants || null
             };
         });
 
