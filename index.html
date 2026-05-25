@@ -2089,6 +2089,19 @@
                     </div>
                 </div>
 
+                <!-- Multi-size pricing (3D Prints only) -->
+                <div id="staff-3dprint-size-variant-wrapper" class="staff-form-group" style="display:none;">
+                    <label class="staff-checkbox-label">
+                        <input type="checkbox" id="staff-3dprint-multisize-toggle" onchange="onMultiSizeToggleChange(this.checked)">
+                        Multi-size pricing (each size has its own price)
+                    </label>
+                    <div id="staff-3dprint-size-variant-body" style="display:none; margin-top: 0.75rem;">
+                        <div id="staff-3dprint-size-variant-rows"></div>
+                        <button type="button" class="staff-size-variant-add-btn" onclick="addSizeVariantRow()">+ Add Size</button>
+                        <p style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem;">When saved, the main Price field above will be set to the lowest variant price (used as the "Starting at" display).</p>
+                    </div>
+                </div>
+
                 <!-- Multi-image uploader -->
                 <div class="staff-form-group">
                     <label>Images <span style="color:var(--red-accent,#e53e3e)">*</span></label>

@@ -1286,6 +1286,7 @@ function openStaffProductModal(product = null) {
     // Determine the current category (set above in the product branch, or '' for new)
     const currentCategoryForModal = (document.getElementById('staff-product-category') || {}).value || '';
     toggle3DPrintColorUI(currentCategoryForModal);
+    toggle3DPrintSizeVariantUI(currentCategoryForModal, product);
     if (currentCategoryForModal === '3D Prints') {
         setSelected3DPrintColors(product ? (product.colors || []) : []);
     } else {
@@ -1363,12 +1364,22 @@ async function handleStaffProductSubmit(e) {
             document.querySelectorAll('input[name="staff-product-size"]:checked')
         ).map(cb => cb.value);
 
+        // Compute size_variants + price override for 3D Prints with multi-size toggle ON
+        const multiSizeToggle = document.getElementById('staff-3dprint-multisize-toggle');
+        const isMultiSize = !!(multiSizeToggle && multiSizeToggle.checked && category === '3D Prints');
+        const validVariants = isMultiSize ? getSizeVariantRows() : [];
+        const useVariants = isMultiSize && validVariants.length > 0;
+        const manualPrice = parseFloat(document.getElementById('staff-product-price').value) || 0;
+        const effectivePrice = useVariants
+            ? Math.min(...validVariants.map(v => v.price))
+            : manualPrice;
+
         const productData = {
             name,
             slug,
             category,
             sub_category: subCategory,
-            price: parseFloat(document.getElementById('staff-product-price').value) || 0,
+            price: effectivePrice,
             price_label: document.getElementById('staff-product-price-label').value || 'Starting at',
             cost: parseFloat(document.getElementById('staff-product-cost').value) || 0,
             sale: document.getElementById('staff-product-sale').checked,
@@ -1379,7 +1390,8 @@ async function handleStaffProductSubmit(e) {
             image_url: imageUrls[0] || null,
             image_urls: imageUrls,
             sizes,
-            colors: (category === '3D Prints') ? getSelected3DPrintColors() : [...staffProductColors]
+            colors: (category === '3D Prints') ? getSelected3DPrintColors() : [...staffProductColors],
+            size_variants: useVariants ? validVariants : null
         };
 
         if (isEditing) {
@@ -1587,6 +1599,7 @@ async function uploadAllNewImages(productSlug) {
 function staffOnCategoryChange(cat) {
     populateSubCategoryOptions(cat, '');
     toggle3DPrintColorUI(cat);
+    toggle3DPrintSizeVariantUI(cat, null);
 }
 window.staffOnCategoryChange = staffOnCategoryChange;
 
@@ -1712,6 +1725,105 @@ function toggle3DPrintColorUI(category) {
     }
 }
 window.toggle3DPrintColorUI = toggle3DPrintColorUI;
+
+// ============================================
+// 3D PRINT SIZE VARIANTS (multi-size pricing)
+// ============================================
+
+// In-memory rows so toggling hide/show within a modal session preserves entries.
+let staffSizeVariantRows = []; // [{label: string, price: number}]
+
+function renderSizeVariantRows() {
+    const container = document.getElementById('staff-3dprint-size-variant-rows');
+    if (!container) return;
+    container.innerHTML = staffSizeVariantRows.map((row, idx) => `
+        <div class="staff-size-variant-row" data-idx="${idx}">
+            <input type="text" class="staff-size-variant-label" placeholder="Size label (e.g., 4x4)" value="${(row.label || '').replace(/"/g, '&quot;')}" oninput="onSizeVariantInput(${idx}, 'label', this.value)">
+            <input type="number" class="staff-size-variant-price" min="0" step="0.01" placeholder="Price" value="${row.price != null ? row.price : ''}" oninput="onSizeVariantInput(${idx}, 'price', this.value)">
+            <button type="button" class="staff-size-variant-remove-btn" onclick="removeSizeVariantRow(${idx})" aria-label="Remove row">&times;</button>
+        </div>
+    `).join('');
+}
+window.renderSizeVariantRows = renderSizeVariantRows;
+
+function addSizeVariantRow() {
+    staffSizeVariantRows.push({ label: '', price: null });
+    renderSizeVariantRows();
+}
+window.addSizeVariantRow = addSizeVariantRow;
+
+function removeSizeVariantRow(idx) {
+    staffSizeVariantRows.splice(idx, 1);
+    renderSizeVariantRows();
+}
+window.removeSizeVariantRow = removeSizeVariantRow;
+
+function onSizeVariantInput(idx, field, value) {
+    if (!staffSizeVariantRows[idx]) return;
+    if (field === 'label') {
+        staffSizeVariantRows[idx].label = value;
+    } else if (field === 'price') {
+        const parsed = parseFloat(value);
+        staffSizeVariantRows[idx].price = isNaN(parsed) ? null : parsed;
+    }
+    // No re-render — we don't want to lose input focus on every keystroke.
+}
+window.onSizeVariantInput = onSizeVariantInput;
+
+function getSizeVariantRows() {
+    // Return only valid rows: label non-empty AND price is a positive number.
+    return staffSizeVariantRows
+        .map(r => ({ label: (r.label || '').trim(), price: r.price }))
+        .filter(r => r.label.length > 0 && typeof r.price === 'number' && r.price > 0);
+}
+window.getSizeVariantRows = getSizeVariantRows;
+
+function setSizeVariantRows(variants) {
+    staffSizeVariantRows = Array.isArray(variants) ? variants.map(v => ({
+        label: String(v.label || ''),
+        price: typeof v.price === 'number' ? v.price : (parseFloat(v.price) || null)
+    })) : [];
+    renderSizeVariantRows();
+}
+window.setSizeVariantRows = setSizeVariantRows;
+
+function onMultiSizeToggleChange(checked) {
+    const body = document.getElementById('staff-3dprint-size-variant-body');
+    if (!body) return;
+    body.style.display = checked ? '' : 'none';
+    if (checked && staffSizeVariantRows.length === 0) {
+        // Seed with one empty row so staff sees the input fields immediately.
+        addSizeVariantRow();
+    }
+}
+window.onMultiSizeToggleChange = onMultiSizeToggleChange;
+
+function toggle3DPrintSizeVariantUI(category, product) {
+    const wrapper = document.getElementById('staff-3dprint-size-variant-wrapper');
+    const toggle = document.getElementById('staff-3dprint-multisize-toggle');
+    const body = document.getElementById('staff-3dprint-size-variant-body');
+    if (!wrapper || !toggle || !body) return;
+    if (category === '3D Prints') {
+        wrapper.style.display = '';
+        // If editing a product with size_variants, turn toggle ON and pre-render rows.
+        const variants = (product && Array.isArray(product.size_variants)) ? product.size_variants : [];
+        if (variants.length > 0) {
+            toggle.checked = true;
+            body.style.display = '';
+            setSizeVariantRows(variants);
+        } else {
+            toggle.checked = false;
+            body.style.display = 'none';
+            setSizeVariantRows([]);
+        }
+    } else {
+        wrapper.style.display = 'none';
+        toggle.checked = false;
+        body.style.display = 'none';
+        setSizeVariantRows([]);
+    }
+}
+window.toggle3DPrintSizeVariantUI = toggle3DPrintSizeVariantUI;
 
 // ============================================
 // INLINE VALIDATION HELPERS
