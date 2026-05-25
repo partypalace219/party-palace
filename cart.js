@@ -3,6 +3,15 @@ import { products } from './products.js';
 
 export const cart = JSON.parse(localStorage.getItem('partyPalaceCart')) || [];
 
+// Fulfillment method state — null until user selects, persisted in localStorage
+const FULFILLMENT_STORAGE_KEY = 'partyPalaceFulfillment';
+const DELIVERY_FEE = 25;
+const PICKUP_FEE = 0;
+let fulfillmentMethod = (() => {
+    const raw = localStorage.getItem(FULFILLMENT_STORAGE_KEY);
+    return raw === 'pickup' || raw === 'delivery' ? raw : null;
+})();
+
 // Rental quantity rules keyed by product slug
 const RENTAL_QTY_CONFIG = {
     'chair-rental':             { min: 15, max: 100 },
@@ -28,6 +37,38 @@ export function hasTentInCart() {
     return cart.some(item => item.slug && TENT_SLUGS.has(item.slug));
 }
 
+// Returns true if the cart contains at least one rental product (any slug in RENTAL_QTY_CONFIG)
+export function hasRentalInCart() {
+    return cart.some(item => item.slug && RENTAL_QTY_CONFIG[item.slug]);
+}
+
+export function getFulfillmentMethod() {
+    return fulfillmentMethod;
+}
+
+export function setFulfillmentMethod(method) {
+    if (method !== 'pickup' && method !== 'delivery' && method !== null) return;
+    fulfillmentMethod = method;
+    if (method === null) {
+        localStorage.removeItem(FULFILLMENT_STORAGE_KEY);
+    } else {
+        localStorage.setItem(FULFILLMENT_STORAGE_KEY, method);
+    }
+    renderCartItems();
+}
+
+// Returns the delivery fee in dollars based on current state.
+// - 0 if no rentals in cart
+// - 0 if pickup selected
+// - 25 if delivery selected
+// - 0 if not yet selected (display purposes; checkout gate blocks progress separately)
+export function getDeliveryFee() {
+    if (!hasRentalInCart()) return 0;
+    if (fulfillmentMethod === 'pickup') return PICKUP_FEE;
+    if (fulfillmentMethod === 'delivery') return DELIVERY_FEE;
+    return 0;
+}
+
 // Returns true if the given product is a panel
 export function isPanelProduct(product) {
     return !!(product && product.slug && PANEL_SLUGS.has(product.slug));
@@ -41,6 +82,11 @@ const FREE_SHIPPING_THRESHOLD = 49;
 const TAX_RATE = 0.07; // 7% Indiana sales tax
 
 export function saveCart() {
+    // Auto-reset fulfillmentMethod if no rentals remain
+    if (fulfillmentMethod !== null && !hasRentalInCart()) {
+        fulfillmentMethod = null;
+        localStorage.removeItem(FULFILLMENT_STORAGE_KEY);
+    }
     localStorage.setItem('partyPalaceCart', JSON.stringify(cart));
     updateCartCount();
     renderCartItems();
@@ -1240,3 +1286,7 @@ window.addInfinityCubeToCart = addInfinityCubeToCart;
 window.addFlexiDinoToCart = addFlexiDinoToCart;
 window.addSnailToCart = addSnailToCart;
 window.addTwistyLizardToCart = addTwistyLizardToCart;
+window.hasRentalInCart = hasRentalInCart;
+window.getFulfillmentMethod = getFulfillmentMethod;
+window.setFulfillmentMethod = setFulfillmentMethod;
+window.getDeliveryFee = getDeliveryFee;
