@@ -5,10 +5,18 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["party", "decorations", "events", "balloons"],
+  "keywords": [
+    "party",
+    "decorations",
+    "events",
+    "balloons"
+  ],
   "author": "Party Palace",
   "license": "MIT",
   "dependencies": {
     "serve-handler": "^6.1.5"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
   }
 }
