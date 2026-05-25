@@ -1160,7 +1160,6 @@ export function toggleCart() {
 export function renderCartItems() {
     const container = document.getElementById('cartItems');
     const footer = document.getElementById('cartFooter');
-    const totalEl = document.getElementById('cartTotal');
 
     if (!container) return;
 
@@ -1172,6 +1171,7 @@ export function renderCartItems() {
 
     if (footer) footer.style.display = 'block';
 
+    // Render line items (unchanged logic, kept verbatim from current implementation)
     container.innerHTML = cart.map(item => {
         const config = getRentalConfig(item.slug);
         const isRental = !!config;
@@ -1207,9 +1207,86 @@ export function renderCartItems() {
         </div>`;
     }).join('');
 
-    if (totalEl) {
-        totalEl.textContent = '$' + getCartTotal().toFixed(2);
+    // Render footer (selector + breakdown + checkout button) into the existing #cartFooter
+    renderCartFooter();
+}
+
+function renderCartFooter() {
+    const footer = document.getElementById('cartFooter');
+    if (!footer) return;
+
+    const subtotal = getCartTotal();
+    const showSelector = hasRentalInCart();
+    const fee = getDeliveryFee();
+    const total = subtotal + fee;
+
+    // Selector block (only when rentals present)
+    let selectorHtml = '';
+    if (showSelector) {
+        const pickupSelected = fulfillmentMethod === 'pickup';
+        const deliverySelected = fulfillmentMethod === 'delivery';
+        const promptHtml = fulfillmentMethod === null
+            ? `<p class="cart-fulfillment-prompt">Please select pickup or delivery</p>`
+            : '';
+        selectorHtml = `
+            <div class="cart-fulfillment">
+                <div class="cart-fulfillment-label">Fulfillment</div>
+                <div class="cart-fulfillment-options">
+                    <button type="button"
+                        class="cart-fulfillment-option${pickupSelected ? ' selected' : ''}"
+                        onclick="setFulfillmentMethod('pickup')"
+                        aria-pressed="${pickupSelected}">
+                        <span class="cart-fulfillment-option-name">Pickup</span>
+                        <span class="cart-fulfillment-option-price">Free</span>
+                    </button>
+                    <button type="button"
+                        class="cart-fulfillment-option${deliverySelected ? ' selected' : ''}"
+                        onclick="setFulfillmentMethod('delivery')"
+                        aria-pressed="${deliverySelected}">
+                        <span class="cart-fulfillment-option-name">Delivery</span>
+                        <span class="cart-fulfillment-option-price">$25</span>
+                    </button>
+                </div>
+                ${promptHtml}
+            </div>`;
     }
+
+    // Fee line (only shown when selector present)
+    let feeLineHtml = '';
+    if (showSelector) {
+        let feeText;
+        if (fulfillmentMethod === null) feeText = '—';
+        else if (fulfillmentMethod === 'pickup') feeText = '$0.00 (Pickup)';
+        else feeText = '$25.00 (Delivery)';
+        feeLineHtml = `
+            <div class="cart-total-row cart-total-fee">
+                <span>Delivery Fee:</span>
+                <span>${feeText}</span>
+            </div>`;
+    }
+
+    // Checkout gate
+    const gated = showSelector && fulfillmentMethod === null;
+    const gateMsg = gated
+        ? `<p class="cart-fulfillment-gate-msg">Please select Pickup or Delivery to continue</p>`
+        : '';
+    const btnDisabled = gated ? ' disabled' : '';
+
+    footer.innerHTML = `
+        ${selectorHtml}
+        <div class="cart-total-row cart-total-subtotal">
+            <span>Subtotal:</span>
+            <span>$${subtotal.toFixed(2)}</span>
+        </div>
+        ${feeLineHtml}
+        <div class="cart-total cart-total-grand">
+            <span>${showSelector ? 'Total:' : 'Estimated Total:'}</span>
+            <span id="cartTotal">$${total.toFixed(2)}</span>
+        </div>
+        <p class="cart-note">Final pricing confirmed after consultation</p>
+        ${gateMsg}
+        <button class="btn btn-primary cart-checkout-btn" onclick="goToCheckout()"${btnDisabled}>Proceed to Checkout</button>
+    `;
 }
 
 export function goToCheckout() {
@@ -1217,9 +1294,12 @@ export function goToCheckout() {
         showNotification('Your cart is empty!', 'error');
         return;
     }
+    if (hasRentalInCart() && fulfillmentMethod === null) {
+        showNotification('Please select Pickup or Delivery to continue', 'error');
+        return;
+    }
     toggleCart();
     window.navigate('checkout');
-    // renderCheckoutItems is called from checkout.js via window
     if (typeof window.renderCheckoutItems === 'function') {
         window.renderCheckoutItems();
     }
