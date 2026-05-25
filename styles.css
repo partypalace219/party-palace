@@ -2655,6 +2655,105 @@
     width: 100%;
 }
 
+/* Cart fulfillment selector */
+.cart-fulfillment {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.cart-fulfillment-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.cart-fulfillment-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.cart-fulfillment-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0.5rem;
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.05s ease;
+    font-family: inherit;
+}
+
+.cart-fulfillment-option:hover {
+    border-color: var(--gray-400, #9ca3af);
+}
+
+.cart-fulfillment-option.selected {
+    border-color: var(--primary, #d4af37);
+    background: rgba(212, 175, 55, 0.08);
+}
+
+.cart-fulfillment-option-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--gray-800, #1f2937);
+}
+
+.cart-fulfillment-option-price {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.cart-fulfillment-option.selected .cart-fulfillment-option-price {
+    color: var(--primary, #d4af37);
+    font-weight: 600;
+}
+
+.cart-fulfillment-prompt {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    font-style: italic;
+}
+
+/* Total breakdown rows (Subtotal, Fee) */
+.cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    margin-bottom: 0.35rem;
+}
+
+.cart-total-grand {
+    border-top: 1px solid var(--gray-200);
+    padding-top: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+/* Checkout gate message */
+.cart-fulfillment-gate-msg {
+    font-size: 0.8rem;
+    color: #b45309;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Disabled checkout button */
+.cart-checkout-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 /* Cart Notification */
 .cart-notification {
     position: fixed;
