@@ -251,9 +251,7 @@ export function renderDynamicPartyRentalsProducts() {
         const image = product.images ? product.images[0] : '';
         const icon = product.icon || '🎪';
 
-        // Panels are stored in Supabase with sub_category=null (constraint limitation),
-        // but identified by slug. Override sub_category to 'Panels' so filtering works.
-        const subCategory = isPanelProduct(product) ? 'Panels' : (product.sub_category || '');
+        const subCategory = product.sub_category || '';
 
         const rentalConfig = getRentalQtyConfig(product);
 

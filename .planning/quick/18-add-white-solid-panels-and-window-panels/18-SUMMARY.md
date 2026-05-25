@@ -17,7 +17,7 @@ key_files:
     - cart.js
     - index.html
 decisions:
-  - "Panels stored with sub_category=NULL in Supabase (check constraint only allows Tables/Chairs/Tents/Games/Concessions for Party Rentals); JS layer overrides to 'Panels' using slug-based isPanelProduct() check so filter works correctly"
+  - "Panels originally inserted with sub_category=NULL due to check constraint; DDL fix applied 2026-05-25 — constraint updated and both rows SET sub_category='Panels'. JS slug-override workaround removed (products.js now reads sub_category directly from DB)"
   - "refreshPartyRentalsGrid() uses dynamic import('./products.js') to avoid circular dependency between cart.js and products.js"
   - "Panel auto-eject fires only when LAST tent is removed (hasTentInCart() returns false after splice), not on every tent removal"
 metrics:
@@ -47,10 +47,10 @@ Two panel rental products added to Party Rentals with a slug-keyed tent dependen
 
 | Name | UUID | slug | price | sub_category |
 |------|------|------|-------|-------------|
-| White Solid Panel 10x10 Rental | a4529577-bf7d-435c-b23b-011fe400226f | white-solid-panel-rental | $25.00 | NULL* |
-| Window Panel 10x10 Rental | 6f387da9-ae15-498c-bebd-f1dac03cc3a2 | window-panel-rental | $35.00 | NULL* |
+| White Solid Panel 10x10 Rental | a4529577-bf7d-435c-b23b-011fe400226f | white-solid-panel-rental | $25.00 | Panels |
+| Window Panel 10x10 Rental | 6f387da9-ae15-498c-bebd-f1dac03cc3a2 | window-panel-rental | $35.00 | Panels |
 
-*sub_category is NULL due to the `products_sub_category_check` constraint (see Deviations). Both rows: category = "Party Rentals", featured = false, sale = false.
+Both rows: category = "Party Rentals", featured = false, sale = false. DDL fix applied 2026-05-25 updated the check constraint and set sub_category = 'Panels' for both rows.
 
 ## RENTAL_QTY_CONFIG Diff (products.js and cart.js — identical in both)
 
@@ -112,7 +112,7 @@ Both exposed on `window.hasTentInCart` and `window.isPanelProduct`.
 
 ## Panel-Aware CTA Branch in renderDynamicPartyRentalsProducts (products.js)
 
-- `subCategory` is overridden to `'Panels'` for panel slugs (compensates for NULL in DB)
+- `subCategory` reads directly from `product.sub_category` (DB value, now 'Panels' after DDL fix)
 - `ctaHtml` branches: if panel and no tent → disabled button + "Add a tent to rent panels" helper text; else normal enabled button
 - Click listener guards against `addBtn.disabled` before attaching
 - Chairs/tables/tents: no change (not matched by `isPanelProduct()`)
@@ -124,41 +124,36 @@ Added between Tents and Games buttons at line 489:
 <button class="filter-btn" data-sub-category="Panels" onclick="filterPartyRentalsProducts('Panels')">Panels</button>
 ```
 
-## Cache-Bust Bump
+## Cache-Bust Bumps
 
-`index.html` line 2347: `ui.js?v=2026-05-22-17` → `ui.js?v=2026-05-22-18`
-
-No stale `?v=2026-05-22-17` tokens remain.
+- Initial commit: `ui.js?v=2026-05-22-17` → `ui.js?v=2026-05-22-18`
+- DDL fix + workaround removal (2026-05-25): `ui.js?v=2026-05-22-18` → `ui.js?v=2026-05-25-19`
 
 ## Deviations from Plan
 
-### Auto-fixed Issues
+### Resolved Deviations
 
-**1. [Rule 3 - Blocking Issue] Supabase check constraint `products_sub_category_check` does not include 'Panels'**
+**1. Supabase check constraint `products_sub_category_check` did not include 'Panels' — RESOLVED 2026-05-25**
 
-- **Found during:** Task 1
-- **Issue:** The constraint added in quick-2 allows Party Rentals sub_category values: Tables, Chairs, Tents, Games, Concessions. 'Panels' is not in the list. INSERT with sub_category='Panels' fails with PGRST constraint violation.
-- **Root cause:** No Supabase personal access token or DB password available in this environment; management API requires a personal access token (service_role JWT does not work). Cannot alter constraint via REST API, CLI (not logged in), or direct psql (no DB password).
-- **Fix:** Inserted rows with `sub_category = NULL` (explicitly allowed by the constraint's `sub_category IS NULL` clause). In `renderDynamicPartyRentalsProducts()`, override `subCategory` to `'Panels'` for panel slugs using `isPanelProduct()` — this is consistent with the plan's slug-first identification approach. The Panels filter works correctly because `card.dataset.subCategory` is set to `'Panels'` by the JS renderer, not read from the DB at render time.
-- **Impact:** Zero user-facing impact. Filter, CTA gating, cart behavior, and auto-eject all work as specified. The only difference is the Supabase row stores NULL for sub_category instead of 'Panels'.
-- **Follow-up:** To align DB with intent, run in Supabase SQL Editor: `ALTER TABLE products DROP CONSTRAINT products_sub_category_check; ALTER TABLE products ADD CONSTRAINT products_sub_category_check CHECK (sub_category IS NULL OR (category = 'Party Decor' AND sub_category IN ('Arches', 'Columns', 'Walls', 'Centerpieces')) OR (category = 'Party Rentals' AND sub_category IN ('Tables', 'Chairs', 'Tents', 'Panels', 'Games', 'Concessions')) OR (category = '3D Prints' AND sub_category IN ('Toys', 'Signs', 'Decor', 'Miscellaneous')) OR (category = 'Engraving' AND sub_category IN ('Wood', 'Metal', 'Leather', 'Acrylic', 'Specialty Materials')));  UPDATE products SET sub_category = 'Panels' WHERE slug IN ('white-solid-panel-rental', 'window-panel-rental');`
-- **Commit:** 1d64268
+- **Originally found during:** Task 1 (commit 1d64268)
+- **Original workaround:** Rows inserted with `sub_category = NULL`; JS layer overrode to `'Panels'` using `isPanelProduct()` slug check.
+- **DDL fix applied 2026-05-25:** Constraint dropped and recreated with 'Panels' added to Party Rentals allowed values. Both panel rows updated: `SET sub_category = 'Panels'`. JS slug-override removed from `renderDynamicPartyRentalsProducts()` (products.js now reads `product.sub_category` directly).
+- **Verification:** Playwright regression — 23/23 checks passed. Both panel cards appear on Panels filter; all sub-category filters, quantity dropdowns, tent-dependency gating, and auto-eject confirmed on live site.
 
 ## Commit SHA + Push Confirmation
 
-- Commit: `1d64268` — feat(quick-18): add 10x10 panels (white solid + window) with tent dependency
-- Pushed to: `origin/main` — confirmed (`db01cf8..1d64268  main -> main`)
+- Commit 1: `1d64268` — feat(quick-18): add 10x10 panels (white solid + window) with tent dependency (2026-05-22)
+- Commit 2: `[see final commit]` — fix(quick-18): apply DDL fix + remove slug-override workaround (2026-05-25)
+- Pushed to: `origin/main`
 
-## Self-Check: PASSED
+## Self-Check: PASSED (final state 2026-05-25)
 
-- products.js contains `white-solid-panel-rental`: confirmed (RENTAL_QTY_CONFIG line 12)
-- products.js contains `hasTentInCart`: confirmed (import line 2, usage lines 2, 281)
-- products.js contains `panel-dependency-note`: confirmed (line 285)
-- cart.js contains `hasTentInCart`: confirmed (function definition + window export)
-- cart.js contains `TENT_SLUGS`: confirmed (line 23)
-- cart.js contains `panels require a tent`: confirmed (removeFromCart hook)
-- index.html contains `data-sub-category="Panels"`: confirmed (line 489)
-- index.html contains `v=2026-05-22-18`: confirmed (line 2347)
-- No stale `v=2026-05-22-17` in index.html: confirmed (grep returns 0 matches)
-- Commit 1d64268 exists in git log: confirmed
-- Branch up to date with origin/main: confirmed
+- products.js `subCategory` reads `product.sub_category` directly (workaround removed): confirmed
+- products.js contains `white-solid-panel-rental` in RENTAL_QTY_CONFIG: confirmed
+- products.js contains `panel-dependency-note` CTA: confirmed
+- cart.js `isPanelProduct()` uses slug check (correct — used for cart logic, not filtering): confirmed
+- cart.js `hasTentInCart()` + tent-removal auto-eject: confirmed
+- index.html `data-sub-category="Panels"` filter button: confirmed
+- index.html `v=2026-05-25-19` cache-bust: confirmed
+- Supabase: both panel rows `sub_category = 'Panels'`: confirmed
+- Live site Playwright regression: 23/23 passed
