@@ -254,6 +254,17 @@ export function renderDynamicPartyRentalsProducts() {
     grid.innerHTML = '';
     const partyRentalsProducts = products.filter(p => p.category === 'Party Rentals');
 
+    // Sort Tables sub-category into ascending foot-size order (4ft → 6ft → 8ft).
+    // All other sub-categories retain their original relative order (stable sort, return 0).
+    const slugOf = (p) => p.slug || p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const tableFeet = (p) => { const m = slugOf(p).match(/^(\d+)-foot/); return (p.sub_category === 'Tables' && m) ? parseInt(m[1], 10) : null; };
+    partyRentalsProducts.sort((a, b) => {
+        const fa = tableFeet(a);
+        const fb = tableFeet(b);
+        if (fa !== null && fb !== null) return fa - fb;
+        return 0;
+    });
+
     partyRentalsProducts.forEach(product => {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         const image = product.images ? product.images[0] : '';
