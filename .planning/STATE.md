@@ -68,6 +68,7 @@ None.
 | 26 | Diagnostic: 3 confirmed staff portal save bugs traced — "Panels" missing from ITEM_CATEGORIES, engraving filter uses material not sub_category, loadProducts() omits image_urls from SELECT | 2026-06-03 | 798c338 | [26-diagnose-staff-portal-save-bug-silent-da](./quick/26-diagnose-staff-portal-save-bug-silent-da/) |
 | 27 | Fix five staff portal save bugs: Panels in ITEM_CATEGORIES, engraving filter→sub_category, image_urls in SELECT, size_variants payload guard, slug preserved on edit; 5/5 Playwright PASS | 2026-06-03 | d76d4a4 | [27-fix-five-root-cause-bugs-in-staff-portal](./quick/27-fix-five-root-cause-bugs-in-staff-portal/) |
 | 28 | Update site favicon to party-palace-logo.png; remove 5 obsolete favicon tags; cache-bust v28; 5/5 Playwright PASS | 2026-06-03 | fb66b74 | [28-update-site-favicon-to-use-existing-part](./quick/28-update-site-favicon-to-use-existing-part/) |
+| 29 | Replace Violet (#8B00FF) with Pink (#FFC0CB) in 3D Print color picker (staff.js PRINT_COLORS + products.js PRINT_COLOR_HEX); cache-bust v29 | 2026-06-03 | f134184 | [29-replace-violet-with-pink-in-3d-print-col](./quick/29-replace-violet-with-pink-in-3d-print-col/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -76,5 +77,5 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 ## Session Continuity
 
 Last session: 2026-06-03
-Stopped at: Completed quick task 26 — Staff portal save bug diagnostic: 3 root causes confirmed, report at .planning/quick/26-diagnose-staff-portal-save-bug-silent-da/26-SUMMARY.md
+Stopped at: Completed quick task 29 — Violet replaced with Pink (#FFC0CB) in 3D Print color picker; cache-bust v29 pushed to origin/main
 Resume file: None
