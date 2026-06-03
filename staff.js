@@ -1242,6 +1242,7 @@ function openStaffProductModal(product = null) {
     if (product) {
         title.textContent = 'Edit Product';
         staffEditingProductId = product.id;
+        staffEditingProductSlug = product.slug || null;
         document.getElementById('staff-product-id').value = product.id;
         document.getElementById('staff-product-name').value = product.name;
         document.getElementById('staff-product-price').value = product.price || '';
@@ -1275,6 +1276,7 @@ function openStaffProductModal(product = null) {
     } else {
         title.textContent = 'Add New Product';
         staffEditingProductId = null;
+        staffEditingProductSlug = null;
         document.getElementById('staff-product-id').value = '';
         document.getElementById('staff-product-discount').value = '';
         document.getElementById('staff-product-price-label').value = '';
@@ -1315,6 +1317,7 @@ function confirmStaffDelete(id, name) {
 window.confirmStaffDelete = confirmStaffDelete;
 
 let staffEditingProductId = null;
+let staffEditingProductSlug = null;
 
 let staffProductSubmitting = false;
 async function handleStaffProductSubmit(e) {
@@ -1352,7 +1355,8 @@ async function handleStaffProductSubmit(e) {
     const id = staffEditingProductId;
     const isEditing = id != null;
     const name = document.getElementById('staff-product-name').value.trim();
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const generatedSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const slug = isEditing ? (staffEditingProductSlug || generatedSlug) : generatedSlug;
     const discountValue = document.getElementById('staff-product-discount').value;
 
     try {
@@ -1390,9 +1394,24 @@ async function handleStaffProductSubmit(e) {
             image_url: imageUrls[0] || null,
             image_urls: imageUrls,
             sizes,
-            colors: (category === '3D Prints') ? getSelected3DPrintColors() : [...staffProductColors],
-            size_variants: useVariants ? validVariants : null
+            colors: (category === '3D Prints') ? getSelected3DPrintColors() : [...staffProductColors]
         };
+
+        // size_variants policy:
+        // - Not a 3D Print: never touch size_variants (omit key).
+        // - 3D Print, multi-size toggle ON with valid rows: write the array.
+        // - 3D Print, multi-size toggle rendered AND explicitly OFF: intentional wipe (null).
+        // - 3D Print, toggle not present in DOM (edit didn't render it): omit key (preserve existing).
+        if (category === '3D Prints') {
+            const toggleRendered = !!multiSizeToggle;
+            if (useVariants) {
+                productData.size_variants = validVariants;
+            } else if (toggleRendered) {
+                productData.size_variants = null;
+            }
+            // else: toggle not rendered -> omit, preserving stored value
+        }
+        // non-3D-Prints: key omitted entirely
 
         if (isEditing) {
             const { data, error } = await window.supabaseClient
@@ -1416,6 +1435,7 @@ async function handleStaffProductSubmit(e) {
         }
 
         staffEditingProductId = null;
+        staffEditingProductSlug = null;
         showStaffToast(isEditing ? 'Product updated!' : 'Product added!', 'success');
         closeStaffModal('staff-product-modal');
 
