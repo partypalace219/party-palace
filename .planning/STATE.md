@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-05-25 - Completed quick task 23: Playwright automated verification of quick-22 (size variants) — 16/16 passing on live site
+Last activity: 2026-06-03 - Completed quick task 24: Remove COMING SOON badge from Party Rentals nav link in index.html
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -63,6 +63,7 @@ None.
 | 21 | Playwright automated verification of quick task 20 — 11/11 checks PASS on live site, no feature bugs found | 2026-05-25 | 9d7abd5 | [21-playwright-automated-verification-of-qui](./quick/21-playwright-automated-verification-of-qui/) |
 | 22 | Size variants for 3D Prints: staff multi-size pricing UI, addSizedPrintToCart, "Starting at $X" grid, size dropdown detail page, cache-bust v22 | 2026-05-25 | 84d9cbe | [22-implement-size-variants-for-3d-prints-pr](./quick/22-implement-size-variants-for-3d-prints-pr/) |
 | 23 | Playwright automated verification of Quick Task 22 (size variants for 3D Prints) — 16/16 passing against live site | 2026-05-25 | 7ef4f97 | [23-playwright-automated-verification-of-qui](./quick/23-playwright-automated-verification-of-qui/) |
+| 24 | Remove COMING SOON badge from Party Rentals nav link in index.html | 2026-06-03 | 4e21d35 | [24-remove-coming-soon-badge-from-party-rent](./quick/24-remove-coming-soon-badge-from-party-rent/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -70,6 +71,6 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 
 ## Session Continuity
 
-Last session: 2026-05-25
-Stopped at: Completed quick task 23 — Playwright verification of quick-22 (size variants), 16/16 passing
+Last session: 2026-06-03
+Stopped at: Completed quick task 24 — Remove COMING SOON badge from Party Rentals nav
 Resume file: None
