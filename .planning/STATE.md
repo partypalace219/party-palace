@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-06-03 - Completed quick task 25: Sort Tables sub-category 4ft → 6ft → 8ft in Party Rentals (DOM sort + index-swap fix)
+Last activity: 2026-06-03 - Completed quick task 26: Staff portal save bug diagnostic — 3 root causes confirmed (Panels missing from ITEM_CATEGORIES, material vs sub_category mismatch, image_urls not fetched by loadProducts)
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -65,6 +65,7 @@ None.
 | 23 | Playwright automated verification of Quick Task 22 (size variants for 3D Prints) — 16/16 passing against live site | 2026-05-25 | 7ef4f97 | [23-playwright-automated-verification-of-qui](./quick/23-playwright-automated-verification-of-qui/) |
 | 24 | Remove COMING SOON badge from Party Rentals nav link in index.html | 2026-06-03 | 4e21d35 | [24-remove-coming-soon-badge-from-party-rent](./quick/24-remove-coming-soon-badge-from-party-rent/) |
 | 25 | Sort Tables sub-category into ascending size order (4ft to 6ft to 8ft) via slug-regex sort in renderDynamicPartyRentalsProducts; cache-bust v25 | 2026-06-03 | 5a8f409 | [25-sort-tables-sub-category-in-party-rental](./quick/25-sort-tables-sub-category-in-party-rental/) |
+| 26 | Diagnostic: 3 confirmed staff portal save bugs traced — "Panels" missing from ITEM_CATEGORIES, engraving filter uses material not sub_category, loadProducts() omits image_urls from SELECT | 2026-06-03 | 798c338 | [26-diagnose-staff-portal-save-bug-silent-da](./quick/26-diagnose-staff-portal-save-bug-silent-da/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -73,5 +74,5 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 ## Session Continuity
 
 Last session: 2026-06-03
-Stopped at: Completed quick task 25 — Tables sort 4ft→6ft→8ft PASS on live site; Panels filter pre-existing issue (sub_category='Tents' in DB, not 'Panels')
+Stopped at: Completed quick task 26 — Staff portal save bug diagnostic: 3 root causes confirmed, report at .planning/quick/26-diagnose-staff-portal-save-bug-silent-da/26-SUMMARY.md
 Resume file: None
