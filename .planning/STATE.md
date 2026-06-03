@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-06-03 - Completed quick task 24: Remove COMING SOON badge from Party Rentals nav link in index.html
+Last activity: 2026-06-03 - Completed quick task 25: Sort Tables sub-category 4ft to 6ft to 8ft ascending in Party Rentals catalog
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -64,6 +64,7 @@ None.
 | 22 | Size variants for 3D Prints: staff multi-size pricing UI, addSizedPrintToCart, "Starting at $X" grid, size dropdown detail page, cache-bust v22 | 2026-05-25 | 84d9cbe | [22-implement-size-variants-for-3d-prints-pr](./quick/22-implement-size-variants-for-3d-prints-pr/) |
 | 23 | Playwright automated verification of Quick Task 22 (size variants for 3D Prints) — 16/16 passing against live site | 2026-05-25 | 7ef4f97 | [23-playwright-automated-verification-of-qui](./quick/23-playwright-automated-verification-of-qui/) |
 | 24 | Remove COMING SOON badge from Party Rentals nav link in index.html | 2026-06-03 | 4e21d35 | [24-remove-coming-soon-badge-from-party-rent](./quick/24-remove-coming-soon-badge-from-party-rent/) |
+| 25 | Sort Tables sub-category into ascending size order (4ft to 6ft to 8ft) via slug-regex sort in renderDynamicPartyRentalsProducts; cache-bust v25 | 2026-06-03 | 5a8f409 | [25-sort-tables-sub-category-in-party-rental](./quick/25-sort-tables-sub-category-in-party-rental/) |
 
 ## Engraving Follow-up Decision Needed
 
@@ -72,5 +73,5 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 ## Session Continuity
 
 Last session: 2026-06-03
-Stopped at: Completed quick task 24 — Remove COMING SOON badge from Party Rentals nav
+Stopped at: Completed quick task 25 — Sort Tables sub-category ascending by slug regex
 Resume file: None
