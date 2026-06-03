@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-06-03 - Completed quick task 25: Sort Tables sub-category 4ft to 6ft to 8ft ascending in Party Rentals catalog
+Last activity: 2026-06-03 - Completed quick task 25: Sort Tables sub-category 4ft → 6ft → 8ft in Party Rentals (DOM sort + index-swap fix)
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -73,5 +73,5 @@ RESOLVED by quick-9: Empty-state feedback added to filterEngravingProducts (Opti
 ## Session Continuity
 
 Last session: 2026-06-03
-Stopped at: Completed quick task 25 — Sort Tables sub-category ascending by slug regex
+Stopped at: Completed quick task 25 — Tables sort 4ft→6ft→8ft PASS on live site; Panels filter pre-existing issue (sub_category='Tents' in DB, not 'Panels')
 Resume file: None
