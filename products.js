@@ -209,7 +209,7 @@ export function renderDynamicPrints3dProducts() {
         const PRINT_COLOR_HEX = {
             'Black': '#000000', 'White': '#FFFFFF', 'Gray': '#808080', 'Brown': '#8B4513',
             'Gold': '#FFD700', 'Red': '#FF0000', 'Orange': '#FFA500', 'Yellow': '#FFFF00',
-            'Green': '#00CC00', 'Blue': '#0066FF', 'Violet': '#8B00FF'
+            'Green': '#00CC00', 'Blue': '#0066FF', 'Pink': '#FFC0CB'
         };
         const productColors = Array.isArray(product.colors) ? product.colors : [];
         const knownColors = productColors.filter(c => PRINT_COLOR_HEX[c]);

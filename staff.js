@@ -1690,7 +1690,7 @@ const PRINT_COLORS = [
     { name: 'Yellow', hex: '#FFFF00' },
     { name: 'Green',  hex: '#00CC00' },
     { name: 'Blue',   hex: '#0066FF' },
-    { name: 'Violet', hex: '#8B00FF' }
+    { name: 'Pink',   hex: '#FFC0CB' }
 ];
 window.PRINT_COLORS = PRINT_COLORS;
 
