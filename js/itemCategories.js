@@ -23,6 +23,7 @@ const ITEM_CATEGORIES = {
         "Tables",
         "Chairs",
         "Tents",
+        "Panels",
         "Games",
         "Concessions"
     ],
