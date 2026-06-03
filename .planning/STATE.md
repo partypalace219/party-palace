@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-06-03 - Completed quick task 27: Fixed all 5 staff portal save bugs — Panels category, engraving filter, image_urls, size_variants guard, slug preservation; 5/5 Playwright PASS, deployed to production
+Last activity: 2026-06-03 - Completed quick task 28: Favicon updated to party-palace-logo.png; 5/5 Playwright PASS
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -67,6 +67,7 @@ None.
 | 25 | Sort Tables sub-category into ascending size order (4ft to 6ft to 8ft) via slug-regex sort in renderDynamicPartyRentalsProducts; cache-bust v25 | 2026-06-03 | 5a8f409 | [25-sort-tables-sub-category-in-party-rental](./quick/25-sort-tables-sub-category-in-party-rental/) |
 | 26 | Diagnostic: 3 confirmed staff portal save bugs traced — "Panels" missing from ITEM_CATEGORIES, engraving filter uses material not sub_category, loadProducts() omits image_urls from SELECT | 2026-06-03 | 798c338 | [26-diagnose-staff-portal-save-bug-silent-da](./quick/26-diagnose-staff-portal-save-bug-silent-da/) |
 | 27 | Fix five staff portal save bugs: Panels in ITEM_CATEGORIES, engraving filter→sub_category, image_urls in SELECT, size_variants payload guard, slug preserved on edit; 5/5 Playwright PASS | 2026-06-03 | d76d4a4 | [27-fix-five-root-cause-bugs-in-staff-portal](./quick/27-fix-five-root-cause-bugs-in-staff-portal/) |
+| 28 | Update site favicon to party-palace-logo.png; remove 5 obsolete favicon tags; cache-bust v28; 5/5 Playwright PASS | 2026-06-03 | fb66b74 | [28-update-site-favicon-to-use-existing-part](./quick/28-update-site-favicon-to-use-existing-part/) |
 
 ## Engraving Follow-up Decision Needed
 
