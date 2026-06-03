@@ -255,15 +255,19 @@ export function renderDynamicPartyRentalsProducts() {
     const partyRentalsProducts = products.filter(p => p.category === 'Party Rentals');
 
     // Sort Tables sub-category into ascending foot-size order (4ft → 6ft → 8ft).
-    // All other sub-categories retain their original relative order (stable sort, return 0).
-    const slugOf = (p) => p.slug || p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const tableFeet = (p) => { const m = slugOf(p).match(/^(\d+)-foot/); return (p.sub_category === 'Tables' && m) ? parseInt(m[1], 10) : null; };
-    partyRentalsProducts.sort((a, b) => {
-        const fa = tableFeet(a);
-        const fb = tableFeet(b);
-        if (fa !== null && fb !== null) return fa - fb;
-        return 0;
+    // Extracts sorted tables from their scattered positions and re-inserts them in order,
+    // leaving Chairs/Tents/Panels in their original relative positions.
+    const tableIndices = [];
+    const tableItems = [];
+    partyRentalsProducts.forEach((p, i) => {
+        if (p.sub_category === 'Tables') { tableIndices.push(i); tableItems.push(p); }
     });
+    tableItems.sort((a, b) => {
+        const ma = (a.slug || '').match(/^(\d+)-foot/);
+        const mb = (b.slug || '').match(/^(\d+)-foot/);
+        return (ma ? parseInt(ma[1], 10) : 0) - (mb ? parseInt(mb[1], 10) : 0);
+    });
+    tableIndices.forEach((idx, i) => { partyRentalsProducts[idx] = tableItems[i]; });
 
     partyRentalsProducts.forEach(product => {
         const slug = product.slug || product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -894,6 +898,17 @@ export function filterPartyRentalsProducts(subCategory) {
         product.style.display = visible ? '' : 'none';
         if (visible) visibleCount++;
     });
+
+    // For Tables: re-order the table cards in the DOM by ascending foot size
+    if (subCategory === 'Tables') {
+        const tableCards = [...grid.querySelectorAll('.partyrentals-product[data-sub-category="Tables"]')];
+        tableCards.sort((a, b) => {
+            const na = a.querySelector('.product-name')?.textContent || '';
+            const nb = b.querySelector('.product-name')?.textContent || '';
+            return (parseInt(na.match(/^(\d+)/)?.[1] || '0') - parseInt(nb.match(/^(\d+)/)?.[1] || '0'));
+        });
+        tableCards.forEach(card => grid.appendChild(card));
+    }
 
     const existing = grid.querySelector('.empty-state');
     if (existing) existing.remove();

@@ -1,7 +1,7 @@
 // ui.js — Navigation, gallery, hero slideshow, app bootstrap
 // Root ES module entry point — imported by index.html
 
-import { loadProducts, products, categoryLabels, renderCatalog, renderServices, renderDynamicProducts, createProductCard, navigateToProduct, renderProductDetail, filterProducts, getProductBySlug, filterEngravingProducts, filter3DProducts, filterPartyRentalsProducts, renderDynamicPartyRentalsProducts } from './products.js?v=2026-06-03-25';
+import { loadProducts, products, categoryLabels, renderCatalog, renderServices, renderDynamicProducts, createProductCard, navigateToProduct, renderProductDetail, filterProducts, getProductBySlug, filterEngravingProducts, filter3DProducts, filterPartyRentalsProducts, renderDynamicPartyRentalsProducts } from './products.js?v=2026-06-03-25c';
 import { cart, updateCartCount, renderCartItems, toggleCart } from './cart.js';
 import { WaiverModal, ContractModal, NoRefundModal, BookingGate, ColorPalette, initPaymentOptions, renderCheckoutItems, showNotification, applyCoupon, removeCoupon, displaySuccessOrderSummary, createOrderInSupabase } from './checkout.js';
 import { clearCart } from './cart.js';
