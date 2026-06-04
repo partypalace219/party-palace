@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-04-09 after v1.0)
 
 Phase: v1.0 complete — all 4 phases, 11 plans shipped
 Status: Milestone archived — ready for next milestone planning
-Last activity: 2026-06-04 - Completed quick task 30: Playwright verification of Violet→Pink swap; 8/8 PASS
+Last activity: 2026-06-04 - Completed quick task 31: Fix colors column missing from loadProducts SELECT; color swatches now render on public 3D Print cards
 
 Progress: [██████████] 100% (v1.0 complete)
 
@@ -70,6 +70,7 @@ None.
 | 28 | Update site favicon to party-palace-logo.png; remove 5 obsolete favicon tags; cache-bust v28; 5/5 Playwright PASS | 2026-06-03 | fb66b74 | [28-update-site-favicon-to-use-existing-part](./quick/28-update-site-favicon-to-use-existing-part/) |
 | 29 | Replace Violet (#8B00FF) with Pink (#FFC0CB) in 3D Print color picker (staff.js PRINT_COLORS + products.js PRINT_COLOR_HEX); cache-bust v29 | 2026-06-03 | f134184 | [29-replace-violet-with-pink-in-3d-print-col](./quick/29-replace-violet-with-pink-in-3d-print-col/) |
 | 30 | Playwright automated verification of Quick Task 29 — 8/8 checks PASS; found products.js omits `colors` from SELECT (swatches use mock-inject path); 27 DB products still have Violet (silently filtered) | 2026-06-04 | e771f51 | [30-playwright-automated-verification-of-qui](./quick/30-playwright-automated-verification-of-qui/) |
+| 31 | Fix colors column missing from loadProducts SELECT: add colors to SELECT + transform in products.js; cache-bust v31; optional SQL to strip Violet from 27 DB products | 2026-06-04 | 28a7b57 | [31-fix-colors-column-missing-from-loadprodu](./quick/31-fix-colors-column-missing-from-loadprodu/) |
 
 ## Engraving Follow-up Decision Needed
 
